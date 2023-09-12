@@ -1,4 +1,11 @@
-@import "./variables";
+.startPage header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.startPage header .logo {
+  width: auto;
+}
 
 *,
 *::before,
@@ -22,10 +29,8 @@ a {
 }
 
 body {
-  background-color: $home-page;
+  background-color: #F6FEFF;
   /* overflow-x: hidden; */
-//   font-family: "Poppins";
-//   height: 1000px;
 }
 
 button,
@@ -37,4 +42,4 @@ input {
 
 html {
   scroll-behavior: smooth;
-}
+}/*# sourceMappingURL=global.css.map */
