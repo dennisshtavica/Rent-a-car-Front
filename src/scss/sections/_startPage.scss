@@ -1,0 +1,107 @@
+.startPage {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+
+    .logo {
+      width: auto;
+    }
+  }
+
+  .getStarted {
+    .CarImageStart {
+      width: 100%;
+      margin-bottom: 50px;
+      img {
+        width: 100%;
+      }
+    }
+    .gSTexts {
+      h1 {
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 110.5%; /* 33.15px */
+        letter-spacing: -0.3px;
+        margin-bottom: 14px;
+      }
+      p {
+        color: #000;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 110.5%; /* 16.575px */
+        letter-spacing: -0.15px;
+        margin-bottom: 14px;
+      }
+    }
+
+    .whatDWO {
+      margin-top: 61px;
+
+      .textBoxCtn {
+        .textBox {
+          width: 243px;
+          height: 87px;
+          background-color: #bdbafd;
+          color: #fff;
+          font-family: Poppins;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 110.5%; /* 13.26px */
+          letter-spacing: -0.12px;
+          padding: 17px 14px;
+          border-radius: 5px;
+
+          &:last-child {
+            float: right;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 780px) {
+  .startPage {
+    .getStarted {
+      .flexImgText {
+        display: flex;
+        justify-content: space-between;
+        gap: 130px;
+        align-items: center;
+
+        .CarImageStart {
+          order: 2;
+          width: 50%;
+        }
+
+        .gSTexts {
+          // width: 500px;
+          h1 {
+            font-size: 50px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 110.5%; /* 55.25px */
+            letter-spacing: -0.5px;
+          }
+        }
+      }
+
+      .whatDWO {
+        .textBoxCtn {
+          display: flex;
+          .textBox {
+            &:last-child {
+              margin: 0px 0px 0px 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
