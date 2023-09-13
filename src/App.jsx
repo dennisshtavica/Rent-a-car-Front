@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet} from "react-router-dom"
 
 import StartPage from "./pages/StartPage"
 import SignUp from "./pages/Users/SignUp"
+import SignIn from "./pages/Users/SignIn";
 
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartPage/>}/>
         <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/signin" element={<SignIn/>}/>
       </Routes>
     </BrowserRouter>
   )
