@@ -1,0 +1,131 @@
+.mainPage{
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 48px;
+      .logo {
+        width: auto;
+      }
+
+      .burgerBar {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+
+        .bar {
+          width: 26px;
+          height: 4px;
+          background-color: #000000;
+          margin: 2px 0;
+          transition: 0.4s;
+
+          &:first-child {
+            transform-origin: left;
+          }
+
+          &:last-child {
+            transform-origin: right;
+          }
+        }
+
+        &.open {
+          .bar {
+            &:first-child {
+              transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            &:nth-child(2) {
+              opacity: 0;
+            }
+
+            &:last-child {
+              transform: rotate(45deg) translate(-5px, -6px);
+            }
+          }
+        }
+      }
+    }
+      .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #8886FD;
+        display: flex;
+        justify-content: left;
+        align-items: flex-start;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s, visibility 0.4s;
+
+        &.open {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .menu-content {
+          padding-top: 100px;
+          padding-left: 30px;
+          ul {
+            list-style: none;
+            padding: 0;
+            li {
+              margin-bottom: 10px;
+              font-size: 24px;
+              color: #213652;
+              cursor: pointer;
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+
+  .carFilterWrapper{
+    h2{
+      color: #000;
+      font-family: Poppins;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+    .searchFilters{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      .BrandFilter{
+          select{
+            padding: 10px 50px 10px 10px;
+            border-radius: 13px;
+            border: 2px solid #D1D1D1;
+            background-color: #F6FEFF;
+          }
+      }
+      .ModelFilter{
+        select{
+          padding: 10px 50px 10px 10px;
+          border-radius: 13px;
+          border: 2px solid #D1D1D1;
+          background-color: #F6FEFF;
+        }
+      }
+    }
+
+    .searchButton{
+      border-radius: 10px;
+      background: #7878FD;
+      padding: 10px 24px;
+      color: white;
+    }
+  }
+  .carDeals{
+    margin-top: 30px;
+  }
+}
