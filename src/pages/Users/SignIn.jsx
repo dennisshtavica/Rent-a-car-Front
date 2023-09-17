@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import RentAcLogo from "../../assets/images/Logo.svg";
 import "../../scss/sections/_signUp.scss";
 import SignUpHeaderTitle from "../../assets/images/SignUpTGS.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ export default function SignIn() {
           "user",
           JSON.stringify({ token: res.data.token, username: res.data.username })
         );
-
+        navigate("/mainPage");
         console.log("Login successful", res.data);
       })
       .catch((err) => {

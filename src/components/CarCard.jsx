@@ -1,33 +1,32 @@
-import React from 'react';
-import "../scss/components/_carCard.scss"
+import React from "react";
+import "../scss/components/_carCard.scss";
 import CarPhotos from "../assets/images/car.png";
-import {Link} from "react-router-dom";
-export default function CarCard() {
-    return (
-        <div className="cardWrapper">
-            <div className="cardContainer">
-                <div className="cardSpecs">
-                    <div className="carPhoto">
-                        <img src={CarPhotos}/>
-                    </div>
-                    <div className="carInfo">
-                        <p className="carBrand">Porsche</p>
-                        <p className="carModel">Cayenne</p>
+import { Link } from "react-router-dom";
 
-                        <p className="carType">7 Seater</p>
-                        <p className="carType">Automatic</p>
-                        <p className="carType">Within 8.0 Km</p>
-                    </div>
-                </div>
-                <div className="carPrice">
-                    <p>$69/day</p>
-                    <Link to="/bookingPage">
-                        <button>Book</button>
-                    </Link>
-                </div>
-            </div>
+export default function CarCard(props) {
+  return (
+    <div className="cardWrapper">
+      <div className="cardContainer">
+        <div className="cardSpecs">
+          <div className="carPhoto">
+            <img src={`http://localhost:3011/${props.image}`} />
+          </div>
+          <div className="carInfo">
+            <p className="carBrand">{props.name}</p>
+            <p className="carModel">{props.model}</p>
+
+            <p className="carType">{props.seats}</p>
+            <p className="carType">{props.transmission}</p>
+            <p className="carType">{props.range}</p>
+          </div>
         </div>
-    );
+        <div className="carPrice">
+          <p>{props.price}€/day</p>
+          <Link to="/bookingPage">
+            <button>Book</button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
-
-

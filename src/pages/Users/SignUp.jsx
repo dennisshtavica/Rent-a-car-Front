@@ -14,28 +14,29 @@ export default function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post(
-      "http://localhost:3011/signup",
-      {
-        username: username,
-        email: email,
-        password: password,
-      },
-    //   {
-    //     headers: {
-    //       Authorization: "Bearer " + userStorage.token,
-    //     },
-    //   }
-    )
-    .then((res) => {
+    axios
+      .post(
+        "http://localhost:3011/signup",
+        {
+          username: username,
+          email: email,
+          password: password,
+        }
+        //   {
+        //     headers: {
+        //       Authorization: "Bearer " + userStorage.token,
+        //     },
+        //   }
+      )
+      .then((res) => {
         console.log("Successful signup", res);
-        setUsername("")
-        setEmail("")
-        setPassword("")
-    })
-    .catch((err) => {
-        console.log("error", err);
+        setUsername("");
+        setEmail("");
+        setPassword("");
       })
+      .catch((err) => {
+        console.log("error", err);
+      });
   };
 
   return (
@@ -85,7 +86,9 @@ export default function SignUp() {
               />
             </div>
             <div className="linkWrapper">
-              <button className="signup-button" type="submit">Sign Up</button>
+              <button className="signup-button" type="submit">
+                Sign Up
+              </button>
               <Link to="/signin">Already have an account?</Link>
             </div>
           </form>
