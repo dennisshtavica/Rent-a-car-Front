@@ -2,41 +2,19 @@ import React, {useState} from "react";
 import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/sections/_mainPage.scss";
 import CarCard from "../components/CarCard";
+import Header from "../components/Header";
 
 export default function MainPage(){
-    const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState("");
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-    const closeMenu = () => {
-        setIsOpen(false);
-    };
+
     const handleSelectChange = (event) => {
         setSelectedValue(event.target.value);
     };
 
     return(
         <div className="mainPage container">
-            <header>
-                <div className="logo">
-                    <img src={RentAcLogo} alt="" />
-                </div>
-                <div className={`burgerBar ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
-                    <div className="bar"/>
-                    <div className="bar"/>
-                </div>
-            </header>
-            <div className={`menu ${isOpen ? 'open' : ''}`} onClick={closeMenu}>
-                <div className="menu-content" onClick={(e) => e.stopPropagation()}>
-                    <ul>
-                        <li>Home</li>
-                        <li>Contact</li>
-                        <li>Car Rented</li>
-                    </ul>
-                </div>
-            </div>
+            <Header/>
             <div className="carFilterWrapper">
                 <h2>Drive the Car of your dreams</h2>
                 <div className="searchFilters">

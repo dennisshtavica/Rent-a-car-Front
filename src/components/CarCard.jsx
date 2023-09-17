@@ -1,6 +1,7 @@
 import React from 'react';
 import "../scss/components/_carCard.scss"
 import CarPhotos from "../assets/images/car.png";
+import {Link} from "react-router-dom";
 export default function CarCard() {
     return (
         <div className="cardWrapper">
@@ -20,7 +21,9 @@ export default function CarCard() {
                 </div>
                 <div className="carPrice">
                     <p>$69/day</p>
-                    <button>Book</button>
+                    <Link to="/bookingPage">
+                        <button>Book</button>
+                    </Link>
                 </div>
             </div>
         </div>

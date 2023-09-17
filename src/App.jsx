@@ -4,6 +4,7 @@ import StartPage from "./pages/StartPage"
 import SignUp from "./pages/Users/SignUp"
 import SignIn from "./pages/Users/SignIn";
 import MainPage from "./pages/MainPage";
+import BookingPage from "./pages/BookingPage";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUp/>}/>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="/mainPage" element={<MainPage/>}/>
+        <Route path="/bookingPage" element={<BookingPage/>}/>
       </Routes>
     </BrowserRouter>
   )
