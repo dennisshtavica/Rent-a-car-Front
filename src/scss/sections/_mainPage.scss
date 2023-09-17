@@ -1,0 +1,46 @@
+.mainPage{
+  .carFilterWrapper{
+    h2{
+      color: #000;
+      font-family: Poppins;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+    .searchFilters{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      .BrandFilter{
+          select{
+            padding: 10px 50px 10px 10px;
+            border-radius: 13px;
+            border: 2px solid #D1D1D1;
+            background-color: #F6FEFF;
+          }
+      }
+      .ModelFilter{
+        select{
+          padding: 10px 50px 10px 10px;
+          border-radius: 13px;
+          border: 2px solid #D1D1D1;
+          background-color: #F6FEFF;
+        }
+      }
+    }
+
+    .searchButton{
+      border-radius: 10px;
+      background: #7878FD;
+      padding: 10px 24px;
+      color: white;
+    }
+  }
+  .carDeals{
+    margin-top: 30px;
+  }
+}

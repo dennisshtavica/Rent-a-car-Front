@@ -1,0 +1,52 @@
+.contact{
+  h2{
+    text-align: center;
+    padding-bottom: 20px;
+    color: #000;
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
+  }
+  .section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    .circle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #8886FD;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .icon {
+      font-size: 30px;
+      color: white;
+    }
+
+    .text {
+      font-size: 18px;
+    }
+
+    .dummy-text {
+      color: #818181;
+      font-family: Poppins;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      cursor: pointer;
+    }
+  }
+}
