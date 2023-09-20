@@ -15,7 +15,9 @@ export default function Header() {
         <>
             <header>
                 <div className="logo">
-                    <img src={RentAcLogo} alt="" />
+                    <Link to="/mainPage">
+                        <img src={RentAcLogo} alt="" />
+                    </Link>
                 </div>
                 <div className={`burgerBar ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
                     <div className="bar"/>
