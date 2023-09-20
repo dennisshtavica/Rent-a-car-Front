@@ -6,6 +6,7 @@ import SignIn from "./pages/Users/SignIn";
 import MainPage from "./pages/MainPage";
 import BookingPage from "./pages/BookingPage";
 import ContactPage from "./pages/ContactPage";
+import SearchResults from "./pages/SearchResults";
 
 
 function App() {
@@ -18,6 +19,10 @@ function App() {
         <Route path="/mainPage" element={<MainPage/>}/>
         <Route path="/bookingPage" element={<BookingPage/>}/>
         <Route path="/contactPage" element={<ContactPage/>}/>
+        <Route
+          path="/search-results/:carBrand/:carModel"
+          element={<SearchResults/>}
+        />
       </Routes>
     </BrowserRouter>
   )

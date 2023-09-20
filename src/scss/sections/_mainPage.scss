@@ -28,13 +28,17 @@
             align-items: center;
             margin-bottom: 5px;
             position: relative;
-
+            font-size: 15px;
+            font-weight: 600;
+            // color: #7B7B7B;
           }
           .custom-options{
             background-color: #000;
             color: white;
             padding: 17px;
             border-radius: 10px;
+            position: absolute;
+            width: 150px;
 
             .custom-option {
               margin-bottom: 20px;

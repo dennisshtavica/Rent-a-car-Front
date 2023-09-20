@@ -5,6 +5,7 @@ import CarCard from "../components/CarCard";
 import Header from "../components/Header";
 import axios from "axios";
 import arrowDown from "../assets/images/arrowDown.svg"
+import { useNavigate } from "react-router-dom";
 
 export default function MainPage() {
   //   const [selectedValue, setSelectedValue] = useState("");
@@ -13,12 +14,17 @@ export default function MainPage() {
   const [selectedCar, setSelectedCar] = useState("Car Brand");
   const [selectedModel, setSelectedModel] = useState("Car Model");
   const [cars, setCars] = useState([]);
+  const [modelOptions, setModelOptions] = useState([]);
 
 
-  const carBrandOptions = ["Audi", "BMW", "Porsche"];
+  const navigate = useNavigate()
 
-  const audiModels = ["Q7", "Q8"];
-  const bmwModels = ["3", "M3"];
+  const carsData = [
+    {car: "Audi", models: ["Q7", "Q8"]},
+    {car: "BMW", models: ["3", "M3"]},
+    {car: "Porsche", models: ["Cayenne", "Carrera S"]},
+  ];
+  
 
   const toggleFirstDropdown = () => {
     setFirstDropdownOpen(!firstDropdownOpen);
@@ -36,7 +42,32 @@ export default function MainPage() {
   const handleModel = (option) => {
     setSelectedModel(option)
     setSecondDropdownOpen(false)
+
   }
+  
+  const handleCarChange = (selectedCarValue) => {
+    setSelectedCar(selectedCarValue);
+
+    const selectedCarData = carsData.find((car) => car.car === selectedCarValue);
+
+    if (selectedCarData) {
+      setModelOptions(selectedCarData.models);
+    } else {
+      setModelOptions([]); 
+   }
+
+   setFirstDropdownOpen(false)
+
+  }
+
+  const handleSearch = () => {
+    if (selectedCar && selectedModel) {
+      navigate(`/search-results/${selectedCar}/${selectedModel}`)
+    } else {
+      alert("Please select both car brand and model.");
+    }
+  };
+  
   
   useEffect(() => {
     axios
@@ -45,9 +76,13 @@ export default function MainPage() {
         setCars(res.data);
       })
       .catch((err) => {
-        console.log("Err", err);
+        console.log("Err", err);my
       });
   }, []);
+
+  // console.log(selectedCar);
+  // console.log(selectedModel);
+
 
   return (
     <div className="mainPage container">
@@ -66,13 +101,14 @@ export default function MainPage() {
             </div>
             {firstDropdownOpen && (
               <div className="custom-options">
-                {carBrandOptions.map((option, index) => (
+                {carsData.map((option, index) => (
                   <div
                     key={index}
                     className="custom-option"
-                    onClick={() => handleCarBrand(option)}
+                    // onClick={() => handleCarBrand(option)}
+                    onClick={() => handleCarChange(option.car)}
                   >
-                    {option}
+                    {option.car}
                   </div>
                 ))}
 
@@ -91,7 +127,7 @@ export default function MainPage() {
             </div>
             {secondDropdownOpen && (
               <div className="custom-options">
-                {carBrandOptions.map((option, index) => (
+                {modelOptions.map((option, index) => (
                   <div
                     key={index}
                     className="custom-option"
@@ -106,7 +142,7 @@ export default function MainPage() {
            
           </div>
         </div>
-        <button className="searchButton">Search</button>
+        <button className="searchButton" onClick={handleSearch}>Search</button>
       </div>
       <div className="carDeals">
         <h2>Popular Cars</h2>
