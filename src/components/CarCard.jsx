@@ -22,7 +22,7 @@ export default function CarCard(props) {
         </div>
         <div className="carPrice">
           <p>{props.price}€/day</p>
-          <Link to="/bookingPage">
+          <Link to={`/bookingPage/${props._id}`}>
             <button>Book</button>
           </Link>
         </div>
