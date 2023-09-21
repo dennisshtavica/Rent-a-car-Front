@@ -5,7 +5,7 @@ import CarCard from "../components/CarCard";
 import Header from "../components/Header";
 import axios from "axios";
 import arrowDown from "../assets/images/arrowDown.svg"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function MainPage() {
   //   const [selectedValue, setSelectedValue] = useState("");
@@ -15,6 +15,21 @@ export default function MainPage() {
   const [selectedModel, setSelectedModel] = useState("Car Model");
   const [cars, setCars] = useState([]);
   const [modelOptions, setModelOptions] = useState([]);
+  // const [car, setCar] = useState(null)
+
+  // const {id} = useParams()
+
+
+  // useEffect(() => {
+  //     axios.get(`http://localhost:3011/bookingPage/${id}`)
+  //     .then((res) => {
+  //         setCar(res.data)
+  //     })
+  //     .catch((err) => {
+  //         console.log('Err', err);
+  //     })
+
+  // }, [id])
 
 
   const navigate = useNavigate()
@@ -150,6 +165,7 @@ export default function MainPage() {
         {cars.map((car) => (
           <CarCard
             key={car._id}
+            _id={car._id}
             image={car.image}
             name={car.name}
             model={car.model}

@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from "../components/Header";
 import CarPhotos from "../assets/images/car.png";
 import "../scss/sections/_bookingPage.scss";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 export default function BookingPage() {
+    const {id} = useParams()
+
+    const [carDetails, setCarDetails] = useState([])
+
+    useEffect(() => {
+        axios.get(`http://localhost:3011/bookingPage/${id}`)
+        .then((res) => {
+            setCarDetails(res.data)
+        })
+        .catch((err) => {
+            console.log('Err', err);
+        })
+
+    }, [id])
+
+    
     return (
         <div className="booking container">
             <Header/>
             <div className="brand">
-                <h2>Porsche Cayenne</h2>
+                <h2>{carDetails.name} {carDetails.model}</h2>
                 <div className="carContainer">
-                    <img src={CarPhotos}/>
+                    {/* <img src={CarPhotos}/> */}
+                    <img src={`http://localhost:3011/${carDetails.image}`} alt="" />
                 </div>
             </div>
             <div className="specifications">
                 <h4>Specifications</h4>
                 <div className="specs">
                     <ul>
-                        <li>7 Seater</li>
-                        <li>Automatic</li>
-                        <li>Within 8.0 Km</li>
-                        <li>Electric</li>
+                        <li>{carDetails.seats} Seater</li>
+                        <li>{carDetails.transmission}</li>
+                        <li>Within {carDetails.range}</li>
+                        <li>{carDetails.type}</li>
                     </ul>
                 </div>
             </div>
@@ -48,7 +67,7 @@ export default function BookingPage() {
                 </div>
             </div>
             <div className="pricing">
-                <p>$69/day</p>
+                <p>{`${carDetails.price}$/day`}</p>
                 <button>Book</button>
             </div>
         </div>

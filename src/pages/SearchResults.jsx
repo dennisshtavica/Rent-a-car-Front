@@ -38,6 +38,7 @@ export default function SearchResults() {
         {searchResults.map((car) => (
             <CarCard
                 key={car._id}
+                _id={car._id}
                 image={car.image}
                 name={car.name}
                 model={car.model}
