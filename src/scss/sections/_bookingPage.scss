@@ -1,6 +1,6 @@
-.booking{
-  .brand{
-    h2{
+.booking {
+  .brand {
+    h2 {
       color: #000;
       font-family: Poppins;
       font-size: 30px;
@@ -9,21 +9,21 @@
       line-height: normal;
       letter-spacing: -0.45px;
     }
-      .carContainer{
-        max-width: 150px;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+    .carContainer {
+      max-width: 150px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
+    }
   }
-  .specifications{
-    border-top: 2px solid #BCBCBC;
-    border-bottom:2px solid #BCBCBC ;
+  .specifications {
+    border-top: 2px solid #bcbcbc;
+    border-bottom: 2px solid #bcbcbc;
     padding-top: 10px;
     padding-bottom: 10px;
-    h4{
+    h4 {
       color: #000;
       font-family: Poppins;
       font-size: 20px;
@@ -33,29 +33,28 @@
       text-transform: uppercase;
       padding-bottom: 10px;
     }
-    .specs{
+    .specs {
       color: rgba(0, 0, 0, 0.51);
       font-family: Poppins;
       font-size: 15px;
       font-style: normal;
       font-weight: 500;
-      ul{
+      ul {
         display: flex;
         justify-content: space-between;
         flex-direction: row;
         flex-wrap: wrap;
-        gap:10px;
-        li{
-
+        gap: 10px;
+        li {
         }
       }
     }
   }
-  .pickupPlace{
+  .pickupPlace {
     padding-top: 10px;
     padding-bottom: 25px;
-    border-bottom:2px solid #BCBCBC ;
-    h4{
+    border-bottom: 2px solid #bcbcbc;
+    h4 {
       color: #000;
       font-family: Poppins;
       font-size: 20px;
@@ -65,16 +64,16 @@
       text-transform: uppercase;
       padding-bottom: 10px;
     }
-    input{
-      background: #F6FEFF;
+    input {
+      background: #f6feff;
       border-radius: 13px;
-      border: 2px solid #8080FD;
+      border: 2px solid #8080fd;
       padding: 15px 60px 15px 10px;
     }
   }
-  .pickupDate{
+  .pickupDate {
     margin-bottom: 45px;
-    h4{
+    h4 {
       color: #000;
       font-family: Poppins;
       font-size: 20px;
@@ -84,8 +83,8 @@
       text-transform: uppercase;
       padding-bottom: 10px;
     }
-    .datePickup{
-      h5{
+    .datePickup {
+      h5 {
         color: #000;
         font-family: Poppins;
         font-size: 15px;
@@ -94,21 +93,54 @@
         line-height: normal;
         padding-bottom: 10px;
       }
-      input{
+      input {
         border-radius: 13px;
-        border: 2px solid #8080FD;
+        border: 2px solid #8080fd;
         padding: 14px 70px 14px 22px;
         margin-bottom: 10px;
       }
     }
   }
-  .pricing{
+  .pricing {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 30px;
-    p{
-      color: #4E4E4E;
+    .background-opacity {
+      background-color: rgba(0, 0, 0, 0.84);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .carBooked {
+        h1 {
+          color: #fff;
+          font-family: Poppins;
+          font-size: 40px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          letter-spacing: -0.6px;
+        }
+
+        p {
+          color: #86afff;
+          font-family: Poppins;
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+          letter-spacing: -0.195px;
+        }
+      }
+    }
+    p {
+      color: #4e4e4e;
       font-family: Poppins;
       font-size: 20px;
       font-style: normal;
@@ -116,10 +148,10 @@
       line-height: normal;
       letter-spacing: -0.3px;
     }
-    button{
+    button {
       border-radius: 15px;
-      background: #8886FD;
-      color: #FFF;
+      background: #8886fd;
+      color: #fff;
       padding: 10px 40px;
       font-family: Poppins;
       font-size: 20px;

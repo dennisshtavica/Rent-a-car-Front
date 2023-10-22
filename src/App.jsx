@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage";
 import BookingPage from "./pages/BookingPage";
 import ContactPage from "./pages/ContactPage";
 import SearchResults from "./pages/SearchResults";
+import CarRented from "./pages/CarRented";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           path="/search-results/:carBrand/:carModel"
           element={<SearchResults/>}
         />
+        <Route path="/carRented" element={<CarRented/>}/>
       </Routes>
     </BrowserRouter>
   )
