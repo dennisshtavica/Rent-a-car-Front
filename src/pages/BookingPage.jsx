@@ -1,76 +1,122 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import CarPhotos from "../assets/images/car.png";
 import "../scss/sections/_bookingPage.scss";
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function BookingPage() {
-    const {id} = useParams()
+  const { id } = useParams();
 
-    const [carDetails, setCarDetails] = useState([])
+  const [carDetails, setCarDetails] = useState([]);
+  const [location, setLocation] = useState("");
+  const [pickUp, setPickUp] = useState("");
+  const [retDate, setRetDate] = useState("");
+  const [isBooked, setIsBooked] = useState(false)
 
-    useEffect(() => {
-        axios.get(`http://localhost:3011/bookingPage/${id}`)
-        .then((res) => {
-            setCarDetails(res.data)
-        })
-        .catch((err) => {
-            console.log('Err', err);
-        })
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3011/bookingPage/${id}`)
+      .then((res) => {
+        setCarDetails(res.data);
+      })
+      .catch((err) => {
+        console.log("Err", err);
+      });
+  }, [id]);
 
-    }, [id])
+  const bookCar = (e) => {
+    e.preventDefault()
 
-    
-    return (
-        <div className="booking container">
-            <Header/>
-            <div className="brand">
-                <h2>{carDetails.name} {carDetails.model}</h2>
-                <div className="carContainer">
-                    {/* <img src={CarPhotos}/> */}
-                    <img src={`http://localhost:3011/${carDetails.image}`} alt="" />
-                </div>
-            </div>
-            <div className="specifications">
-                <h4>Specifications</h4>
-                <div className="specs">
-                    <ul>
-                        <li>{carDetails.seats} Seater</li>
-                        <li>{carDetails.transmission}</li>
-                        <li>Within {carDetails.range}</li>
-                        <li>{carDetails.type}</li>
-                    </ul>
-                </div>
-            </div>
-            <div className="pickupPlace">
-                <h4>Pickup Location</h4>
-                <input type="text" placeholder="Enter your city and street address"/>
-            </div>
-            <div className="pickupDate">
-                <h4>PICK UP AND RETURN DATE</h4>
-                <div className="datePickup">
-                    <h5>Pick Up</h5>
-                    <input type="date" id="pickupDate"
-                           name="pickupDate"
-                           pattern="\d{2}/\d{2}/\d{4}"
-                           placeholder="dd/mm/yyyy"
-                    />
-                </div>
-                <div className="datePickup">
-                    <h5>Return</h5>
-                    <input type="date" id="returnDate"
-                           name="returnDate"
-                           pattern="\d{2}/\m{2}/\d{4}"
-                           placeholder="dd/mm/yyyy"
-                    />
-                </div>
-            </div>
-            <div className="pricing">
-                <p>{`${carDetails.price}$/day`}</p>
-                <button>Book</button>
-            </div>
+    axios.post('http://localhost:3011/bookings', {
+        carId: id,
+        pickupLocation: location,
+        pickupDate: pickUp,
+        returnDate: retDate
+    })
+    .then((res) => {
+        console.log('Car booked');
+        setIsBooked(true)
+    })
+    .catch((err) => {
+        console.log('Err', err);
+    })
+  }
+
+  return (
+    <div className="booking container">
+      <Header />
+      <div className="brand">
+        <h2>
+          {carDetails.name} {carDetails.model}
+        </h2>
+        <div className="carContainer">
+          {/* <img src={CarPhotos}/> */}
+          <img src={`http://localhost:3011/${carDetails.image}`} alt="" />
         </div>
-    );
+      </div>
+      <div className="specifications">
+        <h4>Specifications</h4>
+        <div className="specs">
+          <ul>
+            <li>{carDetails.seats} Seater</li>
+            <li>{carDetails.transmission}</li>
+            <li>Within {carDetails.range}</li>
+            <li>{carDetails.type}</li>
+          </ul>
+        </div>
+      </div>
+      <form action="" onSubmit={bookCar}>
+        <div className="pickupPlace">
+          <h4>Pickup Location</h4>
+          <input 
+            type="text"
+            placeholder="Enter your city and street address"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
+        <div className="pickupDate">
+          <h4>PICK UP AND RETURN DATE</h4>
+          <div className="datePickup">
+            <h5>Pick Up</h5>
+            <input
+              type="date"
+              id="pickupDate"
+              name="pickupDate"
+              pattern="\d{2}/\d{2}/\d{4}"
+              placeholder="dd/mm/yyyy"
+              value={pickUp}
+              onChange={(e) => setPickUp(e.target.value)}
+            />
+          </div>
+          <div className="datePickup">
+            <h5>Return</h5>
+            <input
+              type="date"
+              id="returnDate"
+              name="returnDate"
+              pattern="\d{2}/\m{2}/\d{4}"
+              placeholder="dd/mm/yyyy"
+              value={retDate}
+              onChange={(e) => setRetDate(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="pricing">
+          <p>{`${carDetails.price}$/day`}</p>
+          {isBooked ? (
+            <div className="background-opacity">
+              <div className="carBooked">
+              <h1>CAR BOOKED</h1>
+              <p>See details</p>
+             </div>
+          </div>
+          ) : (
+            <button type="submit">Book</button>
+          )}
+        </div>
+      </form>
+    </div>
+  );
 }
-

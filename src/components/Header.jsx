@@ -5,6 +5,9 @@ import {Link} from "react-router-dom";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const user = JSON.parse(localStorage.getItem("user"));
+
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
@@ -30,6 +33,9 @@ export default function Header() {
                         <li> <Link to="/mainPage">Home</Link></li>
                         <li>Contact</li>
                         <li>Car Rented</li>
+                        <li>
+                            <Link className='profile'>{user.username}</Link>
+                        </li>
                     </ul>
                 </div>
             </div>

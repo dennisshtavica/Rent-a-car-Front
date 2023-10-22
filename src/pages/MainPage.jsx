@@ -101,7 +101,7 @@ export default function MainPage() {
 
   return (
     <div className="mainPage container">
-      <Header />
+      <Header/>
       <div className="carFilterWrapper">
         <h2>Drive the Car of your dreams</h2>
         <div className="searchFilters">
