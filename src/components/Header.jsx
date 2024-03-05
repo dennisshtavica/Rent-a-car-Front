@@ -3,7 +3,7 @@ import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/layout/_header.scss";
 import {Link} from "react-router-dom";
 
-export default function Header() {
+export default function Header(props) {
     const [isOpen, setIsOpen] = useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
 

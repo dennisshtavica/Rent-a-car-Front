@@ -1,6 +1,10 @@
-.mainPage{
-  .carFilterWrapper{
-    h2{
+.mainPage {
+  .hidden {
+    display: none !important;
+  }
+
+  .carFilterWrapper {
+    h2 {
       color: #000;
       font-family: Poppins;
       font-size: 20px;
@@ -10,44 +14,46 @@
       letter-spacing: -0.3px;
       margin-bottom: 10px;
     }
-    .searchFilters{
+    .searchFilters {
       display: flex;
       justify-content: space-between;
       // align-items: center;
       margin-bottom: 14px;
-      .BrandFilter, .ModelFilter{
-          .custom-selected{
-            // padding: 10px 50px 10px 10px;
-            width: 150px;
-            padding: 12px 16px;
-            border-radius: 13px;
-            border: 2px solid #D1D1D1;
-            background-color: #F6FEFF;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-            position: relative;
-            font-size: 15px;
-            font-weight: 600;
-            // color: #7B7B7B;
-          }
-          .custom-options{
-            background-color: #000;
-            color: white;
-            padding: 17px;
-            border-radius: 10px;
-            position: absolute;
-            width: 150px;
+      .BrandFilter,
+      .ModelFilter {
+        .custom-selected {
+          // padding: 10px 50px 10px 10px;
+          width: 150px;
+          padding: 12px 16px;
+          border-radius: 13px;
+          border: 2px solid #d1d1d1;
+          background-color: #f6feff;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 5px;
+          position: relative;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          // color: #7B7B7B;
+        }
+        .custom-options {
+          background-color: #000;
+          color: white;
+          padding: 17px;
+          border-radius: 10px;
+          position: absolute;
+          width: 150px;
 
-            .custom-option {
-              margin-bottom: 20px;
+          .custom-option {
+            margin-bottom: 20px;
 
-              &:last-child{
-                margin-bottom: 0px !important;
-              }
+            &:last-child {
+              margin-bottom: 0px !important;
             }
           }
+        }
       }
       // .ModelFilter{
       //   select{
@@ -59,14 +65,65 @@
       // }
     }
 
-    .searchButton{
+    .searchButton {
       border-radius: 10px;
-      background: #7878FD;
+      background: #7878fd;
       padding: 10px 24px;
       color: white;
+      cursor: pointer;
     }
   }
-  .carDeals{
+  .carDeals {
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+  .popularCars {
     margin-top: 30px;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .carDeals {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 50px;
+
+    .cardWrapper {
+      width: 50%;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .carDeals {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 50px;
+
+    .cardWrapper {
+      width: 40%;
+    }
+  }
+
+  .searchFilters {
+    justify-content: unset !important;
+    gap: 20px;
+  }
+}
+@media screen and (min-width: 1100px) {
+  .carDeals {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 50px;
+
+    .cardWrapper {
+      width: 25%;
+    }
   }
 }

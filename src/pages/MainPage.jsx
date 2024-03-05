@@ -4,7 +4,7 @@ import "../scss/sections/_mainPage.scss";
 import CarCard from "../components/CarCard";
 import Header from "../components/Header";
 import axios from "axios";
-import arrowDown from "../assets/images/arrowDown.svg"
+import arrowDown from "../assets/images/arrowDown.svg";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function MainPage() {
@@ -15,10 +15,10 @@ export default function MainPage() {
   const [selectedModel, setSelectedModel] = useState("Car Model");
   const [cars, setCars] = useState([]);
   const [modelOptions, setModelOptions] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   // const [car, setCar] = useState(null)
 
   // const {id} = useParams()
-
 
   // useEffect(() => {
   //     axios.get(`http://localhost:3011/bookingPage/${id}`)
@@ -31,15 +31,13 @@ export default function MainPage() {
 
   // }, [id])
 
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const carsData = [
-    {car: "Audi", models: ["Q7", "Q8"]},
-    {car: "BMW", models: ["3", "M3"]},
-    {car: "Porsche", models: ["Cayenne", "Carrera S"]},
+    { car: "Audi", models: ["Q7", "Q8"] },
+    { car: "BMW", models: ["3", "M3"] },
+    { car: "Porsche", models: ["Cayenne", "Carrera S"] },
   ];
-  
 
   const toggleFirstDropdown = () => {
     setFirstDropdownOpen(!firstDropdownOpen);
@@ -50,40 +48,39 @@ export default function MainPage() {
   };
 
   const handleCarBrand = (option) => {
-    setSelectedCar(option)
-    setFirstDropdownOpen(false)
-  }
+    setSelectedCar(option);
+    setFirstDropdownOpen(false);
+  };
 
   const handleModel = (option) => {
-    setSelectedModel(option)
-    setSecondDropdownOpen(false)
+    setSelectedModel(option);
+    setSecondDropdownOpen(false);
+  };
 
-  }
-  
   const handleCarChange = (selectedCarValue) => {
     setSelectedCar(selectedCarValue);
 
-    const selectedCarData = carsData.find((car) => car.car === selectedCarValue);
+    const selectedCarData = carsData.find(
+      (car) => car.car === selectedCarValue
+    );
 
     if (selectedCarData) {
       setModelOptions(selectedCarData.models);
     } else {
-      setModelOptions([]); 
-   }
+      setModelOptions([]);
+    }
 
-   setFirstDropdownOpen(false)
-
-  }
+    setFirstDropdownOpen(false);
+  };
 
   const handleSearch = () => {
     if (selectedCar && selectedModel) {
-      navigate(`/search-results/${selectedCar}/${selectedModel}`)
+      navigate(`/search-results/${selectedCar}/${selectedModel}`);
     } else {
       alert("Please select both car brand and model.");
     }
   };
-  
-  
+
   useEffect(() => {
     axios
       .get("http://localhost:3011/getCars")
@@ -91,20 +88,19 @@ export default function MainPage() {
         setCars(res.data);
       })
       .catch((err) => {
-        console.log("Err", err);my
+        console.log("Err", err);
       });
   }, []);
 
   // console.log(selectedCar);
   // console.log(selectedModel);
 
-
   return (
     <div className="mainPage container">
-      <Header/>
+      <Header />
       <div className="carFilterWrapper">
         <h2>Drive the Car of your dreams</h2>
-        <div className="searchFilters">
+        <div className="searchFilters ">
           <div className="BrandFilter">
             <div
               className={`custom-selected ${firstDropdownOpen ? "open" : ""}`}
@@ -112,7 +108,6 @@ export default function MainPage() {
             >
               {selectedCar}
               <img src={arrowDown} alt="" />
-
             </div>
             {firstDropdownOpen && (
               <div className="custom-options">
@@ -126,19 +121,16 @@ export default function MainPage() {
                     {option.car}
                   </div>
                 ))}
-
               </div>
             )}
-           
           </div>
           <div className="ModelFilter">
-          <div
+            <div
               className={`custom-selected ${secondDropdownOpen ? "open" : ""}`}
               onClick={toggleSecondDropdown}
             >
               {selectedModel}
               <img src={arrowDown} alt="" />
-
             </div>
             {secondDropdownOpen && (
               <div className="custom-options">
@@ -151,17 +143,16 @@ export default function MainPage() {
                     {option}
                   </div>
                 ))}
-
               </div>
             )}
-           
           </div>
         </div>
-        <button className="searchButton" onClick={handleSearch}>Search</button>
+        <button className="searchButton" onClick={handleSearch}>
+          Search
+        </button>
       </div>
+      <h2 className="popularCars">Popular Cars</h2>
       <div className="carDeals">
-        <h2>Popular Cars</h2>
-
         {cars.map((car) => (
           <CarCard
             key={car._id}
