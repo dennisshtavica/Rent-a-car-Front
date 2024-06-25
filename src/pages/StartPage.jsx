@@ -5,6 +5,7 @@ import "../scss/layout/_layouts.scss";
 import ReusableButton from "../components/ReusableButton";
 import CarImageStart from "../assets/images/CarImageStartP.svg";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 
 export default function StartPage() {
   return (

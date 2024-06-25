@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import CarPhotos from "../assets/images/car.png";
 import "../scss/sections/_bookingPage.scss";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
 export default function BookingPage() {
@@ -13,6 +13,10 @@ export default function BookingPage() {
   const [pickUp, setPickUp] = useState("");
   const [retDate, setRetDate] = useState("");
   const [isBooked, setIsBooked] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     axios
@@ -32,7 +36,8 @@ export default function BookingPage() {
         carId: id,
         pickupLocation: location,
         pickupDate: pickUp,
-        returnDate: retDate
+        returnDate: retDate,
+        userId: user.id
     })
     .then((res) => {
         console.log('Car booked');
@@ -43,11 +48,25 @@ export default function BookingPage() {
     })
   }
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
+  
+  if (!user) {
+    return <SignIn />;
+  }
+
+
+
   return (
     <div className="booking container">
-      <Header />
+      <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
       <div className="brand">
-        <h2>
+        <h2 style={{marginBottom: '10px'}}>
           {carDetails.name} {carDetails.model}
         </h2>
         <div className="carContainer">
@@ -109,11 +128,13 @@ export default function BookingPage() {
             <div className="background-opacity">
               <div className="carBooked">
               <h1>CAR BOOKED</h1>
-              <p>See details</p>
+              <Link to="/carsRented">
+                <p>See details</p>
+              </Link>
              </div>
           </div>
           ) : (
-            <button type="submit">Book</button>
+            <button type="submit" style={{cursor: 'pointer'}}>Book</button>
           )}
         </div>
       </form>

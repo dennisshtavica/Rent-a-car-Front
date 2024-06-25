@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SignIn() {
+  const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -28,7 +29,7 @@ export default function SignIn() {
       .then((res) => {
         localStorage.setItem(
           "user",
-          JSON.stringify({ token: res.data.token, username: res.data.username })
+          JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id})
         );
         navigate("/mainPage");
         console.log("Login successful", res.data);

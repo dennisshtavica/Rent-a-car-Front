@@ -3,17 +3,9 @@ import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/layout/_header.scss";
 import {Link} from "react-router-dom";
 
-export default function Header(props) {
-    const [isOpen, setIsOpen] = useState(false);
+export default function Header({isOpen, toggleMenu, closeMenu}) {
     const user = JSON.parse(localStorage.getItem("user"));
 
-
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-    const closeMenu = () => {
-        setIsOpen(false);
-    };
     return (
         <>
             <header>
@@ -31,10 +23,14 @@ export default function Header(props) {
                 <div className="menu-content" onClick={(e) => e.stopPropagation()}>
                     <ul>
                         <li> <Link to="/mainPage">Home</Link></li>
-                        <li>Contact</li>
-                        <li>Car Rented</li>
                         <li>
-                            <Link className='profile'>{user.username}</Link>
+                            <Link to="/contactPage">Contact</Link>
+                        </li>
+                        <li>
+                            <Link to="/carsRented">Car Rented</Link>
+                        </li>
+                        <li>
+                            <Link className='profile' to="/profile">{user.username}</Link>
                         </li>
                     </ul>
                 </div>

@@ -1,0 +1,39 @@
+footer {
+    height: auto;
+    background-color: #101319;
+    padding: 62px;
+
+    .footerlinks {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+
+        a {
+            color: white;
+        }
+    }
+    .terms {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: white;
+        font-size: 14px;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    footer {
+        padding: 30px;
+    }
+    .footerlinks {
+        gap: 30px;
+        justify-content: center;
+    }
+    .terms {
+        gap: 30px;
+        justify-content: center;
+        flex-direction: column;
+    }
+}

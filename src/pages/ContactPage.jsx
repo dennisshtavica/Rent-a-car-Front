@@ -3,14 +3,23 @@ import Header from "../components/Header";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import '../scss/sections/_contactPage.scss';
+import Footer from '../components/Footer';
 
 export default function ContactPage() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
     function openMap(address) {
         const encodedAddress = encodeURIComponent(address);
         window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
     }
 
+    if (!user) {
+        return <SignIn />;
+    }
+
+
     return (
+        <div>
         <div className="contact container">
             <Header/>
             <h2>Contact Us</h2>
@@ -42,7 +51,8 @@ export default function ContactPage() {
                     <a href="mailto:contact@rentacarapp.com" className="dummy-text">contact@rentacarapp.com</a>
                 </div>
             </div>
-
+        </div>
+        <Footer/>
         </div>
     );
 }

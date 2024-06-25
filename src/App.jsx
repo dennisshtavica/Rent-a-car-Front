@@ -8,9 +8,11 @@ import BookingPage from "./pages/BookingPage";
 import ContactPage from "./pages/ContactPage";
 import SearchResults from "./pages/SearchResults";
 import CarRented from "./pages/CarRented";
+import DetyraLab from "./pages/DetyraLab";
+import ProfilePage from "./pages/ProfilePage";
 
 
-function App() {
+function App() {  
   return (
     <BrowserRouter>
       <Routes>
@@ -20,11 +22,13 @@ function App() {
         <Route path="/mainPage" element={<MainPage/>}/>
         <Route path="/bookingPage/:id" element={<BookingPage/>}/>
         <Route path="/contactPage" element={<ContactPage/>}/>
+        <Route path="/detyralab2" element={<DetyraLab/>}/>
         <Route
           path="/search-results/:carBrand/:carModel"
           element={<SearchResults/>}
         />
-        <Route path="/carRented" element={<CarRented/>}/>
+        <Route path="/carsRented" element={<CarRented/>}/>
+        <Route path="/profile" element={<ProfilePage/>}/>
       </Routes>
     </BrowserRouter>
   )

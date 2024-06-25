@@ -1,0 +1,225 @@
+.mpCtn{
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: 120px;
+.magazines {
+  padding: 30px;
+  .addPubForm {
+    padding: 30px 10px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+
+    input, select, button {
+        padding: 10px;
+        border-radius: 10px;
+        margin: 7px;        
+    }
+
+    button {
+        background-color: rgb(147, 166, 255);
+        color: white;
+    }
+
+    .flexRolesSubmit {
+      margin: 7px;
+      .dropdownDiv {
+          cursor: pointer;
+          font-size: 15px;
+          margin-bottom: 13px;
+          width: 98%;
+    
+          .dropdown-button {
+            border: 1px solid black;
+            padding: 7px 18px;
+            border-radius: 10px;
+            border: 2px solid rgba(66, 91, 94, 0.25);
+            // margin-bottom: 13px;
+    
+            &::selection {
+              background: none;
+            }
+          }
+    
+          .roleDd {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+          }
+    
+          .dropdown-list {
+            width: auto;
+            // height: 93px;
+            background-color: #151515;
+            border-radius: 15px;
+            color: white;
+            padding: 17px 20px;
+            margin-top: 5px;
+    
+            li {
+              margin-bottom: 10px;
+              cursor: pointer;
+              font-size: 15px;
+    
+              &::selection {
+                background: none;
+              }
+
+              &:last-child {
+                margin-bottom: 0px;
+              }
+            }
+            }
+          }
+
+  
+        }
+  }
+
+  table {
+    width: 100%;
+    background-color: #242528;
+    border-radius: 10px;
+    border-collapse: collapse;
+    box-shadow: 0px 4px 48px 0px rgba(0, 0, 0, 0.06);
+
+    td,
+    th {
+      text-align: left;
+    }
+
+    td {
+      color: rgb(163, 163, 163);
+    }
+    
+    thead {
+      // display: flex;
+      // justify-content: space-around;
+      color: white;
+      // padding: 10px;
+      padding: 13px 20px;
+      // display: block;
+      // width: 100%;
+
+      tr {
+        width: 100%;
+        th {
+          padding: 13px 20px;
+        }
+      }
+    }
+    
+    tbody {
+
+    .borderRows {
+      border-top: 1px solid #333333;
+      border-bottom: 1px solid #333333;
+      border-collapse: collapse;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .tdUser {
+        padding-right: 0px;
+        color: #ffffff;
+        font-family: Poppins;
+        // font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 22px; /* 129.412% */
+      }
+
+      &:hover {
+        background-color: #1b1b1b;
+        color: white;
+        transition: 0.2s ease;
+      }
+
+      td {
+        padding: 13px 20px;
+        color: #ffffff;
+        font-family: Poppins;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+      }
+
+      button {
+        background-color: transparent;
+      }
+
+      // .edit {
+      //   margin-right: 10px;
+      //   border-radius: 10px;
+      //   background: #454545;
+      //   padding: 7px 23px;
+      //   color: white;
+      //   cursor: pointer;
+      // }
+
+      // .delete {
+      //   border-radius: 10px;
+      //   background: #ff5d5d;
+      //   padding: 7px 23px;
+      //   color: white;
+      //   cursor: pointer;
+      // }
+      
+      // .flexEditDelCategories {
+      //   justify-content: end !important;
+      //   gap: 0px !important;
+      // }
+
+      // .flexEditDel {
+      //   display: flex;
+      //   justify-content: center;
+      //   align-items: center;
+      //   gap: 15px;
+
+        
+
+      //   button,
+      //   a {
+      //     cursor: pointer;
+      //     display: flex;
+      //     justify-content: center;
+      //     align-items: center;
+      //   }
+
+      //   .editPen {
+      //     margin-right: 12px;
+      //   }
+
+      //   .confirm-dialog {
+      //     margin-left: 20px;
+      //     width: 130px;
+      //     display: flex;
+      //     justify-content: space-between;
+      //     align-items: center;
+      //     .confirmDel {
+      //       background-color: transparent;
+      //       border: 1px solid #ff5d5d;
+      //       padding: 2px 5px;
+      //       border-radius: 5px;
+      //       color: #ff5d5d;
+      //     }
+
+      //     .confirmCan {
+      //       background-color: transparent;
+      //       border: 1px solid #989898;
+      //       padding: 2px 5px;
+      //       border-radius: 5px;
+      //       color: #989898;
+      //     }
+      //   }
+      // }
+    }
+  }
+
+  }
+  
+}
+}
