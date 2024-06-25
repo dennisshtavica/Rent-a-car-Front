@@ -9,6 +9,9 @@ import axios from "axios";
 export default function SearchResults() {
   const { carBrand, carModel } = useParams();
   const [searchResults, setSearchResults] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     axios
@@ -21,10 +24,24 @@ export default function SearchResults() {
       });
   }, [carBrand, carModel]);
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
+  
+  if (!user) {
+    return <SignIn />;
+  }
+
+
+
   return (
     <div className="container">
       <div>
-        <Header />
+        <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
       </div>
       <div className="flexSHeader">
         <div>

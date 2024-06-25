@@ -6,6 +6,8 @@ import Header from "../components/Header";
 import axios from "axios";
 import arrowDown from "../assets/images/arrowDown.svg";
 import { useNavigate, useParams } from "react-router-dom";
+import Footer from "../components/Footer";
+import SignIn from "./Users/SignIn";
 
 export default function MainPage() {
   //   const [selectedValue, setSelectedValue] = useState("");
@@ -16,20 +18,9 @@ export default function MainPage() {
   const [cars, setCars] = useState([]);
   const [modelOptions, setModelOptions] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const [car, setCar] = useState(null)
+  const [isOpen, setIsOpen] = useState(false);
 
-  // const {id} = useParams()
-
-  // useEffect(() => {
-  //     axios.get(`http://localhost:3011/bookingPage/${id}`)
-  //     .then((res) => {
-  //         setCar(res.data)
-  //     })
-  //     .catch((err) => {
-  //         console.log('Err', err);
-  //     })
-
-  // }, [id])
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const navigate = useNavigate();
 
@@ -38,6 +29,13 @@ export default function MainPage() {
     { car: "BMW", models: ["3", "M3"] },
     { car: "Porsche", models: ["Cayenne", "Carrera S"] },
   ];
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
 
   const toggleFirstDropdown = () => {
     setFirstDropdownOpen(!firstDropdownOpen);
@@ -95,78 +93,88 @@ export default function MainPage() {
   // console.log(selectedCar);
   // console.log(selectedModel);
 
+  if (!user) {
+    return <SignIn />;
+  }
+
   return (
-    <div className="mainPage container">
-      <Header />
-      <div className="carFilterWrapper">
-        <h2>Drive the Car of your dreams</h2>
-        <div className="searchFilters ">
-          <div className="BrandFilter">
-            <div
-              className={`custom-selected ${firstDropdownOpen ? "open" : ""}`}
-              onClick={toggleFirstDropdown}
-            >
-              {selectedCar}
-              <img src={arrowDown} alt="" />
-            </div>
-            {firstDropdownOpen && (
-              <div className="custom-options">
-                {carsData.map((option, index) => (
-                  <div
-                    key={index}
-                    className="custom-option"
-                    // onClick={() => handleCarBrand(option)}
-                    onClick={() => handleCarChange(option.car)}
-                  >
-                    {option.car}
-                  </div>
-                ))}
+    <div>
+      <div className="mainPage container">
+        <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
+        <div className="carFilterWrapper">
+          <h2>Drive the Car of your dreams</h2>
+          <div className="searchFilters ">
+            <div className={`BrandFilter ${isOpen && "setIndex"}`}>
+              <div
+                className={`custom-selected ${firstDropdownOpen ? "open" : ""}`}
+                onClick={toggleFirstDropdown}
+              >
+                {selectedCar}
+                <img src={arrowDown} alt="" />
               </div>
-            )}
-          </div>
-          <div className="ModelFilter">
-            <div
-              className={`custom-selected ${secondDropdownOpen ? "open" : ""}`}
-              onClick={toggleSecondDropdown}
-            >
-              {selectedModel}
-              <img src={arrowDown} alt="" />
+              {firstDropdownOpen && (
+                <div className="custom-options">
+                  {carsData.map((option, index) => (
+                    <div
+                      key={index}
+                      className="custom-option"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleCarChange(option.car)}
+                    >
+                      {option.car}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            {secondDropdownOpen && (
-              <div className="custom-options">
-                {modelOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className="custom-option"
-                    onClick={() => handleModel(option)}
-                  >
-                    {option}
-                  </div>
-                ))}
+            <div className={`ModelFilter ${isOpen && "setIndex"}`}>
+              <div
+                className={`custom-selected ${
+                  secondDropdownOpen ? "open" : ""
+                }`}
+                onClick={toggleSecondDropdown}
+              >
+                {selectedModel}
+                <img src={arrowDown} alt="" />
               </div>
-            )}
+              {secondDropdownOpen && (
+                <div className="custom-options">
+                  {modelOptions.map((option, index) => (
+                    <div
+                      key={index}
+                      className="custom-option"
+                      onClick={() => handleModel(option)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
+          <button className="searchButton" onClick={handleSearch}>
+            Search
+          </button>
         </div>
-        <button className="searchButton" onClick={handleSearch}>
-          Search
-        </button>
+        <h2 className="popularCars">Popular Cars</h2>
+        <div className="carDeals">
+          {cars.map((car) => (
+            <CarCard
+              key={car._id}
+              _id={car._id}
+              image={car.image}
+              name={car.name}
+              model={car.model}
+              seats={car.seats}
+              transmission={car.transmission}
+              range={car.range}
+              price={car.price}
+            />
+          ))}
+        </div>
       </div>
-      <h2 className="popularCars">Popular Cars</h2>
-      <div className="carDeals">
-        {cars.map((car) => (
-          <CarCard
-            key={car._id}
-            _id={car._id}
-            image={car.image}
-            name={car.name}
-            model={car.model}
-            seats={car.seats}
-            transmission={car.transmission}
-            range={car.range}
-            price={car.price}
-          />
-        ))}
-      </div>
+      <Footer />
     </div>
   );
 }

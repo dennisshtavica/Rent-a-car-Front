@@ -3,6 +3,10 @@
     display: none !important;
   }
 
+  .setIndex {
+    z-index: -1;
+  }
+
   .carFilterWrapper {
     h2 {
       color: #000;
