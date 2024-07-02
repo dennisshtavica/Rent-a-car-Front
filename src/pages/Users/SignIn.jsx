@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import RentAcLogo from "../../assets/images/Logo.svg";
 import "../../scss/sections/_signUp.scss";
-import SignUpHeaderTitle from "../../assets/images/SignUpTGS.svg";
+import SignInHeaderTitle from "../../assets/images/SignInTGS.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { PulseLoader } from "react-spinners";
 
 export default function SignIn() {
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState("");
+
 
   const navigate = useNavigate();
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     axios
       .post(
@@ -23,7 +29,9 @@ export default function SignIn() {
           password: password,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+          },
         }
       )
       .then((res) => {
@@ -31,24 +39,31 @@ export default function SignIn() {
           "user",
           JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id})
         );
-        navigate("/mainPage");
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/mainPage");
+        }, 1500);
         console.log("Login successful", res.data);
       })
       .catch((err) => {
         console.log("Login error", err);
+        setErrors(err.response.data.message);
       });
   };
 
   return (
     <div className="signUp container">
       <header>
-        <div className="logo">
-          <img src={RentAcLogo} alt="" />
-        </div>
+        <Link to="/">
+          <div className="logo">
+            <img src={RentAcLogo} alt="" />
+          </div>
+        </Link>
+     
       </header>
       <div className="signUpbody">
         <div className="signUpHeader">
-          <img src={SignUpHeaderTitle} alt="" />
+          <img src={SignInHeaderTitle} alt="" />
         </div>
 
         <div className="signUpWrapper">
@@ -78,7 +93,11 @@ export default function SignIn() {
               </div>
               <div className="linkWrapper">
                 <button className="signup-button" type="submit">
-                  Sign In
+                  {loading ? (
+                    <PulseLoader color="#fff" size={8} />
+                  ): (
+                    "Sign In"
+                  )}
                 </button>
                 <Link to="/signup">Dont have an account?</Link>
               </div>

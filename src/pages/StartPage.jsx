@@ -31,7 +31,9 @@ export default function StartPage() {
             </h1>
             <p>You can choose your ideal car and book it easily.</p>
             <div className="gSBtn">
-              <ReusableButton padding="9px 31px">Let’s Go</ReusableButton>
+              <Link to="/signin">
+                 <ReusableButton padding="9px 31px">Let’s Go</ReusableButton>
+              </Link>
             </div>
           </div>
         </div>

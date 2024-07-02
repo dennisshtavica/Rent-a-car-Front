@@ -21,13 +21,23 @@
                         margin-bottom: 16px;
                         font-family: Poppins;
                         background: #F6FEFF;
-                        cursor: pointer;
+                        // cursor: pointer;
                         transition: border-width 0.3s, border-color 0.3s;
 
-                        &:hover {
-                            border-width: 3px;
-                            border-color: darken(#8C8BBF, 10%);
-                        }
+                        // &:hover {
+                        //     border-width: 3px;
+                        //     border-color: darken(#8C8BBF, 10%);
+                        // }
+                    }
+
+                    span, p {
+                        color: #f77;
+                        font-family: Poppins;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: normal;
+                        margin-bottom: 8px;
                     }
                 }
 

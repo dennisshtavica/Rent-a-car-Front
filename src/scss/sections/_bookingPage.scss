@@ -66,9 +66,10 @@
     }
     input {
       background: #f6feff;
+      // width: 20%;
       border-radius: 13px;
       border: 2px solid #8080fd;
-      padding: 15px 60px 15px 10px;
+      padding: 15px;
     }
   }
   .pickupDate {
@@ -94,9 +95,10 @@
         padding-bottom: 10px;
       }
       input {
+        // width: 20%;
         border-radius: 13px;
         border: 2px solid #8080fd;
-        padding: 14px 70px 14px 22px;
+        padding: 14px;
         margin-bottom: 10px;
       }
     }

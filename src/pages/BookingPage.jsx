@@ -4,6 +4,7 @@ import CarPhotos from "../assets/images/car.png";
 import "../scss/sections/_bookingPage.scss";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { PulseLoader } from "react-spinners";
 
 export default function BookingPage() {
   const { id } = useParams();
@@ -12,15 +13,19 @@ export default function BookingPage() {
   const [location, setLocation] = useState("");
   const [pickUp, setPickUp] = useState("");
   const [retDate, setRetDate] = useState("");
-  const [isBooked, setIsBooked] = useState(false)
+  const [isBooked, setIsBooked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3011/bookingPage/${id}`)
+      .get(`http://localhost:3011/bookingPage/${id}`, {
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
+      })
       .then((res) => {
         setCarDetails(res.data);
       })
@@ -30,23 +35,36 @@ export default function BookingPage() {
   }, [id]);
 
   const bookCar = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true);
 
-    axios.post('http://localhost:3011/bookings', {
-        carId: id,
-        pickupLocation: location,
-        pickupDate: pickUp,
-        returnDate: retDate,
-        userId: user.id
-    })
-    .then((res) => {
-        console.log('Car booked');
-        setIsBooked(true)
-    })
-    .catch((err) => {
-        console.log('Err', err);
-    })
-  }
+    axios
+      .post(
+        "http://localhost:3011/bookings",
+        {
+          carId: id,
+          pickupLocation: location,
+          pickupDate: pickUp,
+          returnDate: retDate,
+          userId: user.id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + user.token,
+          },
+        },
+      )
+      .then((res) => {
+        console.log("Car booked");
+        setTimeout(() => {
+          setLoading(false);
+          setIsBooked(true);
+        }, 1500);
+      })
+      .catch((err) => {
+        console.log("Err", err);
+      });
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -55,18 +73,15 @@ export default function BookingPage() {
     setIsOpen(false);
   };
 
-  
   if (!user) {
     return <SignIn />;
   }
-
-
 
   return (
     <div className="booking container">
       <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
       <div className="brand">
-        <h2 style={{marginBottom: '10px'}}>
+        <h2 style={{ marginBottom: "10px" }}>
           {carDetails.name} {carDetails.model}
         </h2>
         <div className="carContainer">
@@ -88,7 +103,7 @@ export default function BookingPage() {
       <form action="" onSubmit={bookCar}>
         <div className="pickupPlace">
           <h4>Pickup Location</h4>
-          <input 
+          <input
             type="text"
             placeholder="Enter your city and street address"
             value={location}
@@ -127,14 +142,16 @@ export default function BookingPage() {
           {isBooked ? (
             <div className="background-opacity">
               <div className="carBooked">
-              <h1>CAR BOOKED</h1>
-              <Link to="/carsRented">
-                <p>See details</p>
-              </Link>
-             </div>
-          </div>
+                <h1>CAR BOOKED</h1>
+                <Link to="/carsRented">
+                  <p>See details</p>
+                </Link>
+              </div>
+            </div>
           ) : (
-            <button type="submit" style={{cursor: 'pointer'}}>Book</button>
+            <button type="submit" style={{ cursor: "pointer" }}>
+              {loading ? <PulseLoader color="#fff" size={8} /> : "Book"}
+            </button>
           )}
         </div>
       </form>

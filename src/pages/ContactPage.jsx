@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Header from "../components/Header";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,8 @@ import '../scss/sections/_contactPage.scss';
 import Footer from '../components/Footer';
 
 export default function ContactPage() {
+      const [isOpen, setIsOpen] = useState(false);
+
     const user = JSON.parse(localStorage.getItem("user"));
 
     function openMap(address) {
@@ -17,11 +19,19 @@ export default function ContactPage() {
         return <SignIn />;
     }
 
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+      };
+      const closeMenu = () => {
+        setIsOpen(false);
+      };
+    
+
 
     return (
         <div>
         <div className="contact container">
-            <Header/>
+            <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu}/>
             <h2>Contact Us</h2>
             <div className="section">
                 <div className="circle">

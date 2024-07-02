@@ -15,7 +15,13 @@ export default function SearchResults() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3011/search-results/${carBrand}/${carModel}`)
+      .get(`http://localhost:3011/search-results/${carBrand}/${carModel}`, 
+        {
+          headers: {
+            Authorization: "Bearer " + user.token,
+          },
+        }
+      )
       .then((res) => {
         setSearchResults(res.data.results);
       })
