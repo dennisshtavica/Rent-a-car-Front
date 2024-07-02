@@ -79,9 +79,39 @@ export default function MainPage() {
     }
   };
 
+  const handleOutsideClick = (e) => {
+    if (firstDropdownOpen && !e.target.closest(".BrandFilter")) {
+      setFirstDropdownOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    }
+  }, [firstDropdownOpen]);
+
+  const handleOutsideClick2 = (e) => {
+    if (secondDropdownOpen && !e.target.closest(".ModelFilter")) {
+      setSecondDropdownOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick2);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick2);
+    }
+  }, [secondDropdownOpen]);
+
   useEffect(() => {
     axios
-      .get("http://localhost:3011/getCars")
+      .get("http://localhost:3011/getCars", {
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
+      })
       .then((res) => {
         setCars(res.data);
       })
@@ -90,8 +120,6 @@ export default function MainPage() {
       });
   }, []);
 
-  // console.log(selectedCar);
-  // console.log(selectedModel);
 
   if (!user) {
     return <SignIn />;
