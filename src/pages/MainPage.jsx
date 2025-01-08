@@ -8,42 +8,56 @@ import arrowDown from "../assets/images/arrowDown.svg";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import SignIn from "./Users/SignIn";
+import "react-day-picker/style.css";
+import RentalDateModal from "../components/Modal/RentalDateModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleRentalDateModal,
+  hideRentalDateModal,
+} from "../app/slices/rentalDateModalSlice";
+import { format, isValid } from 'date-fns';
+
+import { se } from "react-day-picker/locale";
 
 export default function MainPage() {
-  const [firstDropdownOpen, setFirstDropdownOpen] = useState(false);
-  const [secondDropdownOpen, setSecondDropdownOpen] = useState(false);
-  const [selectedCar, setSelectedCar] = useState("All Brands");
-  const [selectedModel, setSelectedModel] = useState("All Models");
-  const [allCars, setAllCars] = useState([]);
-  const [filteredCars, setFilteredCars] = useState([]);
-  const [carBrands, setCarBrands] = useState([]);
-  const [modelOptions, setModelOptions] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const { rentalDate } = useSelector((state) => state.booking);
+
+
+  const dispatch = useDispatch();
+  const isRentalDateModalV = useSelector(
+    (state) => state.modal.isRentalDateModalV
+  );
 
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-        .get("http://localhost:3011/getCars", {
-          headers: {
-            Authorization: "Bearer " + user.token,
-          },
-        })
-        .then((res) => {
-          const sortedCars = res.data.sort((a, b) => a.name.localeCompare(b.name));
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3011/getCars", {
+  //       headers: {
+  //         Authorization: "Bearer " + user.token,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       const sortedCars = res.data.sort((a, b) =>
+  //         a.name.localeCompare(b.name)
+  //       );
 
-          setAllCars(sortedCars);
-          setFilteredCars(sortedCars);
+  //       setAllCars(sortedCars);
+  //       setFilteredCars(sortedCars);
 
-          const brands = ["All Brands", ...new Set(sortedCars.map((car) => car.name))];
-          setCarBrands(brands);
-        })
-        .catch((err) => {
-          console.log("Error fetching cars", err);
-        });
-  }, []);
+  //       const brands = [
+  //         "All Brands",
+  //         ...new Set(sortedCars.map((car) => car.name)),
+  //       ];
+  //       setCarBrands(brands);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Error fetching cars", err);
+  //     });
+  // }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -53,157 +67,132 @@ export default function MainPage() {
     setIsOpen(false);
   };
 
-  const toggleFirstDropdown = () => {
-    setFirstDropdownOpen(!firstDropdownOpen);
+  const formatDate = (date) => {
+    if (!date) return null;
+    return date.toLocaleString('en-US', {
+      weekday: 'short',  
+      month: 'short',    
+      day: '2-digit',    
+      hour: '2-digit',   
+      minute: '2-digit', 
+      hour12: true,      
+    });
+  };
+  
+  const formattedRentalDate = rentalDate.from && rentalDate.to 
+    ? `${formatDate(rentalDate.from)} - ${formatDate(rentalDate.to)}`
+    : rentalDate.from
+      ? formatDate(rentalDate.from)
+      : 'Choose date';  
+
+  const handleToggleRetalDateModal = (step) => {
+    dispatch(toggleRentalDateModal());
+    // setSelectedDate(date);
   };
 
-  const toggleSecondDropdown = () => {
-    setSecondDropdownOpen(!secondDropdownOpen);
-  };
 
-  const handleCarChange = (selectedCarValue) => {
-    setSelectedCar(selectedCarValue);
 
-    if (selectedCarValue === "All Brands") {
-      setModelOptions(["All Models"]);
-      setFilteredCars(allCars);
-    } else {
-      const models = ["All Models", ...new Set(allCars.filter(car => car.name === selectedCarValue).map(car => car.model))];
-      setModelOptions(models);
 
-      setFilteredCars(allCars.filter((car) => car.name === selectedCarValue));
-    }
-
-    setFirstDropdownOpen(false);
-  };
-
-  const handleModel = (option) => {
-    setSelectedModel(option);
-    setSecondDropdownOpen(false);
-  };
-
-  const handleSearch = () => {
-    let filtered = allCars;
-
-    if (selectedCar !== "All Brands") {
-      filtered = filtered.filter((car) => car.name === selectedCar);
-    }
-
-    if (selectedModel !== "All Models" && selectedModel !== "Car Model") {
-      filtered = filtered.filter((car) => car.model === selectedModel);
-    }
-
-    setFilteredCars(filtered);
-  };
-
-  const handleOutsideClick = (e) => {
-    if (firstDropdownOpen && !e.target.closest(".BrandFilter")) {
-      setFirstDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [firstDropdownOpen]);
-
-  const handleOutsideClick2 = (e) => {
-    if (secondDropdownOpen && !e.target.closest(".ModelFilter")) {
-      setSecondDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleOutsideClick2);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick2);
-    };
-  }, [secondDropdownOpen]);
 
   if (!user) {
     return <SignIn />;
   }
 
   return (
-      <div>
-        <div className="mainPage container">
-          <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
-          <div className="carFilterWrapper">
-            <h2>Drive the Car of your dreams</h2>
-            <div className="searchFilters ">
-              <div className={`BrandFilter ${isOpen && "setIndex"}`}>
-                <div
-                    className={`custom-selected ${firstDropdownOpen ? "open" : ""}`}
-                    onClick={toggleFirstDropdown}
-                >
-                  {selectedCar}
-                  <img src={arrowDown} alt="" />
-                </div>
-                {firstDropdownOpen && (
-                    <div className="custom-options">
-                      {carBrands.map((brand, index) => (
-                          <div
-                              key={index}
-                              className="custom-option"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => handleCarChange(brand)}
-                          >
-                            {brand}
-                          </div>
-                      ))}
-                    </div>
-                )}
+    <div>
+      <div className="mainPage container">
+        <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
+      </div>
+
+        <div className="bookingSteps">
+            <div className="rentalInfo item1">
+              <div className="stepNum">
+                <h1>1</h1>
               </div>
-              <div className={`ModelFilter ${isOpen && "setIndex"}`}>
-                <div
-                    className={`custom-selected ${
-                        secondDropdownOpen ? "open" : ""
-                    }`}
-                    onClick={toggleSecondDropdown}
-                >
-                  {selectedModel}
-                  <img src={arrowDown} alt="" />
+              <div className="stepAndChoose">
+                <div className="stepText">
+                  <p>RENTAL INFORMATION DATE</p>
                 </div>
-                {secondDropdownOpen && (
-                    <div className="custom-options">
-                      {modelOptions.map((option, index) => (
-                          <div
-                              key={index}
-                              className="custom-option"
-                              onClick={() => handleModel(option)}
-                              style={{ cursor: "pointer" }}
-                          >
-                            {option}
-                          </div>
-                      ))}
-                    </div>
-                )}
+                <div className="stepChoose">
+                  <p
+                    onClick={handleToggleRetalDateModal}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {formattedRentalDate}
+                  </p>
+                </div>
               </div>
             </div>
-            <button className="searchButton" onClick={handleSearch}>
-              Search
-            </button>
+          
+       
+
+
+
+          <div className="rentalInfo item2">
+            <div className="stepNum">
+              <h1>2</h1>
+            </div>
+            <div className="stepAndChoose">
+              <div className="stepText">
+                <p>PICK UP LOCATION</p>
+              </div>
+              <div className="stepChoose">
+                <p>Choose</p>
+              </div>
+            </div>
           </div>
-          <h2 className="popularCars">Popular Cars</h2>
-          <div className="carDeals">
-            {filteredCars.map((car) => (
-                <CarCard
-                    key={car._id}
-                    _id={car._id}
-                    image={car.image}
-                    name={car.name}
-                    model={car.model}
-                    seats={car.seats}
-                    transmission={car.transmission}
-                    range={car.range}
-                    price={car.price}
-                />
-            ))}
+
+          <div className="rentalInfo item3">
+            <div className="stepNum">
+              <h1>3</h1>
+            </div>
+            <div className="stepAndChoose">
+              <div className="stepText">
+                <p>RETURN LOCATION</p>
+              </div>
+              <div className="stepChoose">
+                <p>Choose</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <Footer />
+
+          <div className="rentalInfo item4">
+            <div className="stepNum">
+              <h1>4</h1>
+            </div>
+            <div className="stepAndChoose">
+              <div className="stepText">
+                <p>VEHICLE</p>
+              </div>
+              <div className="stepChoose">
+                <p>Choose</p>
+              </div>
+            </div>
+          </div>
+          <div className="rentalInfo item5">
+            <div className="stepNum">
+              <h1>5</h1>
+            </div>
+            <div className="stepAndChoose">
+              <div className="stepText">
+                <p>TOTAL</p>
+              </div>
+              <div className="stepChoose">
+                <p>Choose</p>
+              </div>
+            </div>
+          </div>
+        
       </div>
+      
+      {isRentalDateModalV &&  (
+              <div className="modalWrapper modal1">
+                <RentalDateModal onConfirm={handleToggleRetalDateModal} />
+              </div>
+            )}
+
+
+      {/* <Footer /> */}
+    </div>
   );
 }

@@ -1,0 +1,30 @@
+.rentalDateModal {
+    width: auto;
+    height: auto;
+    position: absolute;
+    margin-top: 138px;
+    margin-left: 20px;
+    // position: fixed;
+    // top: 40%;
+    // left: 11%;
+    // transform: translate(-50%, -50%);
+    z-index: 100;
+    overflow: hidden;
+    background-color: white;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(136, 134, 253, 0.65);
+
+    
+    .dateClose {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+
+        h1 {
+            font-size: 24px;
+            // margin-bottom: 20px;
+            font-weight: 600;
+        }
+    }
+}
