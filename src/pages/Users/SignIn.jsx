@@ -37,7 +37,7 @@ export default function SignIn() {
       .then((res) => {
         localStorage.setItem(
           "user",
-          JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id})
+          JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id, role_id: res.data.role_id })
         );
         setTimeout(() => {
           setLoading(false);

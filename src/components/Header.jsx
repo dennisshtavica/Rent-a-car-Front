@@ -4,6 +4,7 @@ import "../scss/layout/_header.scss";
 import {Link} from "react-router-dom";
 import manageBCar from "../assets/images/managebookingscar.svg"
 import closeIcon from "../assets/images/close.png";
+import userLogout from "../assets/images/userlogout.svg";
 
 export default function Header({isOpen, toggleMenu, closeMenu}) {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -40,7 +41,15 @@ export default function Header({isOpen, toggleMenu, closeMenu}) {
                             <Link to="/carsRented">Car Rented</Link>
                         </li>
                         <li>
-                            <Link className='profile' to="/profile">{user.username}</Link>
+                            {user ? 
+                                <Link className='profile' to="/profile">{user.username}</Link>
+                                : (
+                                    <div className='loginLink'>
+                                        <img src={userLogout} alt="" />
+                                        <Link to="/signIn">Login</Link>
+                                    </div>
+                            )
+                            }
                         </li>
                     </ul>
                 </div>

@@ -7,6 +7,7 @@ import { PulseLoader } from "react-spinners";
 import axios from "axios";
 import UpdateProfileModal from "../components/UpdateProfileModal";
 import "../scss/sections/_profilePage.scss";
+import SignIn from "./Users/SignIn";
 
 export default function ProfilePage() {
   const [isOpen, setIsOpen] = useState(false);

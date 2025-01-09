@@ -10,6 +10,7 @@ import SearchResults from "./pages/SearchResults";
 import CarRented from "./pages/CarRented";
 import DetyraLab from "./pages/DetyraLab";
 import ProfilePage from "./pages/ProfilePage";
+import Error404 from "./pages/Error404";
 
 
 function App() {  
@@ -29,6 +30,9 @@ function App() {
         />
         <Route path="/carsRented" element={<CarRented/>}/>
         <Route path="/profile" element={<ProfilePage/>}/>
+
+        <Route path="*" element={<Error404 />} />
+
       </Routes>
     </BrowserRouter>
   )

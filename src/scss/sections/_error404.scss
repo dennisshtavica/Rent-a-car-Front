@@ -1,0 +1,35 @@
+.errorCtn {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-60%, -50%);
+  
+    h1 {
+      color: #000000;
+      font-family: Poppins;
+      font-size: 50px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  
+    p {
+      color: #000000;
+      font-family: Poppins;
+      font-size: 25px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+  
+    a {
+      color: #f50;
+      font-family: Poppins;
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      border-bottom: 1px solid #f50;
+    }
+  }
+  

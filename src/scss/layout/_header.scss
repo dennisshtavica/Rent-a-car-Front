@@ -72,6 +72,11 @@ header {
       .menu-content {
         padding: 0;
 
+        .loginLink {
+          display: flex;
+          gap: 5px;
+        }
+
         .closeIcon {
           display: none;
         }
