@@ -12,6 +12,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(null);
@@ -29,12 +30,14 @@ export default function SignUp() {
           username: username,
           email: email,
           password: password,
+          phone_number: phoneNumber,
         }
       )
       .then((res) => {
         setUsername("");
         setEmail("");
         setPassword("");
+        setPhoneNumber("");
         setTimeout(() => {
           setLoading(false);
         },
@@ -108,6 +111,18 @@ export default function SignUp() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <p>{(formSubmitted && password === '' ? 'Password is required' : '') || (password.length > 8 && !passwordError ? "" : passwordError)}</p> 
+              </div>
+              <div className="inputGroup">
+                <input
+                  className="signinInput"
+                  type="text"
+                  name="phone_number"
+                  // required
+                  placeholder="Enter your phone number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                {/* <p>{(formSubmitted && password === '' ? 'Password is required' : '') || (password.length > 8 && !passwordError ? "" : passwordError)}</p>  */}
               </div>
               <div className="linkWrapper">
                 <button className="signup-button" type="submit">

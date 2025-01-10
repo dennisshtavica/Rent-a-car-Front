@@ -25,6 +25,7 @@ export default function MainPage() {
   const { rentalDate } = useSelector((state) => state.booking);
 
 
+
   const dispatch = useDispatch();
   const isRentalDateModalV = useSelector(
     (state) => state.modal.isRentalDateModalV
@@ -89,7 +90,6 @@ export default function MainPage() {
     dispatch(toggleRentalDateModal());
     // setSelectedDate(date);
   };
-
 
 
 
