@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isRentalDateModalV: false,
+    isPickupLocationModalV: false,
 }
 
 const rentalDateModalSlice = createSlice({
@@ -17,9 +18,12 @@ const rentalDateModalSlice = createSlice({
           toggleRentalDateModal: (state) => {
             state.isRentalDateModalV = !state.isRentalDateModalV;
           },
+          togglePickupLocationModal: (state) => {
+            state.isPickupLocationModalV = !state.isPickupLocationModalV;
+          },
     },
 })
 
-export const { showRentalDateModal, hideRentalDateModal, toggleRentalDateModal } = rentalDateModalSlice.actions;
+export const { showRentalDateModal, hideRentalDateModal, toggleRentalDateModal, togglePickupLocationModal } = rentalDateModalSlice.actions;
 
 export default rentalDateModalSlice.reducer;

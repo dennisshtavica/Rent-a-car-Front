@@ -10,25 +10,28 @@ import Footer from "../components/Footer";
 import SignIn from "./Users/SignIn";
 import "react-day-picker/style.css";
 import RentalDateModal from "../components/Modal/RentalDateModal";
+import PickUpLocationModal from "../components/Modal/PickUpLocationModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleRentalDateModal,
-  hideRentalDateModal,
+  togglePickupLocationModal,
 } from "../app/slices/rentalDateModalSlice";
-import { format, isValid } from 'date-fns';
+import { format, isValid } from "date-fns";
 
 import { se } from "react-day-picker/locale";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
   const { rentalDate } = useSelector((state) => state.booking);
-
-
+  const { pickupLocation } = useSelector((state) => state.booking);
 
   const dispatch = useDispatch();
   const isRentalDateModalV = useSelector(
     (state) => state.modal.isRentalDateModalV
+  );
+
+  const isPickupLocationModalV = useSelector(
+    (state) => state.modal.isPickupLocationModalV
   );
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -70,29 +73,31 @@ export default function MainPage() {
 
   const formatDate = (date) => {
     if (!date) return null;
-    return date.toLocaleString('en-US', {
-      weekday: 'short',  
-      month: 'short',    
-      day: '2-digit',    
-      hour: '2-digit',   
-      minute: '2-digit', 
-      hour12: true,      
+    return date.toLocaleString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
-  
-  const formattedRentalDate = rentalDate.from && rentalDate.to 
-    ? `${formatDate(rentalDate.from)} - ${formatDate(rentalDate.to)}`
-    : rentalDate.from
+
+  const formattedRentalDate =
+    rentalDate.from && rentalDate.to
+      ? `${formatDate(rentalDate.from)} - ${formatDate(rentalDate.to)}`
+      : rentalDate.from
       ? formatDate(rentalDate.from)
-      : 'Choose date';  
+      : "Choose date";
 
   const handleToggleRetalDateModal = (step) => {
     dispatch(toggleRentalDateModal());
     // setSelectedDate(date);
   };
 
-
-
+  const handleTogglePickupLocationModal = () => {
+    dispatch(togglePickupLocationModal());
+  };
 
   if (!user) {
     return <SignIn />;
@@ -104,93 +109,98 @@ export default function MainPage() {
         <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
       </div>
 
-        <div className="bookingSteps">
-            <div className="rentalInfo item1">
-              <div className="stepNum">
-                <h1>1</h1>
-              </div>
-              <div className="stepAndChoose">
-                <div className="stepText">
-                  <p>RENTAL INFORMATION DATE</p>
-                </div>
-                <div className="stepChoose">
-                  <p
-                    onClick={handleToggleRetalDateModal}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {formattedRentalDate}
-                  </p>
-                </div>
-              </div>
+      <div className="bookingSteps">
+        <div className="rentalInfo item1">
+          <div className="stepNum">
+            <h1>1</h1>
+          </div>
+          <div className="stepAndChoose">
+            <div className="stepText">
+              <p>RENTAL INFORMATION DATE</p>
             </div>
-          
-       
-
-
-
-          <div className="rentalInfo item2">
-            <div className="stepNum">
-              <h1>2</h1>
-            </div>
-            <div className="stepAndChoose">
-              <div className="stepText">
-                <p>PICK UP LOCATION</p>
-              </div>
-              <div className="stepChoose">
-                <p>Choose</p>
-              </div>
+            <div className="stepChoose">
+              <p
+                onClick={handleToggleRetalDateModal}
+                style={{ cursor: "pointer" }}
+              >
+                {formattedRentalDate}
+              </p>
             </div>
           </div>
+        </div>
 
-          <div className="rentalInfo item3">
-            <div className="stepNum">
-              <h1>3</h1>
+        <div className="rentalInfo item2">
+          <div className="stepNum">
+            <h1>2</h1>
+          </div>
+          <div className="stepAndChoose">
+            <div className="stepText">
+              <p>PICK UP LOCATION</p>
             </div>
-            <div className="stepAndChoose">
-              <div className="stepText">
-                <p>RETURN LOCATION</p>
-              </div>
-              <div className="stepChoose">
-                <p>Choose</p>
-              </div>
+            <div className="stepChoose">
+              <p
+                onClick={handleTogglePickupLocationModal}
+                style={{ cursor: "pointer" }}
+              >
+                Choose
+              </p>
             </div>
           </div>
+        </div>
 
-          <div className="rentalInfo item4">
-            <div className="stepNum">
-              <h1>4</h1>
+        <div className="rentalInfo item3">
+          <div className="stepNum">
+            <h1>3</h1>
+          </div>
+          <div className="stepAndChoose">
+            <div className="stepText">
+              <p>RETURN LOCATION</p>
             </div>
-            <div className="stepAndChoose">
-              <div className="stepText">
-                <p>VEHICLE</p>
-              </div>
-              <div className="stepChoose">
-                <p>Choose</p>
-              </div>
+            <div className="stepChoose">
+              <p>Choose</p>
             </div>
           </div>
-          <div className="rentalInfo item5">
-            <div className="stepNum">
-              <h1>5</h1>
+        </div>
+
+        <div className="rentalInfo item4">
+          <div className="stepNum">
+            <h1>4</h1>
+          </div>
+          <div className="stepAndChoose">
+            <div className="stepText">
+              <p>VEHICLE</p>
             </div>
-            <div className="stepAndChoose">
-              <div className="stepText">
-                <p>TOTAL</p>
-              </div>
-              <div className="stepChoose">
-                <p>Choose</p>
-              </div>
+            <div className="stepChoose">
+              <p>Choose</p>
             </div>
           </div>
-        
+        </div>
+        <div className="rentalInfo item5">
+          <div className="stepNum">
+            <h1>5</h1>
+          </div>
+          <div className="stepAndChoose">
+            <div className="stepText">
+              <p>TOTAL</p>
+            </div>
+            <div className="stepChoose">
+              <p>Choose</p>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      {isRentalDateModalV &&  (
-              <div className="modalWrapper modal1">
-                <RentalDateModal onConfirm={handleToggleRetalDateModal} />
-              </div>
-            )}
 
+      {isRentalDateModalV && (
+        <div className="modalWrapper modal1">
+          <RentalDateModal onConfirm={handleToggleRetalDateModal} />
+        </div>
+      )}
+
+      {isPickupLocationModalV && (
+        <div className="modalWrapper modal2">
+          <PickUpLocationModal onConfirm={handleTogglePickupLocationModal} />
+        </div>
+      )}
 
       {/* <Footer /> */}
     </div>
