@@ -13,14 +13,16 @@ const Backdrop = (props) => {
 
 const ModalOverlay = (props) => {
   return (
-    <div className="rentalDateModal">
+    <div className="rentalDateModal pickUpLocationModal">
       <div className="dateClose">
-        <h1>Choose date</h1>
+        <h1>Choose Pick up Location</h1>
         <img src={xIcon} alt="close" onClick={props.onConfirm} />
       </div>
-      <div>
-        <input type="text" />
+      <div className="locationInput">
+        <img src={pinPoint} alt="pinpoint" className="pinpoint-icon" />
+        <input type="text" placeholder="Type your location"/>
       </div>
+      <button className="saveBtn">Save</button>
     </div>
   );
 };

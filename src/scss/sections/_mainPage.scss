@@ -22,6 +22,9 @@
       font-size: 20px;
       h1 {
         font-weight: 600;
+        background: linear-gradient(180deg, #8080FD 0%, #FFFFFF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
 
