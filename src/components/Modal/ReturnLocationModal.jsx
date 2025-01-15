@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import "../../scss/components/_rentalDateModal.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { setPickupLocation } from "../../app/slices/bookingSlice";
+import { setReturnLocation } from "../../app/slices/bookingSlice";
 import pinPoint from "../../assets/images/pinpoint.svg";
 import xIcon from "../../assets/images/xIcon.svg";
 
@@ -20,7 +20,7 @@ const ModalOverlay = (props) => {
   }
 
   const handleSave = () => {
-    dispatch(setPickupLocation(location)); 
+    dispatch(setReturnLocation(location)); 
     props.onConfirm(); 
   };
 
@@ -49,7 +49,7 @@ const ModalOverlay = (props) => {
 };
 
 
-export default function PickUpLocationModal(props) {
+export default function ReturnLocationModal(props) {
     return (
         <>
             {ReactDOM.createPortal(<Backdrop onConfirm={props.onConfirm} />, document.getElementById("backdrop-root"))}

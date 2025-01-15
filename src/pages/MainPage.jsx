@@ -22,8 +22,7 @@ import { se } from "react-day-picker/locale";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const { rentalDate } = useSelector((state) => state.booking);
-  const { pickupLocation } = useSelector((state) => state.booking);
+  const { rentalDate, pickupLocation } = useSelector((state) => state.booking);
 
   const dispatch = useDispatch();
   const isRentalDateModalV = useSelector(
@@ -142,7 +141,7 @@ export default function MainPage() {
                 onClick={handleTogglePickupLocationModal}
                 style={{ cursor: "pointer" }}
               >
-                Choose
+                {pickupLocation || "Choose"}
               </p>
             </div>
           </div>
