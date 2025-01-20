@@ -10,19 +10,24 @@ import SignIn from "./Users/SignIn";
 import "react-day-picker/style.css";
 import RentalDateModal from "../components/Modal/RentalDateModal";
 import PickUpLocationModal from "../components/Modal/PickUpLocationModal";
+import ReturnLocationModal from "../components/Modal/ReturnLocationModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleRentalDateModal,
   togglePickupLocationModal,
+  toggleReturnLocationModal,
 } from "../app/slices/rentalDateModalSlice";
 import { format, isValid } from "date-fns";
 import FilterCars from "../components/FilterCars";
 import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
+import Filters from "../components/Filters";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const { rentalDate, pickupLocation } = useSelector((state) => state.booking);
+  const { rentalDate, pickupLocation, returnLocation } = useSelector(
+    (state) => state.booking
+  );
 
   const dispatch = useDispatch();
   const isRentalDateModalV = useSelector(
@@ -31,6 +36,10 @@ export default function MainPage() {
 
   const isPickupLocationModalV = useSelector(
     (state) => state.modal.isPickupLocationModalV
+  );
+
+  const isReturnLocationModalV = useSelector(
+    (state) => state.modal.isReturnLocationModalV
   );
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -98,6 +107,10 @@ export default function MainPage() {
     dispatch(togglePickupLocationModal());
   };
 
+  const handleToggleReturnLocationModal = () => {
+    dispatch(toggleReturnLocationModal());
+  };
+
   if (!user) {
     return <SignIn />;
   }
@@ -156,7 +169,12 @@ export default function MainPage() {
               <p>RETURN LOCATION</p>
             </div>
             <div className="stepChoose">
-              <p>Choose</p>
+              <p
+                onClick={handleToggleReturnLocationModal}
+                style={{ cursor: "pointer" }}
+              >
+                {returnLocation || "Choose"}
+              </p>
             </div>
           </div>
         </div>
@@ -186,8 +204,11 @@ export default function MainPage() {
               <p>Choose</p>
             </div>
           </div>
+          <button className="bookBtn">Book</button>
         </div>
       </div>
+
+      <Filters/>
 
       {isRentalDateModalV && (
         <div className="modalWrapper modal1">
@@ -200,11 +221,21 @@ export default function MainPage() {
           <PickUpLocationModal onConfirm={handleTogglePickupLocationModal} />
         </div>
       )}
+
+      {isReturnLocationModalV && (
+        <div className="modalWrapper modal2">
+          <ReturnLocationModal onConfirm={handleToggleReturnLocationModal} />
+        </div>
+      )}
+      
       <div className="carGridContainer">
         <FilterCars />
         <CarGrid />
       </div>
       <Footer />
+
+
+      {/* <Footer /> */}
     </div>
   );
 }

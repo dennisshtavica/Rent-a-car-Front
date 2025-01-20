@@ -14,6 +14,17 @@
     border-right: 2px solid rgba(0, 0, 0, 0.11);
     padding: 11px 5px 11px 0px;
 
+    .bookBtn {
+      margin-left: 100px;
+      width: 98px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: black;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
     &:last-child {
       border-right: none;
     }
@@ -40,6 +51,10 @@
       p {
         font-size: 14px;
         font-weight: 600;
+
+        &:hover {
+          color: rgba(150, 75, 168, 0.377);
+        }
       }
     }
   }
@@ -85,6 +100,11 @@
 
     .item5 {
       padding: 11px 18px;
+    }
+
+    .bookBtn {
+      margin-left: 10px !important;
+      width: 80px !important;
     }
   }
 }

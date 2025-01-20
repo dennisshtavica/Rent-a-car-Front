@@ -26,9 +26,9 @@ const ModalOverlay = (props) => {
 
 
   return (
-    <div className="rentalDateModal pickUpLocationModal">
+    <div className="rentalDateModal returnLocationModal">
       <div className="dateClose">
-        <h1>Choose Pick up Location</h1>
+        <h1>Choose Return Location</h1>
         <img src={xIcon} alt="close" onClick={props.onConfirm} />
       </div>
       <div className="locationInput">
