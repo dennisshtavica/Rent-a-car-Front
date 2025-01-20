@@ -88,3 +88,46 @@
     }
   }
 }
+
+.carGridContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  margin: 0 auto;
+  
+  // Style for the FilterCars component
+  > :first-child {
+    background: #FFFFFF;
+    border-radius: 8px;
+    height: fit-content;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  // Style for the CarGrid component
+  > :last-child {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .carGridContainer {
+    grid-template-columns: 240px 1fr;
+    padding: 20px 20px 20px 0;
+    gap: 20px;
+
+    > :first-child {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .carGridContainer {
+    grid-template-columns: 1fr;
+    padding: 16px;
+
+    > :first-child {
+      margin-left: 0;
+    }
+  }
+}

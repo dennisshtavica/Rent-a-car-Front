@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/sections/_mainPage.scss";
-import CarCard from "../components/CarCard";
 import Header from "../components/Header";
 import axios from "axios";
 import arrowDown from "../assets/images/arrowDown.svg";
@@ -17,7 +16,8 @@ import {
   togglePickupLocationModal,
 } from "../app/slices/rentalDateModalSlice";
 import { format, isValid } from "date-fns";
-
+import FilterCars from "../components/FilterCars";
+import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
 
 export default function MainPage() {
@@ -200,8 +200,11 @@ export default function MainPage() {
           <PickUpLocationModal onConfirm={handleTogglePickupLocationModal} />
         </div>
       )}
-
-      {/* <Footer /> */}
+      <div className="carGridContainer">
+        <FilterCars />
+        <CarGrid />
+      </div>
+      <Footer />
     </div>
   );
 }

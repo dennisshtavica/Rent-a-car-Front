@@ -15,7 +15,7 @@ export default function Header({isOpen, toggleMenu, closeMenu}) {
                 <div className="logo">
                     <Link to="/mainPage" className='logoLink'>
                         <img src={RentAcLogo} alt="" />
-                        <span>Rentify</span>
+                        <span><span className="drive">Drive</span><span className="hub">hub</span></span>
                     </Link>
                 </div>
                 <div className={`burgerBar ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
