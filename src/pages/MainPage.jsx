@@ -21,7 +21,6 @@ import { format, isValid } from "date-fns";
 import FilterCars from "../components/FilterCars";
 import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
-import Filters from "../components/Filters";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -194,7 +193,6 @@ export default function MainPage() {
         </div>
       </div>
 
-      <Filters/>
 
       {isRentalDateModalV && (
         <div className="modalWrapper modal1">

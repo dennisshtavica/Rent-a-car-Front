@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../scss/components/_filterCars.scss';
+import rightArrow from '../assets/images/right-arrow.svg';
+import filterLogo from '../assets/images/filterLogo.svg';
 
 const FilterCars = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
@@ -86,7 +88,10 @@ const FilterCars = ({ onFilterChange }) => {
   return (
     <div className="filter-container">
       <div className="filter-header">
-        <h2>Filter</h2>
+        <div className='filter-title'>
+          <img src={filterLogo} alt="" />
+          <h2>Filters</h2>
+        </div>
         <button onClick={handleClearFilters} className="clear-filters">
           CLEAR ALL FILTERS
         </button>
@@ -96,7 +101,9 @@ const FilterCars = ({ onFilterChange }) => {
         <div className="filter-group">
           <div className="filter-title" onClick={() => toggleSection('price')}>
             <h3>PRICE RANGE</h3>
-            <span className={`chevron ${openSections.includes('price') ? 'open' : ''}`}>▼</span>
+            <span className={`chevron ${openSections.includes('price') ? 'open' : ''}`}>
+              <img src={rightArrow}/>
+            </span>
           </div>
           {openSections.includes('price') && (
             <div className="filter-options">
@@ -117,7 +124,9 @@ const FilterCars = ({ onFilterChange }) => {
         <div className="filter-group">
           <div className="filter-title" onClick={() => toggleSection('transmission')}>
             <h3>TRANSMISSION</h3>
-            <span className={`chevron ${openSections.includes('transmission') ? 'open' : ''}`}>▼</span>
+            <span className={`chevron ${openSections.includes('transmission') ? 'open' : ''}`}>
+              <img src={rightArrow}/>
+            </span>
           </div>
           {openSections.includes('transmission') && (
             <div className="filter-options">
@@ -138,7 +147,9 @@ const FilterCars = ({ onFilterChange }) => {
         <div className="filter-group">
           <div className="filter-title" onClick={() => toggleSection('fuel')}>
             <h3>FUEL TYPE</h3>
-            <span className={`chevron ${openSections.includes('fuel') ? 'open' : ''}`}>▼</span>
+            <span className={`chevron ${openSections.includes('fuel') ? 'open' : ''}`}>
+              <img src={rightArrow}/>
+            </span>
           </div>
           {openSections.includes('fuel') && (
             <div className="filter-options">
@@ -159,7 +170,9 @@ const FilterCars = ({ onFilterChange }) => {
         <div className="filter-group">
           <div className="filter-title" onClick={() => toggleSection('seats')}>
             <h3>SEATS</h3>
-            <span className={`chevron ${openSections.includes('seats') ? 'open' : ''}`}>▼</span>
+            <span className={`chevron ${openSections.includes('seats') ? 'open' : ''}`}>
+              <img src={rightArrow}/>
+            </span>
           </div>
           {openSections.includes('seats') && (
             <div className="filter-options">
@@ -180,7 +193,10 @@ const FilterCars = ({ onFilterChange }) => {
         <div className="filter-group">
           <div className="filter-title" onClick={() => toggleSection('category')}>
             <h3>VEHICLE CATEGORY</h3>
-            <span className={`chevron ${openSections.includes('category') ? 'open' : ''}`}>▼</span>
+            <span className={`chevron ${openSections.includes('category') ? 'open' : ''}`}>
+            <img src={rightArrow}/>
+              
+            </span>
           </div>
           {openSections.includes('category') && (
             <div className="filter-options">

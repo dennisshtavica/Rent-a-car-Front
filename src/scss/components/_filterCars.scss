@@ -1,7 +1,9 @@
 .filter-container {
   width: 300px;
-  background-color: #F6FEFF !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f6feff !important;
+  box-shadow: none !important;
+  border-right: 2px solid rgba(0, 0, 0, 0.11);
+  border-radius: 0px !important;
 }
 
 .filter-header {
@@ -9,21 +11,27 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.11);
+
+  .filter-title {
+    display: flex;
+    gap: 5px;
+  }
+
 
   h2 {
     font-size: 18px;
     margin: 0;
-    
   }
 
   .clear-filters {
     background: none;
     border: none;
     color: #666;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
-    
+    font-weight: 600;
+
     &:hover {
       color: #333;
     }
@@ -32,8 +40,8 @@
 
 .filter-section {
   .filter-group {
-    border-bottom: 1px solid #e0e0e0;
-    
+    border-bottom: 2px solid rgba(0, 0, 0, 0.11);
+
     .filter-title {
       display: flex;
       justify-content: space-between;
@@ -51,7 +59,7 @@
         font-size: 12px;
         color: #666;
         transition: transform 0.5s ease;
-        
+
         &.open {
           transform: rotate(180deg);
         }
@@ -87,16 +95,16 @@
           width: 16px;
           height: 16px;
           appearance: none;
-          border: 1px solid #8080FD;
+          border: 3px solid #8080fd;
           border-radius: 3px;
           position: relative;
           cursor: pointer;
           background: #fff;
 
           &:checked {
-            background-color: #8080FD;
+            background-color: #8080fd;
             &:after {
-              content: '✓';
+              content: "✓";
               position: absolute;
               color: #fff;
               font-size: 12px;
@@ -109,6 +117,7 @@
 
         .checkbox-label {
           font-size: 14px;
+          font-weight: 600;
           color: #333;
         }
       }
