@@ -45,31 +45,13 @@ export default function MainPage() {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3011/getCars", {
-  //       headers: {
-  //         Authorization: "Bearer " + user.token,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       const sortedCars = res.data.sort((a, b) =>
-  //         a.name.localeCompare(b.name)
-  //       );
-
-  //       setAllCars(sortedCars);
-  //       setFilteredCars(sortedCars);
-
-  //       const brands = [
-  //         "All Brands",
-  //         ...new Set(sortedCars.map((car) => car.name)),
-  //       ];
-  //       setCarBrands(brands);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error fetching cars", err);
-  //     });
-  // }, []);
+  const [filters, setFilters] = useState({
+    priceRange: [],
+    transmission: [],
+    fuelType: [],
+    seats: [],
+    vehicleCategory: []
+  });
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -109,6 +91,10 @@ export default function MainPage() {
 
   const handleToggleReturnLocationModal = () => {
     dispatch(toggleReturnLocationModal());
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
   };
 
   if (!user) {
@@ -229,8 +215,8 @@ export default function MainPage() {
       )}
       
       <div className="carGridContainer">
-        <FilterCars />
-        <CarGrid />
+        <FilterCars onFilterChange={handleFilterChange} />
+        <CarGrid filters={filters} />
       </div>
       <Footer />
 

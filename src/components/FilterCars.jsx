@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../scss/components/_filterCars.scss';
 
-const FilterCars = () => {
+const FilterCars = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
     priceRange: [],
     transmission: [],
@@ -49,14 +49,30 @@ const FilterCars = () => {
   ];
 
   const handleClearFilters = () => {
-    setFilters({
+    const clearedFilters = {
       priceRange: [],
       transmission: [],
       fuelType: [],
       seats: [],
       vehicleCategory: []
-    });
+    };
+    setFilters(clearedFilters);
+    onFilterChange(clearedFilters);
     setOpenSections([]);
+  };
+
+  const updateFilters = (filterType, value) => {
+    const updatedValues = filters[filterType].includes(value)
+      ? filters[filterType].filter(item => item !== value)
+      : [...filters[filterType], value];
+    
+    const newFilters = {
+      ...filters,
+      [filterType]: updatedValues
+    };
+    
+    setFilters(newFilters);
+    onFilterChange(newFilters);
   };
 
   const toggleSection = (section) => {
@@ -89,12 +105,7 @@ const FilterCars = () => {
                   <input
                     type="checkbox"
                     checked={filters.priceRange.includes(price.range)}
-                    onChange={() => {
-                      const updatedPrices = filters.priceRange.includes(price.range)
-                        ? filters.priceRange.filter(p => p !== price.range)
-                        : [...filters.priceRange, price.range];
-                      setFilters({ ...filters, priceRange: updatedPrices });
-                    }}
+                    onChange={() => updateFilters('priceRange', price.range)}
                   />
                   <span className="checkbox-label">{price.range}</span>
                 </label>
@@ -115,12 +126,7 @@ const FilterCars = () => {
                   <input
                     type="checkbox"
                     checked={filters.transmission.includes(item.type)}
-                    onChange={() => {
-                      const updatedTransmission = filters.transmission.includes(item.type)
-                        ? filters.transmission.filter(t => t !== item.type)
-                        : [...filters.transmission, item.type];
-                      setFilters({ ...filters, transmission: updatedTransmission });
-                    }}
+                    onChange={() => updateFilters('transmission', item.type)}
                   />
                   <span className="checkbox-label">{item.type}</span>
                 </label>
@@ -141,12 +147,7 @@ const FilterCars = () => {
                   <input
                     type="checkbox"
                     checked={filters.fuelType.includes(item.type)}
-                    onChange={() => {
-                      const updatedFuelType = filters.fuelType.includes(item.type)
-                        ? filters.fuelType.filter(f => f !== item.type)
-                        : [...filters.fuelType, item.type];
-                      setFilters({ ...filters, fuelType: updatedFuelType });
-                    }}
+                    onChange={() => updateFilters('fuelType', item.type)}
                   />
                   <span className="checkbox-label">{item.type}</span>
                 </label>
@@ -167,12 +168,7 @@ const FilterCars = () => {
                   <input
                     type="checkbox"
                     checked={filters.seats.includes(item.count)}
-                    onChange={() => {
-                      const updatedSeats = filters.seats.includes(item.count)
-                        ? filters.seats.filter(s => s !== item.count)
-                        : [...filters.seats, item.count];
-                      setFilters({ ...filters, seats: updatedSeats });
-                    }}
+                    onChange={() => updateFilters('seats', item.count)}
                   />
                   <span className="checkbox-label">{item.count}</span>
                 </label>
@@ -193,12 +189,7 @@ const FilterCars = () => {
                   <input
                     type="checkbox"
                     checked={filters.vehicleCategory.includes(item.category)}
-                    onChange={() => {
-                      const updatedCategory = filters.vehicleCategory.includes(item.category)
-                        ? filters.vehicleCategory.filter(c => c !== item.category)
-                        : [...filters.vehicleCategory, item.category];
-                      setFilters({ ...filters, vehicleCategory: updatedCategory });
-                    }}
+                    onChange={() => updateFilters('vehicleCategory', item.category)}
                   />
                   <span className="checkbox-label">{item.category}</span>
                 </label>

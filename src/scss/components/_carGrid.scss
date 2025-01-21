@@ -1,5 +1,15 @@
 .gridContainer {
   padding: 20px;
+  
+  .gridLayout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    
+    .mainContent {
+      width: 100%;
+    }
+  }
 
   .gridHeader {
     display: flex;
@@ -58,5 +68,38 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 30px;
     padding: 20px 0;
+  }
+
+  .loading,
+  .error-message {
+    text-align: center;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 600px;
+  }
+
+  .error-message {
+    background: #fff1f0;
+    border: 1px solid #ffa39e;
+    border-radius: 4px;
+
+    h3 {
+      color: #cf1322;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #1890ff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background: #096dd9;
+      }
+    }
   }
 }

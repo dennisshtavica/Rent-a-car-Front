@@ -1,86 +1,107 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CarCard from "./CarCard";
 import "../scss/components/_carGrid.scss";
+import axios from "axios";
 
-const carData = [
-  {
-    id: 1,
-    model: "VW T-Roc",
-    pricePerDay: "119.99",
-    totalPrice: "1159.99",
-    features: ["4", "Diesel", "Automatic"],
-    isEarlyBird: true,
-    distance: "Within 8.0 Km"
-  },
-  {
-    id: 2,
-    model: "VW T-Roc",
-    pricePerDay: "129.99",
-    totalPrice: "1159.99",
-    features: ["4", "Petrol", "Manual"],
-    isEarlyBird: true,
-    distance: "Within 8.0 Km"
-  },
-  {
-    id: 3,
-    model: "VW T-Roc",
-    pricePerDay: "139.99",
-    totalPrice: "1159.99",
-    features: ["5", "Petrol", "Manual"],
-    isEarlyBird: true,
-    distance: "Within 8.0 Km"
-  },
-  {
-    id: 4,
-    model: "VW T-Roc",
-    pricePerDay: "149.99",
-    totalPrice: "1159.99",
-    features: ["5", "Petrol", "Manual"],
-    distance: "Within 8.0 Km"
-  },   
-  {
-    id: 5,
-    model: "VW T-Roc",
-    pricePerDay: "159.99",
-    totalPrice: "1159.99",
-    features: ["5", "Petrol", "Manual"],
-    distance: "Within 8.0 Km"
-  },
-  {
-    id: 6,
-    model: "VW T-Roc",
-    pricePerDay: "169.99",
-    totalPrice: "1159.99",
-    features: ["4", "Petrol", "Automatic"],
-    distance: "Within 8.0 Km"
-  }
-];
+const CarGrid = ({ filters }) => {
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [sortType, setSortType] = useState('Default');
 
-export default function CarGrid() {
-  const [sortedCars, setSortedCars] = useState(carData);
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        
+        if (!user || !user.token) {
+          setError("No authentication token found. Please login again.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get("http://localhost:3011/getCars", {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.data && Array.isArray(response.data)) {
+          setCars(response.data);
+        } else {
+          setError("Invalid data format received from server");
+        }
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+        setError("Failed to fetch cars");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
+  const getFilteredCars = () => {
+    return cars.filter(car => {
+      // Price Range Filter
+      const priceMatch = filters.priceRange.length === 0 || 
+        filters.priceRange.some(range => {
+          // Handle the "€201+" case separately
+          if (range === '€201+') {
+            return car.price >= 201;
+          }
+          
+          // For other ranges, parse the numbers
+          const [minStr, maxStr] = range.split(' - ');
+          const min = parseInt(minStr.replace('€', ''));
+          const max = parseInt(maxStr.replace('€', ''));
+          
+          return car.price >= min && car.price <= max;
+        });
+
+      const transmissionMatch = filters.transmission.length === 0 ||
+        filters.transmission.includes(car.transmission);
+
+      const fuelMatch = filters.fuelType.length === 0 ||
+        filters.fuelType.includes(car.fuelType);
+
+      const seatsMatch = filters.seats.length === 0 ||
+        filters.seats.includes(`${car.seats} Seats`);
+
+      const categoryMatch = filters.vehicleCategory.length === 0 ||
+        filters.vehicleCategory.includes(car.category);
+
+      return priceMatch && transmissionMatch && fuelMatch && 
+             seatsMatch && categoryMatch;
+    });
+  };
+
+  const getSortedCars = (filteredCars) => {
+    let sortedCars = [...filteredCars];
+    
+    switch (sortType) {
+      case 'MOST POPULAR FIRST':
+        return sortedCars.filter(car => car.available);
+      case 'price-low':
+        return sortedCars.sort((a, b) => a.price - b.price);
+      case 'price-high':
+        return sortedCars.sort((a, b) => b.price - a.price);
+      default:
+        return sortedCars;
+    }
+  };
 
   const handleSort = (event) => {
-    const sortType = event.target.value;
-    let sorted;
-    
-    if (sortType === 'MOST POPULAR FIRST') {
-      // Filter to show only early bird cars
-      sorted = [...carData].filter(car => car.isEarlyBird);
-    } else {
-      // For other sort types, use all cars
-      sorted = [...carData].sort((a, b) => {
-        switch (sortType) {
-          case 'price-low':
-            return parseFloat(a.pricePerDay) - parseFloat(b.pricePerDay);
-          case 'price-high':
-            return parseFloat(b.pricePerDay) - parseFloat(a.pricePerDay);
-          default:
-            return 0;
-        }
-      });
-    }
-    setSortedCars(sorted);
+    setSortType(event.target.value);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  const filteredCars = getFilteredCars();
+  const sortedAndFilteredCars = getSortedCars(filteredCars);
 
   return (
     <div className="gridContainer">
@@ -89,7 +110,7 @@ export default function CarGrid() {
           <h2>Choose your vehicle</h2>
           <div className="searchSection">
             <input type="text" placeholder="Search" />
-            <span className="availableCars">21 AVAILABLE</span>
+            <span className="availableCars">{sortedAndFilteredCars.length} AVAILABLE</span>
           </div>
         </div>
         <div className="sortSection">
@@ -103,10 +124,25 @@ export default function CarGrid() {
         </div>
       </div>
       <div className="carGrid">
-        {sortedCars.map((car) => (
-          <CarCard key={car.id} {...car} />
+        {sortedAndFilteredCars.map((car) => (
+          <CarCard 
+            key={car._id}
+            model={`${car.brand} ${car.model}`}
+            pricePerDay={car.price}
+            totalPrice={car.price * 7}
+            features={[
+              `${car.seats} Seats`,
+              car.transmission,
+              car.year.toString(),
+              car.fuelType || 'N/A'
+            ]}
+            isEarlyBird={car.available}
+            image={`http://localhost:3011/${car.image}`}
+          />
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default CarGrid;
