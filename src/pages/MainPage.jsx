@@ -24,6 +24,7 @@ import { se } from "react-day-picker/locale";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showChooseBelow, setShowChooseBelow] = useState(false);
   const { rentalDate, pickupLocation, returnLocation } = useSelector(
     (state) => state.booking
   );
@@ -94,6 +95,10 @@ export default function MainPage() {
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+  };
+
+  const handleVehicleClick = () => {
+    setShowChooseBelow(!showChooseBelow);
   };
 
   if (!user) {
@@ -172,11 +177,12 @@ export default function MainPage() {
             <div className="stepText">
               <p>VEHICLE</p>
             </div>
-            <div className="stepChoose">
-              <p>Choose</p>
+            <div className="stepChoose" onClick={handleVehicleClick} style={{ cursor: "pointer" }}>
+              <p>{showChooseBelow ? "Choose Below" : "Choose"}</p>
             </div>
           </div>
         </div>
+        
         <div className="rentalInfo item5">
           <div className="stepNum">
             <h1>5</h1>
