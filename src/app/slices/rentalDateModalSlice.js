@@ -4,6 +4,7 @@ const initialState = {
     isRentalDateModalV: false,
     isPickupLocationModalV: false,
     isReturnLocationModalV: false,
+    isBookingModalV: false,
 }
 
 const rentalDateModalSlice = createSlice({
@@ -19,9 +20,18 @@ const rentalDateModalSlice = createSlice({
           toggleReturnLocationModal: (state) => {
             state.isReturnLocationModalV = !state.isReturnLocationModalV;
           },
+          toggleBookingModal: (state, action) => {
+            console.log('Reducer: toggling modal with payload:', action.payload);
+            if (action.payload !== undefined) {
+                state.isBookingModalV = action.payload;
+            } else {
+                state.isBookingModalV = !state.isBookingModalV;
+            }
+            console.log('Reducer: new state:', state.isBookingModalV);
+          },
     },
 })
 
-export const { showRentalDateModal, hideRentalDateModal, toggleRentalDateModal, togglePickupLocationModal, toggleReturnLocationModal } = rentalDateModalSlice.actions;
+export const { showRentalDateModal, hideRentalDateModal, toggleRentalDateModal, togglePickupLocationModal, toggleReturnLocationModal, toggleBookingModal } = rentalDateModalSlice.actions;
 
 export default rentalDateModalSlice.reducer;

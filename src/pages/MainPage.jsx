@@ -11,11 +11,13 @@ import "react-day-picker/style.css";
 import RentalDateModal from "../components/Modal/RentalDateModal";
 import PickUpLocationModal from "../components/Modal/PickUpLocationModal";
 import ReturnLocationModal from "../components/Modal/ReturnLocationModal";
+import BookingModal from "../components/Modal/BookingModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleRentalDateModal,
   togglePickupLocationModal,
   toggleReturnLocationModal,
+  toggleBookingModal,
 } from "../app/slices/rentalDateModalSlice";
 import { format, isValid } from "date-fns";
 import FilterCars from "../components/FilterCars";
@@ -33,6 +35,11 @@ export default function MainPage() {
   const isRentalDateModalV = useSelector(
     (state) => state.modal.isRentalDateModalV
   );
+
+  const isBookingModalV = useSelector((state) => {
+    console.log('Current modal state:', state.modal.isBookingModalV); // Debug log
+    return state.modal.isBookingModalV;
+  });
 
   const isPickupLocationModalV = useSelector(
     (state) => state.modal.isPickupLocationModalV
@@ -99,6 +106,11 @@ export default function MainPage() {
 
   const handleVehicleClick = () => {
     setShowChooseBelow(!showChooseBelow);
+  };
+
+  const handleToggleBookingModal = () => {
+    console.log('MainPage: Toggling booking modal. Before dispatch:', isBookingModalV);
+    dispatch(toggleBookingModal());
   };
 
   if (!user) {
@@ -195,7 +207,7 @@ export default function MainPage() {
               <p>Choose</p>
             </div>
           </div>
-          <button className="bookBtn">Book</button>
+          <button className="bookBtn" onClick={handleToggleBookingModal}>Book</button>
         </div>
       </div>
 
@@ -217,7 +229,18 @@ export default function MainPage() {
           <ReturnLocationModal onConfirm={handleToggleReturnLocationModal} />
         </div>
       )}
-      
+      {isBookingModalV && (
+        <div className="modalWrapper modal3">
+          <BookingModal 
+            isVisible={isBookingModalV}
+            onConfirm={() => {
+              console.log('MainPage: Modal confirmed, dispatching close action');
+              dispatch(toggleBookingModal(false));
+            }} 
+          />
+        </div>
+      )}
+
       <div className="carGridContainer">
         <FilterCars onFilterChange={handleFilterChange} />
         <CarGrid filters={filters} />
