@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import "../../scss/components/_rentalDateModal.scss";
 import { DayPicker } from "react-day-picker";
@@ -36,10 +36,24 @@ const ModalOverlay = (props) => {
 }
 
 export default function RentalDateModal(props) {
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === "Escape") {
+            props.onConfirm();
+          }
+        };
+    
+        window.addEventListener("keydown", handleKeyDown);
+    
+        return () => {
+          window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [props.onConfirm]);
+
     return (
         <>
             {ReactDOM.createPortal(<Backdrop onConfirm={props.onConfirm} />, document.getElementById("backdrop-root"))}
-            {ReactDOM.createPortal(<ModalOverlay>{props.children}</ModalOverlay>, document.getElementById("overlay-root"))}
+            {ReactDOM.createPortal(<ModalOverlay onConfirm={props.onConfirm}>{props.children}</ModalOverlay>, document.getElementById("overlay-root"))}
         </>
     );
 }

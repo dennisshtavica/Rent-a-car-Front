@@ -84,7 +84,9 @@ const CarDetails = ({ car, onClose }) => {
               </div>
             )}
 
+
             <button className="choose-button">Choose</button>
+
           </div>
         </div>
       </div>

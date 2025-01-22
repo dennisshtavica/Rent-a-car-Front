@@ -140,7 +140,9 @@ function BookingModal({ onConfirm }) {
                         <span>Total price:</span>
                         <span className="price">1200€</span>
                     </div>
-                    <button className="book-button">Book with Stripe</button>
+                    <button className="book-button">Book with <span style={{
+                        color: '#7878FD'
+                    }}>Stripe</span></button>
                 </div>
             </div>
         </div>

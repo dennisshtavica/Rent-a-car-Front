@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import "../../scss/components/_rentalDateModal.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +50,20 @@ const ModalOverlay = (props) => {
 
 
 export default function PickUpLocationModal(props) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        props.onConfirm();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [props.onConfirm]);
+
     return (
         <>
             {ReactDOM.createPortal(<Backdrop onConfirm={props.onConfirm} />, document.getElementById("backdrop-root"))}
