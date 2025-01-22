@@ -1,0 +1,214 @@
+.carDetails {
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  &-popup {
+    width: 90%;
+    max-width: 1200px;
+    height: 85vh;
+    background-color: transparent;
+    border-radius: 20px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      line-height: 1;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .earlyBirdBadge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #000;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      z-index: 10;
+    }
+  }
+
+  &-content {
+    flex: 1;
+    display: flex;
+    height: 100%;
+  }
+
+  &-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+
+    .car-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &-right {
+    flex: 1;
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.8));
+    color: #fff;
+  }
+}
+
+.price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  .price-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    .amount {
+      font-size: 4rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .price-period {
+      display: flex;
+      flex-direction: column;
+      padding-top: 0.5rem;
+      
+      .currency {
+        font-size: 1.5rem;
+      }
+      
+      .period {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .total-price {
+    text-align: right;
+    
+    .total-amount {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  .spec-item {
+    .spec-label {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .spec-value {
+      font-size: 1.1rem;
+      font-weight: 500;
+
+      &.available {
+        color: #00ff44;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-shadow: 0 0 15px rgba(0, 255, 68, 0.5);
+        letter-spacing: 1px;
+      }
+
+      &.not-available {
+        color: #ff3333;
+        font-size: 1.3rem;
+        font-weight: 700;
+        text-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+.features-section {
+  h3 {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    .feature-badge {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1rem;
+    }
+  }
+}
+
+.choose-button {
+  margin-top: auto;
+  width: 200px;
+  padding: 0.75rem;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: center;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+}

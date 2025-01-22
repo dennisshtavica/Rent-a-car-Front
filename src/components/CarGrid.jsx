@@ -45,15 +45,12 @@ const CarGrid = ({ filters }) => {
 
   const getFilteredCars = () => {
     return cars.filter(car => {
-      // Price Range Filter
       const priceMatch = filters.priceRange.length === 0 || 
         filters.priceRange.some(range => {
-          // Handle the "€201+" case separately
           if (range === '€201+') {
             return car.price >= 201;
           }
           
-          // For other ranges, parse the numbers
           const [minStr, maxStr] = range.split(' - ');
           const min = parseInt(minStr.replace('€', ''));
           const max = parseInt(maxStr.replace('€', ''));
@@ -138,6 +135,7 @@ const CarGrid = ({ filters }) => {
             ]}
             isEarlyBird={car.available}
             image={`http://localhost:3011/${car.image}`}
+            car={car}
           />
         ))}
       </div>
