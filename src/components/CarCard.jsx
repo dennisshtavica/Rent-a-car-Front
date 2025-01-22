@@ -14,6 +14,12 @@ export default function CarCard({
   distance,
   image 
 }) {
+  const getFeatureIcon = (feature) => {
+    if (feature.includes('Seats')) return seatImage;
+    if (['Electric', 'Hybrid', 'Diesel', 'Petrol'].includes(feature)) return fuelImage;
+    return null;
+  };
+
   return (
     <div className="carCard" style={{ backgroundImage: `url(${backgroundImage})` }}>
       {isEarlyBird && <span className="earlyBirdBadge">EARLY BIRD SPECIAL</span>}
@@ -42,8 +48,9 @@ export default function CarCard({
       <div className="features">
         {features.map((feature, index) => (
           <span key={index} className="featureBadge">
-            {index === 0 && <img src={seatImage} alt="Seats" className="featureIcon" />}
-            {index === 3 && <img src={fuelImage} alt="Fuel" className="featureIcon" />}
+            {(feature.includes('Seats') || ['Electric', 'Hybrid', 'Diesel', 'Petrol'].includes(feature)) && 
+              <img src={getFeatureIcon(feature)} alt="" className="featureIcon" />
+            }
             {feature}
           </span>
         ))}

@@ -12,14 +12,14 @@ const FilterCars = ({ onFilterChange }) => {
     vehicleCategory: []
   });
 
-  const [openSections, setOpenSections] = useState([]);
+  const [openSections, setOpenSections] = useState(['price', 'transmission', 'fuel', 'seats', 'category']);
 
   const priceRanges = [
-    { id: 1, range: '€0 - €50' },
-    { id: 2, range: '€51 - €100' },
-    { id: 3, range: '€101 - €150' },
-    { id: 4, range: '€151 - €200' },
-    { id: 5, range: '€201+' }
+    { id: 1, range: '€100 - €200' },
+    { id: 2, range: '€201 - €300' },
+    { id: 3, range: '€301 - €350' },
+    { id: 4, range: '€351 - €400' },
+    { id: 5, range: '€401 - €1000' }
   ];
 
   const transmissionTypes = [
