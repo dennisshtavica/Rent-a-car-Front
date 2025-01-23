@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RentAcLogo from "../../assets/images/Logo.svg";
 import "../../scss/sections/_signUp.scss";
+import "../../scss/layout/_layouts.scss";
 import SignInHeaderTitle from "../../assets/images/SignInTGS.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
