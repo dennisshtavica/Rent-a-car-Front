@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet} from "react-router-dom"
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom"
+import DashboardLayout from './pages/Dashboard/pages/DashboardLayout';
 
 import StartPage from "./pages/StartPage"
 import SignUp from "./pages/Users/SignUp"
@@ -11,8 +13,15 @@ import CarRented from "./pages/CarRented";
 import DetyraLab from "./pages/DetyraLab";
 import ProfilePage from "./pages/ProfilePage";
 import Error404 from "./pages/Error404";
-
-
+import MainDashboard from "./pages/Dashboard/pages/MainDashboard";
+import Rentals from './pages/Dashboard/pages/Rentals';
+import Vehicles from './pages/Dashboard/pages/Vehicles';
+import Customers from './pages/Dashboard/pages/Customers';
+import Staff from './pages/Dashboard/pages/Staff';
+import Settings from './pages/Dashboard/pages/Settings';
+import Reports from './pages/Dashboard/pages/Reports';
+import Maintenance from './pages/Dashboard/pages/Maintenance';
+import Reservations from './pages/Dashboard/pages/Reservations';
 function App() {  
   return (
     <BrowserRouter>
@@ -24,6 +33,19 @@ function App() {
         <Route path="/bookingPage/:id" element={<BookingPage/>}/>
         <Route path="/contactPage" element={<ContactPage/>}/>
         <Route path="/detyralab2" element={<DetyraLab/>}/>
+
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<MainDashboard />} />
+          <Route path="rentals" element={<Rentals />} />
+          <Route path="vehicles" element={<Vehicles />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="reservations" element={<Reservations />} />
+          <Route path="maintenance" element={<Maintenance />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="staff" element={<Staff />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        
         <Route
           path="/search-results/:carBrand/:carModel"
           element={<SearchResults/>}

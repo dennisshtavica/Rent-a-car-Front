@@ -30,7 +30,7 @@ export default function Header({isOpen, toggleMenu, closeMenu}) {
                     <ul>
                         <li>
                             {user.role_id === 1 && (
-                                <Link to="/" className='manageBCar'>
+                                <Link to="/dashboard" className='manageBCar'>
                                     <img src={manageBCar} alt="" />
                                     <p>Manage bookings</p>
                                 </Link>
