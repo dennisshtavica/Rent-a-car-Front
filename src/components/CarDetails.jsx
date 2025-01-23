@@ -39,7 +39,7 @@ const CarDetails = ({ car, onClose }) => {
       const days = differenceInDays(rentalDate.to, rentalDate.from) + 1;
       return car.price * days;
     }
-    return car.price; // Default to daily price if no dates selected
+    return car.price; 
   };
 
   const handleChoose = () => {

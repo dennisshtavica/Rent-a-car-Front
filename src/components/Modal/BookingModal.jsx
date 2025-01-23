@@ -9,6 +9,7 @@ import locationIcon from '../../assets/images/icons/location.svg';
 import nameIcon from '../../assets/images/icons/name.svg';
 import phoneIcon from '../../assets/images/icons/phone.svg';
 import carImage from '../../assets/images/troc.svg';
+import { differenceInDays } from 'date-fns';
 
 function BookingModal({ onConfirm }) {
     const dispatch = useDispatch();
@@ -16,6 +17,22 @@ function BookingModal({ onConfirm }) {
         console.log('BookingModal: Current state in modal:', state.modal.isBookingModalV);
         return state.modal.isBookingModalV;
     });
+    const bookingDetails = useSelector(state => state.booking);
+
+    const [userDetails, setUserDetails] = React.useState({
+        name: '',
+        email: '',
+        phone_number: ''
+    });
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user')) || {};
+        setUserDetails({
+            name: user.username || 'Not available',
+            email: user.email || 'Not available',
+            phone_number: user.phone_number || 'Not available'
+        });
+    }, []);
 
     const handleClose = () => {
         console.log('BookingModal: Close button clicked - dispatching close action');
@@ -50,6 +67,26 @@ function BookingModal({ onConfirm }) {
         }
     };
 
+    // Format the dates for display
+    const formatDate = (date) => {
+        if (!date) return 'Not available';
+        return new Date(date).toLocaleString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const calculateTotalPrice = () => {
+        if (bookingDetails.selectedCar?.car && bookingDetails.rentalDate.from && bookingDetails.rentalDate.to) {
+            const days = differenceInDays(new Date(bookingDetails.rentalDate.to), new Date(bookingDetails.rentalDate.from)) + 1;
+            return bookingDetails.selectedCar.car.price * days;
+        }
+        return 0;
+    };
+
     return (
         <div className="booking-modal" onClick={handleBackgroundClick}>
             <div className="booking-modal-content" style={{ 
@@ -72,9 +109,20 @@ function BookingModal({ onConfirm }) {
                 <div className="booking-header" >
                     <div className="textWrapper">
                         <h1>YOU'RE BOOKING</h1>
-                        <h2>VW T-Roc</h2>
+                        <h2>{bookingDetails.selectedCar?.car ? 
+                            `${bookingDetails.selectedCar.car.brand} ${bookingDetails.selectedCar.car.model}` 
+                            : 'Car not selected'}
+                        </h2>
                     </div>
-                    <img src={carImage} alt="VW T-Roc" className="car-image" />
+                    <img 
+                        src={bookingDetails.selectedCar?.car ? 
+                            `http://localhost:3011/${bookingDetails.selectedCar.car.image}` 
+                            : carImage} 
+                        alt={bookingDetails.selectedCar?.car ? 
+                            `${bookingDetails.selectedCar.car.brand} ${bookingDetails.selectedCar.car.model}` 
+                            : 'Car'} 
+                        className="car-image" 
+                    />
                 </div>
 
                 <div className="booking-details">
@@ -84,21 +132,21 @@ function BookingModal({ onConfirm }) {
                             <img src={nameIcon} alt="" />
                             <div>
                                 <label>Name</label>
-                                <p>Bledor Pireci</p>
+                                <p>{userDetails.name}</p>
                             </div>
                         </div>
                         <div className="detail-item">
                             <img src={emailIcon} alt="" />
                             <div>
                                 <label>Email</label>
-                                <p>bledor@g.com</p>
+                                <p>{userDetails.email}</p>
                             </div>
                         </div>
                         <div className="detail-item">
                             <img src={phoneIcon} alt="" />
                             <div>
                                 <label>Phone number</label>
-                                <p>+420696969</p>
+                                <p>{userDetails.phone_number}</p>
                             </div>
                         </div>
                     </div>
@@ -109,8 +157,8 @@ function BookingModal({ onConfirm }) {
                             <img src={dateIcon} alt="" />
                             <div>
                                 <label>Booking Date</label>
-                                <p className="booking-date-start">Wed, Jan 22, 12:00 AM</p>
-                                <p className="booking-date-end">Thu, Jan 23, 12:00 AM</p>
+                                <p className="booking-date-start">{formatDate(bookingDetails.rentalDate.from)}</p>
+                                <p className="booking-date-end">{formatDate(bookingDetails.rentalDate.to)}</p>
                             </div>
                             <div className="date-dots">
                                 <div className="dot"></div>
@@ -122,14 +170,14 @@ function BookingModal({ onConfirm }) {
                             <img src={locationIcon} alt="" />
                             <div>
                                 <label>Pick up location</label>
-                                <p>Paris</p>
+                                <p>{bookingDetails.pickupLocation || 'Not available'}</p>
                             </div>
                         </div>
                         <div className="detail-item">
                             <img src={locationIcon} alt="" />
                             <div>
                                 <label>Return location</label>
-                                <p>Milano</p>
+                                <p>{bookingDetails.returnLocation || 'Not available'}</p>
                             </div>
                         </div>
                     </div>
@@ -138,7 +186,7 @@ function BookingModal({ onConfirm }) {
                 <div className="booking-footer">
                     <div className="total-price">
                         <span>Total price:</span>
-                        <span className="price">1200€</span>
+                        <span className="price">{calculateTotalPrice()}€</span>
                     </div>
                     <button className="book-button">Book with <span style={{
                         color: '#7878FD'
