@@ -4,10 +4,41 @@ import "../scss/sections/_startPage.scss";
 import "../scss/layout/_layouts.scss";
 import ReusableButton from "../components/ReusableButton";
 import CarImageStart from "../assets/images/CarImageStartP.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 
 export default function StartPage() {
+  const navigate = useNavigate();
+  
+  const handleTransition = (e, path) => {
+    e.preventDefault();
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'page-transition';
+    
+    const logo = document.createElement('div');
+    logo.className = 'transition-logo';
+    logo.innerHTML = `
+      <span>
+        <span class="drive">Drive</span><span class="hub">hub</span>
+      </span>
+    `;
+    overlay.appendChild(logo);
+    
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => {
+      navigate(path);
+      
+      overlay.style.animation = 'pageTransitionIn 1.5s ease-in-out forwards';
+      overlay.style.transformOrigin = 'top';
+      
+      setTimeout(() => {
+        overlay.remove();
+      }, 1500);
+    }, 1500);
+  };
+
   return (
     <div className="startPage container">
       <header>
@@ -15,7 +46,7 @@ export default function StartPage() {
           <img src={RentAcLogo} alt="" />
         </div>
         <nav>
-          <Link to="/signup">
+          <Link to="/signup" onClick={(e) => handleTransition(e, '/signup')}>
             <ReusableButton padding="9px 18px">Sign up</ReusableButton>
           </Link>
         </nav>
@@ -31,8 +62,8 @@ export default function StartPage() {
             </h1>
             <p>You can choose your ideal car and book it easily.</p>
             <div className="gSBtn">
-              <Link to="/signin">
-                 <ReusableButton padding="9px 31px">Let’s Go</ReusableButton>
+              <Link to="/signin" onClick={(e) => handleTransition(e, '/signin')}>
+                <ReusableButton padding="9px 31px">Let's Go</ReusableButton>
               </Link>
             </div>
           </div>
@@ -42,13 +73,11 @@ export default function StartPage() {
           <h2>What do we offer</h2>
 
           <div className="textBoxCtn">
-            <div className="textBox">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore
+            <div className="textBox"> 
+                Discover a wide range of vehicles, from spacious SUVs to versatile sedans, perfect for any trip.
             </div>
             <div className="textBox">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore
+                Indulge in unmatched luxury and performance with our premium high-end vehicle selection.
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RentAcLogo from "../../assets/images/Logo.svg";
 import "../../scss/sections/_signUp.scss";
 import SignInHeaderTitle from "../../assets/images/SignInTGS.svg";
@@ -13,9 +13,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
 
-
   const navigate = useNavigate();
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,15 +37,36 @@ export default function SignIn() {
           "user",
           JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id, role_id: res.data.role_id })
         );
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'page-transition';
+        
+        const logo = document.createElement('div');
+        logo.className = 'transition-logo';
+        logo.innerHTML = `
+          <span>
+            <span class="drive">Drive</span><span class="hub">hub</span>
+          </span>
+        `;
+        overlay.appendChild(logo);
+        document.body.appendChild(overlay);
+
         setTimeout(() => {
           setLoading(false);
           navigate("/mainPage");
-        }, 1500);
-        console.log("Login successful", res.data);
+          
+          overlay.style.animation = 'pageTransitionIn 2.5s ease-in-out forwards';
+          overlay.style.transformOrigin = 'top';
+          
+          setTimeout(() => {
+            overlay.remove();
+          }, 2500);
+        }, 2500);
       })
       .catch((err) => {
         console.log("Login error", err);
         setErrors(err.response.data.message);
+        setLoading(false);
       });
   };
 
