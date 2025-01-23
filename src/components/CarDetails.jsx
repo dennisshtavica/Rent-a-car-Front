@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import '../scss/components/_carDetails.scss';
 import backgroundImage from '../assets/images/carDetailsBackground.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { differenceInDays } from 'date-fns';
 
 const CarDetails = ({ car, onClose }) => {
+  const dispatch = useDispatch();
+  const { rentalDate } = useSelector((state) => state.booking);
+  
   if (!car) return null;
 
   useEffect(() => {
@@ -28,6 +33,25 @@ const CarDetails = ({ car, onClose }) => {
 
   
   const features = car.features?.split(',').map(f => f.trim()).filter(Boolean) || [];
+
+  const calculateTotalPrice = () => {
+    if (rentalDate.from && rentalDate.to) {
+      const days = differenceInDays(rentalDate.to, rentalDate.from) + 1;
+      return car.price * days;
+    }
+    return car.price; // Default to daily price if no dates selected
+  };
+
+  const handleChoose = () => {
+    dispatch({
+      type: 'booking/setSelectedCar',
+      payload: {
+        car,
+        totalPrice: calculateTotalPrice()
+      }
+    });
+    onClose();
+  };
 
   return (
     <div className="carDetails-overlay">
@@ -85,7 +109,15 @@ const CarDetails = ({ car, onClose }) => {
             )}
 
 
-            <button className="choose-button">Choose</button>
+            <button 
+              className="choose-button" 
+              onClick={handleChoose}
+              disabled={!rentalDate.from || !rentalDate.to}
+            >
+              {!rentalDate.from || !rentalDate.to 
+                ? 'Please select dates first' 
+                : 'Choose'}
+            </button>
 
           </div>
         </div>

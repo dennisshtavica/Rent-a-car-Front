@@ -5,6 +5,7 @@ const initialState = {
     pickupLocation: null,
     returnLocation: null,
     cardId: null,
+    selectedCar: null
 }
 
 const bookingSlice = createSlice({
@@ -23,9 +24,12 @@ const bookingSlice = createSlice({
         setCardId: (state, action) => {
             state.cardId = action.payload;
         },
+        setSelectedCar: (state, action) => {
+            state.selectedCar = action.payload;
+        },
     },
 })
 
-export const { setRentalDate, setPickupLocation, setReturnLocation, setCardId } = bookingSlice.actions;
+export const { setRentalDate, setPickupLocation, setReturnLocation, setCardId, setSelectedCar } = bookingSlice.actions;
 
 export default bookingSlice.reducer;

@@ -19,7 +19,7 @@ import {
   toggleReturnLocationModal,
   toggleBookingModal,
 } from "../app/slices/rentalDateModalSlice";
-import { format, isValid } from "date-fns";
+import { format, isValid, differenceInDays } from "date-fns";
 import FilterCars from "../components/FilterCars";
 import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
@@ -27,7 +27,7 @@ import { se } from "react-day-picker/locale";
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [showChooseBelow, setShowChooseBelow] = useState(false);
-  const { rentalDate, pickupLocation, returnLocation } = useSelector(
+  const { rentalDate, pickupLocation, returnLocation, selectedCar } = useSelector(
     (state) => state.booking
   );
 
@@ -113,6 +113,14 @@ export default function MainPage() {
     dispatch(toggleBookingModal());
   };
 
+  const calculateTotalPrice = () => {
+    if (selectedCar && rentalDate.from && rentalDate.to) {
+      const days = differenceInDays(rentalDate.to, rentalDate.from) + 1;
+      return selectedCar.car.price * days;
+    }
+    return null;
+  };
+
   if (!user) {
     return <SignIn />;
   }
@@ -190,7 +198,7 @@ export default function MainPage() {
               <p>VEHICLE</p>
             </div>
             <div className="stepChoose" onClick={handleVehicleClick} style={{ cursor: "pointer" }}>
-              <p>{showChooseBelow ? "Choose Below" : "Choose"}</p>
+              <p>{selectedCar ? `${selectedCar.car.brand} ${selectedCar.car.model}` : (showChooseBelow ? "Choose Below" : "Choose")}</p>
             </div>
           </div>
         </div>
@@ -204,10 +212,16 @@ export default function MainPage() {
               <p>TOTAL</p>
             </div>
             <div className="stepChoose">
-              <p>Choose</p>
+              <p>{calculateTotalPrice() ? `${calculateTotalPrice()}€` : 'Choose'}</p>
             </div>
           </div>
-          <button className="bookBtn" onClick={handleToggleBookingModal}>Book</button>
+          <button 
+            className="bookBtn" 
+            onClick={handleToggleBookingModal}
+            disabled={!selectedCar || !rentalDate.from || !rentalDate.to}
+          >
+            Book
+          </button>
         </div>
       </div>
 

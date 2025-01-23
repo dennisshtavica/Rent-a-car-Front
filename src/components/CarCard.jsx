@@ -51,7 +51,7 @@ export default function CarCard({
           </div>
           <div className="totalPrice">
             <span>{totalPrice}€</span>
-            <span className="label">TOTAL PRICE</span>
+            <span className="label">For 7 days Rental</span>
           </div>
         </div>
         <div className="features">
