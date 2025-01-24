@@ -49,6 +49,17 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         setLoading(true);
         setError(null);
         
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.token) {
+          throw new Error("No authentication token found");
+        }
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        };
+        
         // Log the API URLs being called
         console.log('Fetching from:', {
           features: 'http://localhost:3011/features',
@@ -56,8 +67,8 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         });
 
         const [featuresRes, categoriesRes] = await Promise.all([
-          axios.get('http://localhost:3011/features'),
-          axios.get('http://localhost:3011/categories')
+          axios.get('http://localhost:3011/features', config),
+          axios.get('http://localhost:3011/categories', config)
         ]);
 
         console.log('API responses:', {
@@ -69,7 +80,7 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         setCategories(categoriesRes.data);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to load features and categories');
+        setError(error.response?.data?.message || 'Failed to load features and categories');
       } finally {
         setLoading(false);
       }
