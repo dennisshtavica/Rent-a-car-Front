@@ -10,6 +10,7 @@ import nameIcon from '../../assets/images/icons/name.svg';
 import phoneIcon from '../../assets/images/icons/phone.svg';
 import carImage from '../../assets/images/troc.svg';
 import { differenceInDays } from 'date-fns';
+import axios from 'axios';
 
 function BookingModal({ onConfirm }) {
     const dispatch = useDispatch();
@@ -86,6 +87,26 @@ function BookingModal({ onConfirm }) {
         }
         return 0;
     };
+    
+    const handleStripeCheckout = async () => {
+        try {
+            const totalPrice = calculateTotalPrice();
+            const carName = `${bookingDetails.selectedCar?.car.brand} ${bookingDetails.selectedCar?.car.model}`;
+            
+         
+            const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
+                amount: totalPrice,
+                carName,
+            });
+
+  
+            window.location.href = data.url;
+        } catch (error) {
+            console.error('Error redirecting to Stripe Checkout:', error);
+
+        }
+    };
+
 
     return (
         <div className="booking-modal" onClick={handleBackgroundClick}>
@@ -188,7 +209,10 @@ function BookingModal({ onConfirm }) {
                         <span>Total price:</span>
                         <span className="price">{calculateTotalPrice()}€</span>
                     </div>
-                    <button className="book-button">Book with <span style={{
+                    <button
+                        className="book-button"
+                        onClick={handleStripeCheckout}
+                    >Book with <span style={{
                         color: '#7878FD'
                     }}>Stripe</span></button>
                 </div>
