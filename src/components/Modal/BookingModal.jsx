@@ -89,24 +89,55 @@ function BookingModal({ onConfirm }) {
         return 0;
     };
     
+    // const handleStripeCheckout = async () => {
+    //     try {
+    //         dispatch(setPaymentInitiated(true));
+    //         const totalPrice = calculateTotalPrice();
+    //         const carName = `${bookingDetails.selectedCar?.car.brand} ${bookingDetails.selectedCar?.car.model}`;
+            
+    //         const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
+    //             amount: totalPrice,
+    //             carName,
+    //         });
+    
+    //         window.location.href = data.url;
+    //     } catch (error) {
+    //         console.error('Error redirecting to Stripe Checkout:', error);
+    //         dispatch(clearPaymentStatus()); 
+    //     }
+    // };
+
     const handleStripeCheckout = async () => {
         try {
             dispatch(setPaymentInitiated(true));
             const totalPrice = calculateTotalPrice();
             const carName = `${bookingDetails.selectedCar?.car.brand} ${bookingDetails.selectedCar?.car.model}`;
-            
+            const rentalDate = {
+                from: bookingDetails.rentalDate.from,
+                to: bookingDetails.rentalDate.to,
+            };
+    
+            // API call to create a checkout session
             const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
                 amount: totalPrice,
                 carName,
+                carId: bookingDetails.selectedCar?.car._id, // Car ID
+                pickupLocation: bookingDetails.pickupLocation,
+                returnLocation: bookingDetails.returnLocation,
+                rentalDate,
+                username: userDetails.name,
+                email: userDetails.email,
+                phone_number: userDetails.phone_number,
             });
     
+            // Redirect to the Stripe checkout page
             window.location.href = data.url;
         } catch (error) {
             console.error('Error redirecting to Stripe Checkout:', error);
             dispatch(clearPaymentStatus()); 
         }
     };
-
+    
 
     return (
         <div className="booking-modal" onClick={handleBackgroundClick}>
