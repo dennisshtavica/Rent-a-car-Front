@@ -22,6 +22,11 @@ import Settings from './pages/Dashboard/pages/Settings';
 import Reports from './pages/Dashboard/pages/Reports';
 import Maintenance from './pages/Dashboard/pages/Maintenance';
 import Reservations from './pages/Dashboard/pages/Reservations';
+import Cancel from './pages/Cancel';
+import Success from './pages/Success';
+import ProtectedPaymentRoute from './components/ProtectedPaymentRoute';
+
+
 function App() {  
   return (
     <BrowserRouter>
@@ -33,6 +38,11 @@ function App() {
         <Route path="/bookingPage/:id" element={<BookingPage/>}/>
         <Route path="/contactPage" element={<ContactPage/>}/>
         <Route path="/detyralab2" element={<DetyraLab/>}/>
+        {/* <Route path="/cancel" element={<Cancel/>}/>
+        <Route path="/success" element={<Success/>}/> */}
+        <Route path='/cancel' element={<ProtectedPaymentRoute><Cancel/></ProtectedPaymentRoute>}/>
+        <Route path='/success' element={<ProtectedPaymentRoute><Success/></ProtectedPaymentRoute>}/>
+
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<MainDashboard />} />
