@@ -2,45 +2,85 @@ import React, { useState, useEffect } from 'react';
 import { FaCar, FaSearch, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import "../scss/_pages.scss";
+import AddCarsForm from '../components/AddCarsForm';
+import EditCarsForm from '../components/EditCarsForm';
 
 const Vehicles = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingCar, setEditingCar] = useState(null);
+
+  const fetchCars = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      if (!user || !user.token) {
+        setError("No authentication token found. Please login again.");
+        setLoading(false);
+        return;
+      }
+
+      const response = await axios.get("http://localhost:3011/getCars", {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data && Array.isArray(response.data)) {
+        setCars(response.data);
+      } else {
+        setError("Invalid data format received from server");
+      }
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+      setError("Failed to fetch cars");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteCar = async (carId) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      
+      if (!user || !user.token) {
+        setError("No authentication token found. Please login again.");
+        return;
+      }
+
+      const response = await axios.delete(`http://localhost:3011/deleteCar/${carId}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 200) {
+        // Refresh the cars list after deletion
+        fetchCars();
+      }
+    } catch (error) {
+      console.error("Error deleting car:", error);
+      alert(error.response?.data?.message || "Failed to delete car");
+    }
+  };
 
   useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        
-        if (!user || !user.token) {
-          setError("No authentication token found. Please login again.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get("http://localhost:3011/getCars", {
-          headers: {
-            'Authorization': `Bearer ${user.token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.data && Array.isArray(response.data)) {
-          setCars(response.data);
-        } else {
-          setError("Invalid data format received from server");
-        }
-      } catch (error) {
-        console.error("Error fetching cars:", error);
-        setError("Failed to fetch cars");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCars();
+    // alert("Per me testu EDIT duhesh 2 tfundit (porsche Cayenne)");
   }, []);
+
+  const handleAddCarSuccess = () => {
+    setIsAddModalOpen(false);
+    fetchCars();
+  };
+
+  const handleEditClick = (car) => {
+    setEditingCar(car);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -54,11 +94,29 @@ const Vehicles = () => {
             <FaSearch />
             <input type="text" placeholder="Search vehicles..." />
           </div>
-          <button className="add-btn">
+          <button className="add-btn" onClick={() => setIsAddModalOpen(true)}>
             <FaPlus /> Add Vehicle
           </button>
         </div>
       </div>
+
+      {isAddModalOpen && (
+        <AddCarsForm 
+          onClose={() => setIsAddModalOpen(false)}
+          onSuccess={handleAddCarSuccess}
+        />
+      )}
+
+      {editingCar && (
+        <EditCarsForm 
+          car={editingCar}
+          onClose={() => setEditingCar(null)}
+          onSuccess={() => {
+            setEditingCar(null);
+            fetchCars();
+          }}
+        />
+      )}
 
       <div className="vehicles-grid">
         {cars.map((car) => (
@@ -85,8 +143,22 @@ const Vehicles = () => {
               <p className="price">€{car.price}/day</p>
             </div>
             <div className="vehicle-actions">
-              <button className="btn-primary">Edit</button>
-              <button className="btn-secondary">View Details</button>
+              <button 
+                className="btn-primary" 
+                onClick={() => handleEditClick(car)}
+              >
+                Edit
+              </button>
+              <button 
+                className="btn-secondary"
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this car?')) {
+                    handleDeleteCar(car._id);
+                  }
+                }}
+              >
+                Delete Car
+              </button>
             </div>
           </div>
         ))}

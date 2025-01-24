@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../scss/components/_carDetails.scss';
 import backgroundImage from '../assets/images/carDetailsBackground.svg';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,8 @@ import { differenceInDays } from 'date-fns';
 const CarDetails = ({ car, onClose }) => {
   const dispatch = useDispatch();
   const { rentalDate } = useSelector((state) => state.booking);
+  const [features, setFeatures] = useState([]);
+  const [category, setCategory] = useState('');
   
   if (!car) return null;
 
@@ -22,17 +24,74 @@ const CarDetails = ({ car, onClose }) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          console.error('No user data found');
+          return;
+        }
+
+        const userData = JSON.parse(userString);
+        const token = userData.token;
+        
+        if (!token) {
+          console.error('No token found in user data');
+          return;
+        }
+
+        const carResponse = await fetch(`http://localhost:3011/getCars`, {
+          headers: {
+            'Authorization': `Bearer ${token.trim()}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!carResponse.ok) {
+          throw new Error(`HTTP error! status: ${carResponse.status}`);
+        }
+
+        const cars = await carResponse.json();
+        
+        const currentCar = cars.find(c => c._id === car._id);
+        
+        if (currentCar) {
+          if (currentCar.car_features && Array.isArray(currentCar.car_features)) {
+            const carFeatures = currentCar.car_features.map(feature => {
+              return feature.feature_name;
+            });
+            setFeatures(carFeatures);
+          }
+
+          // Handle category
+          if (currentCar.car_category && currentCar.car_category.category_name) {
+            setCategory(currentCar.car_category.category_name);
+          }
+        }
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        if (error.message.includes('401')) {
+          console.log('Authentication error - please log in again');
+        }
+      }
+    };
+
+    if (car) {
+      fetchData();
+    }
+  }, [car]);
+
+
   const specs = [
     { label: 'SEATS', value: car.seats },
     { label: 'FUEL TYPE', value: car.fuelType },
     { label: 'TRANSMISSION', value: car.transmission },
-    { label: 'VEHICLE CATEGORY', value: car.car_category[0].category_name},
-    // { label: 'STATUS', value: 'NOT AVAILABLE', isStatus: true },
+    { label: 'VEHICLE CATEGORY', value: category || 'Loading...' },
+    { label: 'FEATURES', value: features, isFeatures: true },
     { label: 'STATUS', value: car.available ? 'AVAILABLE' : 'NOT AVAILABLE', isStatus: true },
   ];
-
-  
-  const features = car.features?.split(',').map(f => f.trim()).filter(Boolean) || [];
 
   const calculateTotalPrice = () => {
     if (rentalDate.from && rentalDate.to) {
@@ -88,26 +147,23 @@ const CarDetails = ({ car, onClose }) => {
               {specs.map((spec, index) => (
                 <div key={index} className="spec-item">
                   <span className="spec-label">{spec.label}</span>
-                  <span className={`spec-value ${spec.isStatus ? (spec.value === 'AVAILABLE' ? 'available' : 'not-available') : ''}`}>
-                    {spec.value}
-                  </span>
+                  {spec.isFeatures ? (
+                    <div className="features-list">
+                      {features.map((feature, index) => (
+                        <span key={index} className="feature-item">
+                          {feature}
+                          {index < features.length - 1 && <span className="feature-separator">•</span>}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className={`spec-value ${spec.isStatus ? (spec.value === 'AVAILABLE' ? 'available' : 'not-available') : ''}`}>
+                      {spec.value}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
-
-            {features.length > 0 && (
-              <div className="features-section">
-                <h3>FEATURES</h3>
-                <div className="features-grid">
-                  {features.map((feature, index) => (
-                    <span key={index} className="feature-badge">
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
 
             <button 
               className="choose-button" 

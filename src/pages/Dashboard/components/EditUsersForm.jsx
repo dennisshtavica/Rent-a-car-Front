@@ -1,15 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 
-const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
+const EditUsersForm = ({ isOpen, onClose, user, onSuccess }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: '',
     phone_number: '',
-    role_id: '3'
+    role_id: ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        username: user.username,
+        email: user.email,
+        phone_number: user.phone_number,
+        role_id: user.role_id
+      });
+    }
+  }, [user]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const authUser = JSON.parse(localStorage.getItem("user"));
+      await axios.put(`http://localhost:3011/users/edit/${user.id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${authUser.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -18,37 +45,13 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      await axios.post("http://localhost:3011/users/create", formData, {
-        headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      setFormData({
-        username: '',
-        email: '',
-        password: '',
-        phone_number: '',
-        role_id: '3'
-      });
-      onSuccess();
-      onClose();
-    } catch (error) {
-      console.error('Error creating user:', error);
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Add New User</h2>
+          <h2>Edit User</h2>
           <button onClick={onClose} className="close-btn">
             <FaTimes />
           </button>
@@ -74,18 +77,6 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
               onChange={handleChange}
               required
             />
@@ -122,7 +113,7 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
               Cancel
             </button>
             <button type="submit" className="btn-primary">
-              Add User
+              Save Changes
             </button>
           </div>
         </form>
@@ -131,4 +122,4 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
   );
 };
 
-export default AddUsersForm;
+export default EditUsersForm;

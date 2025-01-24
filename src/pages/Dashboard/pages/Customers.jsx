@@ -3,44 +3,36 @@ import { FaUsers, FaSearch, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 import "../scss/_pages.scss";
 import AddUsersForm from '../components/AddUsersForm';
+import EditUsersForm from '../components/EditUsersForm';
 
 const Customers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const user = JSON.parse(localStorage.getItem("user"));
+      const response = await axios.get('http://localhost:3011/getUsers', {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      setUsers(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      setError('Error fetching users');
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        
-        if (!user || !user.token) {
-          setError("No authentication token found. Please login again.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get("http://localhost:3011/getUsers", {
-          headers: {
-            'Authorization': `Bearer ${user.token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.data && Array.isArray(response.data)) {
-          setUsers(response.data);
-        } else {
-          setError("Invalid data format received from server");
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setError("Failed to fetch users");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
 
@@ -49,10 +41,6 @@ const Customers = () => {
       case 1:
         return 'Admin';
       case 2:
-        return 'Staff';
-      case 3:
-        return 'Customer';
-      default:
         return 'User';
     }
   };
@@ -65,8 +53,50 @@ const Customers = () => {
     });
   };
 
-  const handleUserAdded = () => {
-    fetchUsers();
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setIsEditUserOpen(true);
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      await axios.delete(`http://localhost:3011/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      await fetchUsers();
+      setShowDeleteConfirm(false);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
+  const DeleteConfirmation = () => {
+    if (!showDeleteConfirm) return null;
+    
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content delete-confirm">
+          <h2>Confirm Delete</h2>
+          <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+          <div className="form-actions">
+            <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary">
+              Cancel
+            </button>
+            <button 
+              onClick={() => handleDelete(selectedUser.id)} 
+              className="btn-primary delete"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) return <div>Loading...</div>;
@@ -114,8 +144,16 @@ const Customers = () => {
                 </td>
                 <td>{formatDate(user.created_at)}</td>
                 <td className="actions">
-                  <button className="edit">Edit</button>
-                  <button className="delete">Delete</button>
+                  <button className="edit" onClick={() => handleEdit(user)}>Edit</button>
+                  <button 
+                    className="delete" 
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setShowDeleteConfirm(true);
+                    }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -126,8 +164,23 @@ const Customers = () => {
       <AddUsersForm 
         isOpen={isAddUserOpen}
         onClose={() => setIsAddUserOpen(false)}
-        onSuccess={handleUserAdded}
+        onSuccess={() => {
+          fetchUsers();
+          setIsAddUserOpen(false);
+        }}
       />
+
+      <EditUsersForm 
+        isOpen={isEditUserOpen}
+        onClose={() => setIsEditUserOpen(false)}
+        user={selectedUser}
+        onSuccess={() => {
+          fetchUsers();
+          setIsEditUserOpen(false);
+        }}
+      />
+
+      <DeleteConfirmation />
     </div>
   );
 };

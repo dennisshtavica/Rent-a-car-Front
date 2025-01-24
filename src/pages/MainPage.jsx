@@ -37,7 +37,6 @@ export default function MainPage() {
   );
 
   const isBookingModalV = useSelector((state) => {
-    console.log('Current modal state:', state.modal.isBookingModalV); // Debug log
     return state.modal.isBookingModalV;
   });
 
@@ -109,7 +108,6 @@ export default function MainPage() {
   };
 
   const handleToggleBookingModal = () => {
-    console.log('MainPage: Toggling booking modal. Before dispatch:', isBookingModalV);
     dispatch(toggleBookingModal());
   };
 
@@ -248,7 +246,6 @@ export default function MainPage() {
           <BookingModal 
             isVisible={isBookingModalV}
             onConfirm={() => {
-              console.log('MainPage: Modal confirmed, dispatching close action');
               dispatch(toggleBookingModal(false));
             }} 
           />

@@ -171,6 +171,33 @@
       }
     }
   }
+
+  .features-container {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+
+    .features-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .feature-item {
+      color: #fff;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-separator {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      margin: 0 2px;
+    }
+  }
 }
 
 .features-section {
