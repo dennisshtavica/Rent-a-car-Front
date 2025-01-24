@@ -19,7 +19,7 @@ const PaymentCancel = () => {
         <div className="payment-result cancel">
             <div className="result-container">
                 {/* <img src={cancelIcon} alt="Cancelled" className="status-icon" /> */}
-                <h1>Payment Cancelled</h1>
+                <h1 className='canceled'>Payment Cancelled</h1>
                 <p>Your payment was cancelled. No charges were made.</p>
 
                 <div className="action-buttons">

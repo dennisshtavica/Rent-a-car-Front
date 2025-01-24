@@ -14,6 +14,9 @@ const bookingSlice = createSlice({
     reducers: {
         setRentalDate: (state, action) => {
             state.rentalDate = action.payload;
+            const rental = JSON.parse(localStorage.getItem('rental') || '{}');
+            rental.rentalDate = action.payload;
+            localStorage.setItem('rental', JSON.stringify(rental));
         },
         setPickupLocation: (state, action) => {
             state.pickupLocation = action.payload;
@@ -26,6 +29,9 @@ const bookingSlice = createSlice({
         },
         setSelectedCar: (state, action) => {
             state.selectedCar = action.payload;
+            const rental = JSON.parse(localStorage.getItem('rental') || '{}');
+            rental.selectedCar = action.payload;
+            localStorage.setItem('rental', JSON.stringify(rental));
         },
     },
 })
