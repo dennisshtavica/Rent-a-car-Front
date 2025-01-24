@@ -11,6 +11,7 @@ import phoneIcon from '../../assets/images/icons/phone.svg';
 import carImage from '../../assets/images/troc.svg';
 import { differenceInDays } from 'date-fns';
 import axios from 'axios';
+import { setPaymentInitiated } from '../../app/slices/paymentSlice';
 
 function BookingModal({ onConfirm }) {
     const dispatch = useDispatch();
@@ -90,20 +91,19 @@ function BookingModal({ onConfirm }) {
     
     const handleStripeCheckout = async () => {
         try {
+            dispatch(setPaymentInitiated(true));
             const totalPrice = calculateTotalPrice();
             const carName = `${bookingDetails.selectedCar?.car.brand} ${bookingDetails.selectedCar?.car.model}`;
             
-         
             const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
                 amount: totalPrice,
                 carName,
             });
-
-  
+    
             window.location.href = data.url;
         } catch (error) {
             console.error('Error redirecting to Stripe Checkout:', error);
-
+            dispatch(clearPaymentStatus()); 
         }
     };
 

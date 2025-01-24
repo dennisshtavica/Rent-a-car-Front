@@ -1,12 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import "../scss/layout/_payment-result.scss";
 // import checkIcon from '../assets/images/icons/check-circle.svg';
+import { clearPaymentStatus } from '../app/slices/paymentSlice';
 
 const PaymentSuccess = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const bookingDetails = useSelector((state) => state.booking);
+    
+    
+    const handleCancelPayment = () => {
+        dispatch(clearPaymentStatus());
+        navigate('/mainPage');
+    }
 
     return (
         <div className="payment-result success">
@@ -32,7 +40,7 @@ const PaymentSuccess = () => {
                 </div>
 
                 <div className="action-buttons">
-                    <button onClick={() => navigate('/mainPage')} className="primary-button">
+                    <button onClick={() => handleCancelPayment()} className="primary-button">
                         Return to Home
                     </button>
                     <button onClick={() => navigate('/profile')} className="secondary-button">
