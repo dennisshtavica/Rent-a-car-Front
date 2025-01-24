@@ -8,6 +8,18 @@ const CarGrid = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortType, setSortType] = useState('Default');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300); 
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -70,8 +82,13 @@ const CarGrid = ({ filters }) => {
       const categoryMatch = filters.vehicleCategory.length === 0 ||
         filters.vehicleCategory.includes(car.category);
 
+      const searchMatch =
+        car.brand.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        car.model.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+
+
       return priceMatch && transmissionMatch && fuelMatch && 
-             seatsMatch && categoryMatch;
+             seatsMatch && categoryMatch && searchMatch;
     });
   };
 
@@ -94,6 +111,10 @@ const CarGrid = ({ filters }) => {
     setSortType(event.target.value);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -106,7 +127,12 @@ const CarGrid = ({ filters }) => {
         <div className="leftSection">
           <h2>Choose your vehicle</h2>
           <div className="searchSection">
-            <input type="text" placeholder="Search" />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
             <span className="availableCars">{sortedAndFilteredCars.length} AVAILABLE</span>
           </div>
         </div>
