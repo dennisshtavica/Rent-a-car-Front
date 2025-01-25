@@ -4,6 +4,8 @@ import { FaTimes } from 'react-icons/fa';
 import "../scss/_pages.scss";
 
 const EditCarsForm = ({ car, onClose, onSuccess }) => {
+  console.log('Initial car data:', car); // Debug log
+  
   const [formData, setFormData] = useState({
     brand: car?.brand || '',
     model: car?.model || '',
@@ -16,6 +18,8 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
     car_features: car?.car_features?.map(f => f._id) || [],
     car_category: car?.car_category?._id || ''
   });
+
+  console.log('Initial formData:', formData); // Debug log
 
   const [features, setFeatures] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -58,35 +62,49 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
   }, []);
 
   const handleFeatureToggle = (featureId) => {
-    setFormData(prev => ({
-      ...prev,
-      car_features: prev.car_features.includes(featureId)
+    console.log('Toggling feature:', featureId);
+    setFormData(prev => {
+      const newFeatures = prev.car_features.includes(featureId)
         ? prev.car_features.filter(f => f !== featureId)
-        : [...prev.car_features, featureId]
-    }));
+        : [...prev.car_features, featureId];
+      console.log('New features array:', newFeatures);
+      return {
+        ...prev,
+        car_features: newFeatures
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const user = JSON.parse(localStorage.getItem("user"));
+      
+      // Create a regular object instead of FormData
+      const updateData = {
+        brand: formData.brand,
+        model: formData.model,
+        seats: formData.seats,
+        transmission: formData.transmission,
+        price: formData.price,
+        year: formData.year,
+        fuelType: formData.fuelType,
+        car_category: formData.car_category,
+        car_features: formData.car_features // Send features as an array
+      };
+
+      // Create FormData only if there's an image
       const data = new FormData();
       
-      Object.keys(formData).forEach(key => {
-        if (key === 'car_features') {
-          if (formData[key] && formData[key].length > 0) {
-            formData[key].forEach(feature => {
-              data.append('car_features', feature);
-            });
-          }
-        } else if (key === 'image') {
-          if (formData.image) {
-            data.append('image', formData.image);
-          }
-        } else {
-          data.append(key, formData[key]);
-        }
-      });
+      // Add the JSON data
+      data.append('data', JSON.stringify(updateData));
+      
+      // Add image if present
+      if (formData.image) {
+        data.append('image', formData.image);
+      }
+
+      console.log('Sending update data:', updateData);
 
       const response = await axios.put(`http://localhost:3011/updateCar/${car._id}`, data, {
         headers: {
@@ -96,6 +114,15 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
       });
 
       console.log('Success response:', response.data);
+      
+      if (response.data.car) {
+        setFormData(prev => ({
+          ...prev,
+          ...response.data.car,
+          car_features: response.data.car.car_features.map(f => f._id)
+        }));
+      }
+      
       onSuccess();
     } catch (error) {
       console.error('Error updating car:', error);

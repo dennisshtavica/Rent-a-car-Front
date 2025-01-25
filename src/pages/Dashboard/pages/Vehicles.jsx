@@ -11,6 +11,8 @@ const Vehicles = () => {
   const [error, setError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingCar, setEditingCar] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [selectedCar, setSelectedCar] = useState(null);
 
   const fetchCars = async () => {
     try {
@@ -51,17 +53,16 @@ const Vehicles = () => {
         return;
       }
 
-      const response = await axios.delete(`http://localhost:3011/deleteCar/${carId}`, {
+      await axios.delete(`http://localhost:3011/cars/${carId}`, {
         headers: {
-          'Authorization': `Bearer ${user.token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${user.token}`
         }
       });
 
-      if (response.status === 200) {
-        // Refresh the cars list after deletion
-        fetchCars();
-      }
+      fetchCars();
+      setShowDeleteConfirm(false);
+      setSelectedCar(null);
+      
     } catch (error) {
       console.error("Error deleting car:", error);
       alert(error.response?.data?.message || "Failed to delete car");
@@ -80,6 +81,30 @@ const Vehicles = () => {
 
   const handleEditClick = (car) => {
     setEditingCar(car);
+  };
+
+  const DeleteConfirmation = () => {
+    if (!showDeleteConfirm) return null;
+    
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content delete-confirm">
+          <h2>Confirm Delete</h2>
+          <p>Are you sure you want to delete this car? This action cannot be undone.</p>
+          <div className="form-actions">
+            <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary">
+              Cancel
+            </button>
+            <button 
+              onClick={() => handleDeleteCar(selectedCar._id)} 
+              className="btn-primary delete"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) return <div>Loading...</div>;
@@ -118,6 +143,8 @@ const Vehicles = () => {
         />
       )}
 
+      <DeleteConfirmation />
+
       <div className="vehicles-grid">
         {cars.map((car) => (
           <div key={car._id} className="vehicle-card">
@@ -152,9 +179,8 @@ const Vehicles = () => {
               <button 
                 className="btn-secondary"
                 onClick={() => {
-                  if (window.confirm('Are you sure you want to delete this car?')) {
-                    handleDeleteCar(car._id);
-                  }
+                  setSelectedCar(car);
+                  setShowDeleteConfirm(true);
                 }}
               >
                 Delete Car

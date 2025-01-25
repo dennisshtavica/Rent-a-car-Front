@@ -40,6 +40,7 @@ const CarGrid = ({ filters }) => {
         });
 
         if (response.data && Array.isArray(response.data)) {
+          console.log("First car object:", response.data[0]);
           setCars(response.data);
         } else {
           setError("Invalid data format received from server");
@@ -80,12 +81,11 @@ const CarGrid = ({ filters }) => {
         filters.seats.includes(`${car.seats} Seats`);
 
       const categoryMatch = filters.vehicleCategory.length === 0 ||
-        filters.vehicleCategory.includes(car.category);
+        filters.vehicleCategory.includes(car.car_category._id);
 
       const searchMatch =
         car.brand.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         car.model.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
-
 
       return priceMatch && transmissionMatch && fuelMatch && 
              seatsMatch && categoryMatch && searchMatch;

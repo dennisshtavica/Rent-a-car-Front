@@ -42,12 +42,12 @@ const FilterCars = ({ onFilterChange }) => {
   ];
 
   const vehicleCategories = [
-    { id: 1, category: 'Sedan' },
-    { id: 2, category: 'SUV' },
-    { id: 3, category: 'Hatchback' },
-    { id: 4, category: 'Coupe' },
-    { id: 5, category: 'Wagon' },
-    { id: 7, category: 'Convertible' },
+    { id: "67937323f91c5f7f64c8017f", category: 'Sedan' },
+    { id: "67937323f91c5f7f64c80180", category: 'SUV' },
+    { id: "67937323f91c5f7f64c80181", category: 'Hatchback' },
+    { id: "67937323f91c5f7f64c80182", category: 'Coupe' },
+    { id: "67937323f91c5f7f64c80183", category: 'Wagon' },
+    { id: "67937323f91c5f7f64c80184", category: 'Convertible' },
   ];
 
   const handleClearFilters = () => {
@@ -64,9 +64,13 @@ const FilterCars = ({ onFilterChange }) => {
   };
 
   const updateFilters = (filterType, value) => {
-    const updatedValues = filters[filterType].includes(value)
-      ? filters[filterType].filter(item => item !== value)
-      : [...filters[filterType], value];
+    const valueToStore = filterType === 'vehicleCategory' 
+      ? vehicleCategories.find(vc => vc.category === value)?.id
+      : value;
+    
+    const updatedValues = filters[filterType].includes(valueToStore)
+      ? filters[filterType].filter(item => item !== valueToStore)
+      : [...filters[filterType], valueToStore];
     
     const newFilters = {
       ...filters,
@@ -204,7 +208,7 @@ const FilterCars = ({ onFilterChange }) => {
                 <label key={item.id} className="checkbox-container">
                   <input
                     type="checkbox"
-                    checked={filters.vehicleCategory.includes(item.category)}
+                    checked={filters.vehicleCategory.includes(item.id)}
                     onChange={() => updateFilters('vehicleCategory', item.category)}
                   />
                   <span className="checkbox-label">{item.category}</span>

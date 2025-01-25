@@ -192,35 +192,40 @@ button {
     }
 
     .vehicle-actions {
-      padding: 1.25rem;
       display: flex;
-      gap: 0.75rem;
-      border-top: 1px solid #e2e8f0;
-      margin-top: auto;
-
+      gap: 10px;
+      padding: 15px;
+      
       button {
-        flex: 1;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
         font-weight: 500;
-        
+        transition: all 0.2s ease;
+
         &.btn-primary {
-          background: #2563eb;
+          background-color: #007bff;
           color: white;
-          border: none;
-          
+
           &:hover {
-            background: #1d4ed8;
+            background-color: #0056b3;
           }
         }
-        
+
         &.btn-secondary {
-          background: white;
-          color: #2563eb;
-          border: 1px solid #2563eb;
-          
+          background-color: #dc3545;
+          color: white;
+          border: 1px solid #dc3545;
+
           &:hover {
-            background: #f8fafc;
+            background-color: #c82333;
+            border-color: #bd2130;
+          }
+
+          &:active {
+            background-color: #bd2130;
+            border-color: #b21f2d;
           }
         }
       }
@@ -442,9 +447,11 @@ button {
 
         &.btn-primary.delete {
           background-color: #dc3545;
-          
+          border-color: #dc3545;
+
           &:hover {
             background-color: #c82333;
+            border-color: #bd2130;
           }
         }
 
