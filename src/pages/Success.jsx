@@ -12,12 +12,36 @@ const PaymentSuccess = () => {
     useEffect(() => {
         const rental = JSON.parse(localStorage.getItem('rental') || '{}');
         setRentalDetails(rental);
+        
+        const userStr = localStorage.getItem('user');
+        const user = JSON.parse(userStr || '{}');
+        
+        if (user && user.token) {
+            localStorage.setItem('token', user.token);
+        }
     }, []);
 
-    const handleCancelPayment = () => {
+    const handleViewBookings = () => {
+        const userStr = localStorage.getItem('user');
+        const user = JSON.parse(userStr || '{}');
+
+        const token = user.token;
+        
+        if (!token) {
+            console.log('No token found in user data');
+            navigate('/signin');
+            return;
+        }
+        
+        localStorage.setItem('token', token);
+        localStorage.removeItem('rental');
+        navigate('/carsRented');
+    };
+
+    const handleReturnHome = () => {
         localStorage.removeItem('rental');
         navigate('/mainPage');
-    }
+    };
 
     return (
         <div className="payment-result success">
@@ -50,10 +74,10 @@ const PaymentSuccess = () => {
                 </div>
 
                 <div className="action-buttons">
-                    <button onClick={() => handleCancelPayment()} className="primary-button">
+                    <button onClick={handleReturnHome} className="primary-button">
                         Return to Home
                     </button>
-                    <button onClick={() => navigate('/profile')} className="secondary-button">
+                    <button onClick={handleViewBookings} className="secondary-button">
                         View My Bookings
                     </button>
                 </div>

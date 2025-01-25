@@ -34,10 +34,22 @@ export default function SignIn() {
         }
       )
       .then((res) => {
+        console.log('Login response:', res.data);
+
         localStorage.setItem(
           "user",
-          JSON.stringify({ token: res.data.token, username: res.data.username, email: res.data.email, id: res.data.id, role_id: res.data.role_id, phone_number: res.data.phone_number })
+          JSON.stringify({ 
+            token: res.data.token,
+            username: res.data.username, 
+            email: res.data.email, 
+            id: res.data.id, 
+            role_id: res.data.role_id, 
+            phone_number: res.data.phone_number 
+          })
         );
+        
+        localStorage.setItem("token", res.data.token);
+        
         
         const overlay = document.createElement('div');
         overlay.className = 'page-transition';

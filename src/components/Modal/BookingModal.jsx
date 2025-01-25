@@ -11,12 +11,11 @@ import phoneIcon from '../../assets/images/icons/phone.svg';
 import carImage from '../../assets/images/troc.svg';
 import { differenceInDays } from 'date-fns';
 import axios from 'axios';
-import { setPaymentInitiated } from '../../app/slices/paymentSlice';
+import { setPaymentInitiated, clearPaymentStatus } from '../../app/slices/paymentSlice';
 
 function BookingModal({ onConfirm }) {
     const dispatch = useDispatch();
     const isVisible = useSelector(state => {
-        console.log('BookingModal: Current state in modal:', state.modal.isBookingModalV);
         return state.modal.isBookingModalV;
     });
     const bookingDetails = useSelector(state => state.booking);
@@ -37,10 +36,8 @@ function BookingModal({ onConfirm }) {
     }, []);
 
     const handleClose = () => {
-        console.log('BookingModal: Close button clicked - dispatching close action');
         dispatch(toggleBookingModal(false));
         setTimeout(() => {
-            console.log('BookingModal: State after dispatch:', isVisible);
             if (onConfirm) {
                 onConfirm();
             }
@@ -50,7 +47,6 @@ function BookingModal({ onConfirm }) {
     useEffect(() => {
         const handleEscKey = (event) => {
             if (event.key === 'Escape') {
-                console.log('BookingModal: ESC key pressed - calling handleClose');
                 handleClose();
             }
         };
@@ -64,12 +60,10 @@ function BookingModal({ onConfirm }) {
 
     const handleBackgroundClick = (e) => {
         if (e.target.className === 'booking-modal') {
-            console.log('Background clicked - closing modal');
             handleClose();
         }
     };
 
-    // Format the dates for display
     const formatDate = (date) => {
         if (!date) return 'Not available';
         return new Date(date).toLocaleString('en-US', {
@@ -89,24 +83,6 @@ function BookingModal({ onConfirm }) {
         return 0;
     };
     
-    // const handleStripeCheckout = async () => {
-    //     try {
-    //         dispatch(setPaymentInitiated(true));
-    //         const totalPrice = calculateTotalPrice();
-    //         const carName = `${bookingDetails.selectedCar?.car.brand} ${bookingDetails.selectedCar?.car.model}`;
-            
-    //         const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
-    //             amount: totalPrice,
-    //             carName,
-    //         });
-    
-    //         window.location.href = data.url;
-    //     } catch (error) {
-    //         console.error('Error redirecting to Stripe Checkout:', error);
-    //         dispatch(clearPaymentStatus()); 
-    //     }
-    // };
-
     const handleStripeCheckout = async () => {
         try {
             dispatch(setPaymentInitiated(true));
@@ -116,21 +92,33 @@ function BookingModal({ onConfirm }) {
                 from: bookingDetails.rentalDate.from,
                 to: bookingDetails.rentalDate.to,
             };
-    
-            // API call to create a checkout session
+
+            const user = JSON.parse(localStorage.getItem('user'));
+            
             const { data } = await axios.post('http://localhost:3011/create-checkout-session', {
                 amount: totalPrice,
                 carName,
-                carId: bookingDetails.selectedCar?.car._id, // Car ID
+                carId: bookingDetails.selectedCar?.car._id,
                 pickupLocation: bookingDetails.pickupLocation,
                 returnLocation: bookingDetails.returnLocation,
                 rentalDate,
                 username: userDetails.name,
                 email: userDetails.email,
                 phone_number: userDetails.phone_number,
+                userId: user.id 
             });
-    
-            // Redirect to the Stripe checkout page
+
+            const rentalDetails = {
+                bookingId: data.bookingId,
+                selectedCar: bookingDetails.selectedCar,
+                rentalDate: bookingDetails.rentalDate,
+                pickupLocation: bookingDetails.pickupLocation,
+                returnLocation: bookingDetails.returnLocation,
+                totalPrice: totalPrice,
+                userId: user.id
+            };
+            localStorage.setItem('rental', JSON.stringify(rentalDetails));
+
             window.location.href = data.url;
         } catch (error) {
             console.error('Error redirecting to Stripe Checkout:', error);
@@ -151,7 +139,6 @@ function BookingModal({ onConfirm }) {
                     className="close-button" 
                     onClick={(e) => {
                         e.stopPropagation();
-                        console.log('BookingModal: Close button clicked');
                         handleClose();
                     }}
                 >

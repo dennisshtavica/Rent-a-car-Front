@@ -1,98 +1,165 @@
-import React, { useState, useEffect } from "react";
-import Header from "../components/Header";
-import "../scss/components/_carCard.scss";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import CarCard from "../components/CarCard";
-import CarRentedCard from "../components/CarRentedCard";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../scss/sections/_carRented.scss';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-export default function CarRented() {
-  const [bookedCar, setBookedCar] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [loadingStates, setLoadingStates] = useState({});
+function CarRented() {
+    const [bookedCars, setBookedCars] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
 
-  console.log("bookedCar", bookedCar);
-  const user = JSON.parse(localStorage.getItem("user"));
+    const fetchBookedCars = async () => {
+        try {
+            const userStr = localStorage.getItem('user');
+            const user = JSON.parse(userStr || '{}');
+            const token = user.token;
 
-  useEffect(() => {
+            if (!user || !token) {
+                throw new Error('Authentication data missing');
+            }
 
-    axios.get(`http://localhost:3011/carsRented/${user.id}`,
-      {
-        headers: {
-          Authorization: "Bearer " + user.token,
-        },
-      }
-    ).then((res) => {
-      setBookedCar(res.data);
-    });
-  }, []);
+            const response = await axios.get(
+                `http://localhost:3011/carsRented/${user.id}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
-  const handleCancelBooking = (bookingId) => {
-    setLoadingStates((prevState) => ({
-      ...prevState,
-      [bookingId]: true,
-    }));
-
-    axios
-      .delete(`http://localhost:3011/cancelBooking/${user.id}/${bookingId}`, 
-        {
-          headers: {
-            Authorization: "Bearer " + user.token,
-          },
+            
+            
+            if (Array.isArray(response.data)) {
+                setBookedCars(response.data);
+            } else {
+                throw new Error('Invalid response format');
+            }
+        } catch (error) {
+            console.error('Error details:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            setError(error.response?.data?.message || error.message || 'Failed to load booked cars');
+        } finally {
+            setLoading(false);
         }
-      )
-      .then((res) => {
-        setTimeout(() => {
-          setLoadingStates((prevState) => ({
-            ...prevState,
-            [bookingId]: false,
-          }));
-          setBookedCar(bookedCar.filter((car) => car.bookingId !== bookingId));
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error("Error canceling booking:", err);
-        setLoadingStates((prevState) => ({
-          ...prevState,
-          [bookingId]: false,
-        }));
-      });
-  };
+    };
 
-  if (!user) {
-    return <SignIn />;
-  }
+    useEffect(() => {
+        fetchBookedCars();
+    }, []);
 
-  return (
-    <div className="carRented container">
-      <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu} />
-      <div>
-        <h1>Car Rented</h1>
-        {bookedCar.map((car) => (
-          <CarRentedCard
-            key={car.bookingId}
-            _id={car.car._id}
-            image={car.car.image}
-            name={car.car.name}
-            model={car.car.model}
-            seats={car.car.seats}
-            transmission={car.car.transmission}
-            range={car.car.range}
-            price={car.car.price}
-            formattedDates={car.formattedDates}
-            pickupLocation={car.pickupLocation}
-            handleCancelBooking={() => handleCancelBooking(car.bookingId)}
-            loading={loadingStates[car.bookingId] || false}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    const handleCancelBooking = async (bookingId) => {
+        try {
+            const userStr = localStorage.getItem('user');
+            const user = JSON.parse(userStr || '{}');
+            const token = user.token;
+
+            if (!token) {
+                throw new Error('Authentication token missing');
+            }
+
+            // Show confirmation dialog
+            if (!window.confirm('Are you sure you want to cancel this booking?')) {
+                return;
+            }
+
+            // Updated URL to match your backend endpoint
+            const response = await axios.delete(
+                `http://localhost:3011/cancelBooking/${user.id}/${bookingId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+          
+
+            // Refresh the bookings list
+            await fetchBookedCars();
+
+            // Show success message
+            alert('Booking cancelled successfully');
+
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            alert(error.response?.data?.message || 'Failed to cancel booking');
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <div className="loading">Loading...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <div className="error">{error}</div>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <div className="mainPage container">
+                <Header isOpen={isOpen} toggleMenu={() => setIsOpen(!isOpen)} closeMenu={() => setIsOpen(false)} />
+            </div>
+
+            <div className="booked-cars-container">
+                <h1>My Booked Cars</h1>
+                {bookedCars.length === 0 ? (
+                    <div className="no-bookings">
+                        <p>You haven't made any bookings yet.</p>
+                    </div>
+                ) : (
+                    <div className="booked-cars-grid">
+                        {bookedCars.map((booking) => (
+                            <div key={booking.bookingId} className="booked-car-card">
+                                <div className="car-image">
+                                    <img 
+                                        src={`http://localhost:3011/${booking.car.image}`} 
+                                        alt={`${booking.car.brand} ${booking.car.model}`} 
+                                    />
+                                </div>
+                                <div className="car-details">
+                                    <h2>{booking.car.brand} {booking.car.model}</h2>
+                                    <div className="booking-info">
+                                        <p><strong>Pickup Location:</strong> {booking.pickupLocation}</p>
+                                        <p><strong>Return Location:</strong> {booking.returnLocation}</p>
+                                        <p><strong>Dates:</strong> {booking.formattedDates}</p>
+                                        <p><strong>Status:</strong> 
+                                            <span className={`status ${booking.status.toLowerCase()}`}>
+                                                {booking.status}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    {booking.status === 'Pending' && (
+                                        <button 
+                                            className="cancel-button"
+                                            onClick={() => handleCancelBooking(booking.bookingId)}
+                                        >
+                                            Cancel Booking
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+            <Footer />
+        </>
+    );
 }
+
+export default CarRented;
