@@ -30,8 +30,6 @@ function CarRented() {
                     }
                 }
             );
-
-            
             
             if (Array.isArray(response.data)) {
                 setBookedCars(response.data);
