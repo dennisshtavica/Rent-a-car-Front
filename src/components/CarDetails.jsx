@@ -165,7 +165,9 @@ const CarDetails = ({ car, onClose }) => {
               ))}
             </div>
 
-            <button 
+
+            {car.available ? (
+              <button 
               className="choose-button" 
               onClick={handleChoose}
               disabled={!rentalDate.from || !rentalDate.to}
@@ -173,7 +175,9 @@ const CarDetails = ({ car, onClose }) => {
               {!rentalDate.from || !rentalDate.to 
                 ? 'Please select dates first' 
                 : 'Choose'}
-            </button>
+            </button>) : (<div></div>)
+            }  
+    
 
           </div>
         </div>

@@ -14,7 +14,8 @@ export default function CarCard({
   isEarlyBird, 
   distance,
   image,
-  car
+  car,
+  bookingDate
 }) {
   const [showDetails, setShowDetails] = useState(false);
 
@@ -31,7 +32,15 @@ export default function CarCard({
         style={{ backgroundImage: `url(${backgroundImage})` }}
         onClick={() => setShowDetails(true)}
       >
-        {isEarlyBird && <span className="earlyBirdBadge">EARLY BIRD SPECIAL</span>}
+        {/* {isEarlyBird ? ( <span className="earlyBirdBadge">EARLY BIRD SPECIAL</span> 
+        : 
+          <span className="earlyBirdBadge">SPECIAL OFFER</span>
+        )} */}
+        {isEarlyBird ? (
+          <span className="earlyBirdBadge">EARLY BIRD SPECIAL</span>
+        ) : (
+          <span className="earlyBirdBadge notAvailableUntil">NOT AVAILABLE UNTIL: {bookingDate}</span>
+        )}
         <h3 className="carModel">{model}</h3>
         <div className="carImageContainer">
           <img 

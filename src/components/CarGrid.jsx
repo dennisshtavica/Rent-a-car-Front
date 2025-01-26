@@ -10,6 +10,7 @@ const CarGrid = ({ filters }) => {
   const [sortType, setSortType] = useState('Default');
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [bookings, setBookings] = useState({});
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -20,6 +21,16 @@ const CarGrid = ({ filters }) => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  console.log('bookings:', bookings);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -39,12 +50,31 @@ const CarGrid = ({ filters }) => {
           }
         });
 
+        const bookingsResponse = await axios.get("http://localhost:3011/bookings", {
+          headers: {
+            'Authorization': `Bearer ${user.token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+          const bookingsMap = {};
+      bookingsResponse.data.forEach(booking => {
+        if (!bookingsMap[booking.carId] || 
+            new Date(booking.rentalDate.to) > new Date(bookingsMap[booking.carId].rentalDate.to)) {
+          bookingsMap[booking.carId] = {
+            ...booking,
+            formattedDate: formatDate(booking.rentalDate.to)
+          };
+        }
+      });
+
         if (response.data && Array.isArray(response.data)) {
           console.log("First car object:", response.data[0]);
           setCars(response.data);
         } else {
           setError("Invalid data format received from server");
         }
+        setBookings(bookingsMap);
       } catch (error) {
         console.error("Error fetching cars:", error);
         setError("Failed to fetch cars");
@@ -153,6 +183,7 @@ const CarGrid = ({ filters }) => {
             model={`${car.brand} ${car.model}`}
             pricePerDay={car.price}
             totalPrice={car.price * 7}
+            bookingDate={bookings[car._id]?.formattedDate}
             features={[
               `${car.seats} Seats`,
               car.transmission,
