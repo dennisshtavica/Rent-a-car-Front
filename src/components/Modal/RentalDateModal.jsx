@@ -29,6 +29,7 @@ const ModalOverlay = (props) => {
             mode='range'
             selected={rentalDate}  
             onSelect={handleRentalDate}
+            disabled={{ before: new Date() }} 
         />
         
       </div>
