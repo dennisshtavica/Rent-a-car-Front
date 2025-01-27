@@ -155,7 +155,6 @@ function CarRented() {
                     </div>
                 )}
             </div>
-            <Footer />
         </>
     );
 }

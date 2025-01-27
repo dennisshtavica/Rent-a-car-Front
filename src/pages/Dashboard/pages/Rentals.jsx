@@ -33,6 +33,7 @@ const Rentals = () => {
         }
       );
 
+      
       setRentals(response.data);
       setLoading(false);
     } catch (error) {
@@ -42,7 +43,6 @@ const Rentals = () => {
     }
   };
 
-  // Filter rentals based on search term and status
   const filteredRentals = rentals.filter(rental => {
     const matchesSearch = 
       rental.car.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,6 +60,23 @@ const Rentals = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  const calculateTotalPrice = (rental) => {
+    try {
+      const startDate = new Date(rental.rentalDate.from);
+      const endDate = new Date(rental.rentalDate.to);
+      const diffTime = Math.abs(endDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      
+      const pricePerDay = rental.car?.price || 0;
+      const total = diffDays * pricePerDay;
+
+      return total;
+    } catch (error) {
+      console.error('Error calculating total amount:', error);
+      return 0;
+    }
   };
 
   if (loading) {
@@ -160,6 +177,10 @@ const Rentals = () => {
                 <span className="value">
                   {formatDate(rental.rentalDate.from)} - {formatDate(rental.rentalDate.to)}
                 </span>
+              </div>
+              <div className="detail-row">
+                <span className="label">Total Price:</span>
+                <span className="value">${calculateTotalPrice(rental).toFixed(2)}</span>
               </div>
             </div>
           </div>

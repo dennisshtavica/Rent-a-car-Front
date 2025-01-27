@@ -1,27 +1,135 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaChartBar, FaCarSide, FaUsers, FaDollarSign, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import axios from 'axios';
 import "../scss/_pages.scss";
 
 const Reports = () => {
-  // Sample data - replace with actual data later
-  const statistics = {
-    totalBookings: 156,
-    totalRevenue: 25600,
-    activeVehicles: 24,
-    totalCustomers: 89,
-    recentBookings: [
-      { id: 1, customer: "John Doe", car: "BMW X5", date: "2024-03-15", amount: 180 },
-      { id: 2, customer: "Jane Smith", car: "Audi A4", date: "2024-03-14", amount: 150 },
-      { id: 3, customer: "Mike Johnson", car: "Mercedes C-Class", date: "2024-03-13", amount: 200 },
-      { id: 4, customer: "Sarah Wilson", car: "Tesla Model 3", date: "2024-03-12", amount: 220 },
-    ],
-    popularCars: [
-      { car: "BMW X5", bookings: 45 },
-      { car: "Tesla Model 3", bookings: 38 },
-      { car: "Mercedes C-Class", bookings: 32 },
-      { car: "Audi A4", bookings: 28 },
-    ]
-  };
+  const [statistics, setStatistics] = useState({
+    totalBookings: 0,
+    totalRevenue: 0,
+    activeVehicles: 0,
+    totalCustomers: 0,
+    recentBookings: [],
+    popularCars: []
+  });
+
+  const [previousStats, setPreviousStats] = useState({
+    totalBookings: 0,
+    totalRevenue: 0,
+    activeVehicles: 0,
+    totalCustomers: 0
+  });
+
+  const [percentageChanges, setPercentageChanges] = useState({
+    bookings: 0,
+    revenue: 0,
+    vehicles: 0,
+    customers: 0
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userStr = localStorage.getItem('user');
+        const user = JSON.parse(userStr || '{}');
+        const token = user.token;
+
+        if (!token) {
+          throw new Error('Authentication token missing');
+        }
+
+        const [bookingsResponse, carsResponse, usersResponse] = await Promise.all([
+          axios.get('http://localhost:3011/allBookings', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          axios.get('http://localhost:3011/getCars', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          axios.get('http://localhost:3011/getUsers', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+        ]);
+
+        const currentBookings = bookingsResponse.data.length;
+        const currentVehicles = carsResponse.data.length;
+        const currentCustomers = usersResponse.data.length;
+        
+        const currentRevenue = bookingsResponse.data.reduce((sum, booking) => {
+          const startDate = new Date(booking.rentalDate.from);
+          const endDate = new Date(booking.rentalDate.to);
+          const diffTime = Math.abs(endDate - startDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const bookingTotal = diffDays * booking.car.price;
+          return sum + bookingTotal;
+        }, 0);
+
+        const oldStats = {
+          totalBookings: statistics.totalBookings,
+          totalRevenue: statistics.totalRevenue,
+          activeVehicles: statistics.activeVehicles,
+          totalCustomers: statistics.totalCustomers
+        };
+
+        const calculateExactPercentageChange = (current, previous) => {
+          const difference = current - previous;
+          const percentageChange = (difference / previous) * 100;
+          return isFinite(percentageChange) ? percentageChange : 0;
+        };
+
+        const changes = {
+          bookings: calculateExactPercentageChange(currentBookings, oldStats.totalBookings),
+          revenue: calculateExactPercentageChange(currentRevenue, oldStats.totalRevenue),
+          vehicles: calculateExactPercentageChange(currentVehicles, oldStats.activeVehicles),
+          customers: calculateExactPercentageChange(currentCustomers, oldStats.totalCustomers)
+        };
+
+        console.log('Stats Change Analysis:');
+        console.log(`Customers: ${oldStats.totalCustomers} → ${currentCustomers} (${changes.customers.toFixed(1)}%)`);
+        console.log(`Vehicles: ${oldStats.activeVehicles} → ${currentVehicles} (${changes.vehicles.toFixed(1)}%)`);
+        console.log(`Bookings: ${oldStats.totalBookings} → ${currentBookings} (${changes.bookings.toFixed(1)}%)`);
+        console.log(`Revenue: ${oldStats.totalRevenue} → ${currentRevenue} (${changes.revenue.toFixed(1)}%)`);
+
+        const carBookingCounts = bookingsResponse.data.reduce((acc, booking) => {
+          const carId = booking.car._id;
+          acc[carId] = acc[carId] || {
+            car: `${booking.car.brand} ${booking.car.model}`,
+            bookings: 0
+          };
+          acc[carId].bookings += 1;
+          return acc;
+        }, {});
+
+        const popularCars = Object.values(carBookingCounts)
+          .filter(car => car.bookings > 3)
+          .sort((a, b) => b.bookings - a.bookings);
+
+        setPreviousStats(oldStats);
+        setPercentageChanges(changes);
+        setStatistics({
+          totalBookings: currentBookings,
+          totalRevenue: currentRevenue,
+          activeVehicles: currentVehicles,
+          totalCustomers: currentCustomers,
+          recentBookings: bookingsResponse.data.slice(0, 4).map(booking => ({
+            id: booking._id,
+            customer: booking.user?.username || 'Unknown Customer',
+            car: `${booking.car.brand} ${booking.car.model}`,
+            date: booking.rentalDate.from,
+            amount: booking.car.price
+          })),
+          popularCars: popularCars
+        });
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
+  }, []); 
 
   return (
     <div className="page-container">
@@ -30,7 +138,6 @@ const Reports = () => {
       </div>
 
       <div className="reports-container">
-        {/* Statistics Cards */}
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon bookings">
@@ -39,9 +146,6 @@ const Reports = () => {
             <div className="stat-details">
               <h3>Total Bookings</h3>
               <p className="stat-number">{statistics.totalBookings}</p>
-              <span className="stat-change positive">
-                <FaArrowUp /> +12.5%
-              </span>
             </div>
           </div>
 
@@ -52,9 +156,6 @@ const Reports = () => {
             <div className="stat-details">
               <h3>Total Revenue</h3>
               <p className="stat-number">€{statistics.totalRevenue}</p>
-              <span className="stat-change positive">
-                <FaArrowUp /> +8.3%
-              </span>
             </div>
           </div>
 
@@ -65,9 +166,6 @@ const Reports = () => {
             <div className="stat-details">
               <h3>Active Vehicles</h3>
               <p className="stat-number">{statistics.activeVehicles}</p>
-              <span className="stat-change negative">
-                <FaArrowDown /> -2.1%
-              </span>
             </div>
           </div>
 
@@ -78,14 +176,10 @@ const Reports = () => {
             <div className="stat-details">
               <h3>Total Customers</h3>
               <p className="stat-number">{statistics.totalCustomers}</p>
-              <span className="stat-change positive">
-                <FaArrowUp /> +5.7%
-              </span>
             </div>
           </div>
         </div>
 
-        {/* Recent Bookings */}
         <div className="report-section">
           <h2>Recent Bookings</h2>
           <div className="table-container">
@@ -112,7 +206,6 @@ const Reports = () => {
           </div>
         </div>
 
-        {/* Popular Cars */}
         <div className="report-section">
           <h2>Most Popular Vehicles</h2>
           <div className="popular-cars">

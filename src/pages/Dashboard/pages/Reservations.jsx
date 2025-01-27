@@ -4,62 +4,42 @@ import axios from 'axios';
 import "../scss/_pages.scss";
 
 const Reservations = () => {
-  const [cars, setCars] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchReservations = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const response = await axios.get("http://localhost:3011/getCars", {
+        const response = await axios.get("http://localhost:3011/allBookings", {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
         });
-        setCars(response.data);
+
+        // Get current date
+        const currentDate = new Date();
+        
+        // Filter bookings within next 3 days
+        const upcomingReservations = response.data.filter(booking => {
+          const pickupDate = new Date(booking.rentalDate.from);
+          const timeDiff = pickupDate.getTime() - currentDate.getTime();
+          const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          return daysDiff >= 0 && daysDiff <= 3;
+        });
+
+        setReservations(upcomingReservations);
+        setLoading(false);
       } catch (err) {
-        console.error("Error fetching cars:", err);
-      } finally {
+        console.error("Error fetching reservations:", err);
         setLoading(false);
       }
     };
 
-    fetchCars();
+    fetchReservations();
   }, []);
-
-  // Sample reservation data with actual car data
-  const reservations = [
-    {
-      id: 1,
-      customer: "John Doe",
-      car: cars[0] || { brand: "Loading...", model: "", image: "" },
-      startDate: "2024-03-15",
-      endDate: "2024-03-20",
-      status: "Active",
-      totalPrice: 450
-    },
-    {
-      id: 2,
-      customer: "Jane Smith",
-      car: cars[1] || { brand: "Loading...", model: "", image: "" },
-      startDate: "2024-03-18",
-      endDate: "2024-03-25",
-      status: "Pending",
-      totalPrice: 560
-    },
-    {
-      id: 3,
-      customer: "Mike Johnson",
-      car: cars[2] || { brand: "Loading...", model: "", image: "" },
-      startDate: "2024-03-10",
-      endDate: "2024-03-12",
-      status: "Completed",
-      totalPrice: 240
-    }
-  ];
-
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -87,24 +67,27 @@ const Reservations = () => {
   const filteredReservations = reservations
     .filter(reservation => {
       if (filter === 'all') return true;
-      return reservation.status.toLowerCase() === filter.toLowerCase();
+      return reservation.booking_status.toLowerCase() === filter.toLowerCase();
     })
     .filter(reservation => {
       const searchStr = searchTerm.toLowerCase();
       return (
-        reservation.customer.toLowerCase().includes(searchStr) ||
+        reservation.user?.username?.toLowerCase().includes(searchStr) ||
         `${reservation.car.brand} ${reservation.car.model}`.toLowerCase().includes(searchStr)
       );
     });
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
   return (
     <div className="page-container">
       <div className="page-header">
-        <h1><FaCalendarAlt className="page-icon" /> Reservations</h1>
+        <h1><FaCalendarAlt className="page-icon" /> Upcoming Reservations</h1>
       </div>
 
       <div className="reservations-container">
-        {/* Filters and Search */}
         <div className="reservations-actions">
           <div className="search-bar">
             <FaSearch />
@@ -119,18 +102,16 @@ const Reservations = () => {
             <FaFilter />
             <select value={filter} onChange={(e) => setFilter(e.target.value)}>
               <option value="all">All Reservations</option>
-              <option value="active">Active</option>
               <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
+              <option value="confirmed">Confirmed</option>
               <option value="cancelled">Cancelled</option>
             </select>
           </div>
         </div>
 
-        {/* Reservations Grid */}
         <div className="reservations-grid">
           {filteredReservations.map((reservation) => (
-            <div key={reservation.id} className="reservation-card">
+            <div key={reservation._id} className="reservation-card">
               <div className="car-info">
                 <img 
                   src={`http://localhost:3011/${reservation.car.image}`}
@@ -143,36 +124,36 @@ const Reservations = () => {
                 />
                 <div className="car-details">
                   <h3>{reservation.car.brand} {reservation.car.model}</h3>
-                  <p className="customer-name">{reservation.customer}</p>
+                  <p className="customer-name">{reservation.user?.username}</p>
                 </div>
-                <span className={`status-badge ${getStatusColor(reservation.status)}`}>
-                  {reservation.status}
+                <span className={`status-badge ${getStatusColor(reservation.booking_status)}`}>
+                  {reservation.booking_status}
                 </span>
               </div>
 
               <div className="reservation-details">
                 <div className="date-range">
                   <div className="date">
-                    <label>Start Date</label>
-                    <p>{formatDate(reservation.startDate)}</p>
+                    <label>Pickup Date</label>
+                    <p>{formatDate(reservation.rentalDate.from)}</p>
                   </div>
                   <div className="date">
-                    <label>End Date</label>
-                    <p>{formatDate(reservation.endDate)}</p>
+                    <label>Return Date</label>
+                    <p>{formatDate(reservation.rentalDate.to)}</p>
                   </div>
                 </div>
                 <div className="price">
                   <label>Total Price</label>
-                  <p>€{reservation.totalPrice}</p>
+                  <p>€{reservation.car.price}</p>
                 </div>
-              </div>
-
-              <div className="card-actions">
-                <button className="btn-primary">View Details</button>
-                <button className="btn-secondary">Update Status</button>
               </div>
             </div>
           ))}
+          {filteredReservations.length === 0 && (
+            <div className="no-reservations">
+              <p>No upcoming reservations found within the next 3 days.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

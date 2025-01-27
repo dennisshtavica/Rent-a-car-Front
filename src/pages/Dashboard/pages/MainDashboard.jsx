@@ -32,11 +32,40 @@ ChartJS.register(
 
 const MainDashboard = () => {
   const [totalCars, setTotalCars] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalBookings, setTotalBookings] = useState(0);
+  const [recentActivities, setRecentActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Rentals',
+        data: [],
+        borderColor: '#2563eb',
+        tension: 0.4,
+      },
+    ],
+  });
+
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const activityDate = new Date(date);
+    const diffTime = Math.abs(now - activityDate);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+    if (diffDays > 0) return `${diffDays}d ago`;
+    if (diffHours > 0) return `${diffHours}h ago`;
+    if (diffMinutes > 0) return `${diffMinutes}m ago`;
+    return 'Just now';
+  };
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchData = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         
@@ -46,39 +75,141 @@ const MainDashboard = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:3011/getCars", {
-          headers: {
-            'Authorization': `Bearer ${user.token}`,
-            'Content-Type': 'application/json'
-          }
+        const [carsResponse, usersResponse, bookingsResponse] = await Promise.all([
+          axios.get("http://localhost:3011/getCars", {
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+              'Content-Type': 'application/json'
+            }
+          }),
+          axios.get("http://localhost:3011/getUsers", {
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+              'Content-Type': 'application/json'
+            }
+          }),
+          axios.get("http://localhost:3011/allBookings", {
+            headers: {
+              'Authorization': `Bearer ${user.token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+        ]);
+
+        const revenue = bookingsResponse.data.reduce((sum, booking) => {
+          const startDate = new Date(booking.rentalDate.from);
+          const endDate = new Date(booking.rentalDate.to);
+          const diffTime = Math.abs(endDate - startDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const bookingTotal = diffDays * booking.car.price;
+          return sum + bookingTotal;
+        }, 0);
+
+        const sortedBookings = [...bookingsResponse.data].sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        const recentActivities = sortedBookings.slice(0, 3).map(booking => ({
+          id: booking._id,
+          type: 'booking',
+          time: booking.createdAt,
+          message: `New booking: ${booking.car.brand} ${booking.car.model} by ${booking.user?.username || 'Unknown User'}`,
+          status: booking.booking_status
+        }));
+
+        const processChartData = (bookings) => {
+          const currentDate = new Date();
+          const currentMonth = currentDate.toLocaleString('default', { month: 'short' });
+          
+          const bookedCars = new Set();
+          
+          bookings.forEach(booking => {
+            const bookingDate = new Date(booking.rentalDate.from);
+            if (bookingDate.getFullYear() === 2025 && 
+                bookingDate.getMonth() === currentDate.getMonth()) {
+              bookedCars.add(booking.car._id);
+            }
+          });
+
+          return {
+            labels: [`${currentMonth} 2025`],
+            datasets: [
+              {
+                label: 'Cars Booked',
+                data: [bookedCars.size],
+                borderColor: '#2563eb',
+                tension: 0.4,
+                fill: true,
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                barThickness: 50
+              },
+            ],
+          };
+        };
+
+        const newChartData = processChartData(bookingsResponse.data);
+        setChartData(newChartData);
+
+        if (carsResponse.data && Array.isArray(carsResponse.data)) {
+          setTotalCars(carsResponse.data.length);
+        }
+        
+        if (usersResponse.data && Array.isArray(usersResponse.data)) {
+          setTotalUsers(usersResponse.data.length);
+        }
+
+        // Get current month bookings
+        const currentDate = new Date();
+        const currentMonthBookings = bookingsResponse.data.filter(booking => {
+          const bookingDate = new Date(booking.rentalDate.from);
+          return bookingDate.getFullYear() === 2025 && 
+                 bookingDate.getMonth() === currentDate.getMonth();
         });
 
-        if (response.data && Array.isArray(response.data)) {
-          setTotalCars(response.data.length);
-        } else {
-          setError("Invalid data format received from server");
-        }
+        setTotalBookings(currentMonthBookings.length);
+
+        setRecentActivities(recentActivities);
+        setTotalRevenue(revenue);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching cars:", error);
-        setError("Failed to fetch cars");
-      } finally {
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data");
         setLoading(false);
       }
     };
 
-    fetchCars();
+    fetchData();
   }, []);
 
-  const chartData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Rentals',
-        data: [65, 59, 80, 81, 56, 55],
-        borderColor: '#2563eb',
-        tension: 0.4,
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
       },
-    ],
+      title: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const value = context.raw;
+            return `${value} car${value !== 1 ? 's' : ''} booked`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          callback: function(value) {
+            return `${value} car${value !== 1 ? 's' : ''}`;
+          }
+        },
+      },
+    },
   };
 
   if (loading) return <div>Loading...</div>;
@@ -105,7 +236,7 @@ const MainDashboard = () => {
           </div>
           <div className="stat-info">
             <h3>Active Customers</h3>
-            <p>847</p>
+            <p>{totalUsers}</p>
           </div>
         </Link>
 
@@ -115,7 +246,7 @@ const MainDashboard = () => {
           </div>
           <div className="stat-info">
             <h3>Revenue</h3>
-            <p>$52,847</p>
+            <p>€{totalRevenue}</p>
           </div>
         </Link>
 
@@ -124,33 +255,37 @@ const MainDashboard = () => {
             <FaCalendarAlt />
           </div>
           <div className="stat-info">
-            <h3>Bookings</h3>
-            <p>38</p>
+            <h3>Current Month Bookings</h3>
+            <p>{totalBookings}</p>
           </div>
         </Link>
       </div>
 
       <div className="dashboard-grid">
         <div className="chart-container">
-          <h2>Rental Statistics</h2>
-          <Line data={chartData} />
+          <h2>Cars Booked (Current Month)</h2>
+          <Line data={chartData} options={chartOptions} />
         </div>
 
         <div className="recent-activities">
           <h2>Recent Activities</h2>
           <div className="activity-list">
-            <div className="activity-item">
-              <span className="activity-time">2h ago</span>
-              <p>New booking: BMW X5 by John Doe</p>
-            </div>
-            <div className="activity-item">
-              <span className="activity-time">5h ago</span>
-              <p>Return completed: Mercedes C-Class</p>
-            </div>
-            <div className="activity-item">
-              <span className="activity-time">1d ago</span>
-              <p>New customer registration: Sarah Smith</p>
-            </div>
+            {recentActivities.map((activity) => (
+              <div key={activity.id} className="activity-item">
+                <span className="activity-time">{formatTimeAgo(activity.time)}</span>
+                <p>{activity.message}</p>
+                {activity.status && (
+                  <span className={`status-badge ${activity.status.toLowerCase()}`}>
+                    {activity.status}
+                  </span>
+                )}
+              </div>
+            ))}
+            {recentActivities.length === 0 && (
+              <div className="activity-item">
+                <p>No recent activities</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
