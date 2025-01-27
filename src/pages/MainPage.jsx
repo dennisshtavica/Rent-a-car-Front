@@ -23,6 +23,7 @@ import { format, isValid, differenceInDays } from "date-fns";
 import FilterCars from "../components/FilterCars";
 import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
+import checkstepLogo from "../assets/images/checkstep.svg";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,6 +120,11 @@ export default function MainPage() {
     return null;
   };
 
+  // const isDateFilled = bookingDetails.rentalDate.from && bookingDetails.rentalDate.to;
+  // const isPickupFilled = bookingDetails.pickupLocation;
+  // const isReturnFilled = bookingDetails.returnLocation;
+  // const isVehicleSelected = bookingDetails.selectedCar;
+
   if (!user) {
     return <SignIn />;
   }
@@ -147,6 +153,7 @@ export default function MainPage() {
               </p>
             </div>
           </div>
+          {rentalDate.from && rentalDate.to && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
         <div className="rentalInfo item2">
@@ -166,6 +173,7 @@ export default function MainPage() {
               </p>
             </div>
           </div>
+          {pickupLocation && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
         <div className="rentalInfo item3">
@@ -185,6 +193,7 @@ export default function MainPage() {
               </p>
             </div>
           </div>
+          {returnLocation && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
         <div className="rentalInfo item4">
@@ -199,6 +208,7 @@ export default function MainPage() {
               <p>{selectedCar ? `${selectedCar.car.brand} ${selectedCar.car.model}` : (showChooseBelow ? "Choose Below" : "Choose")}</p>
             </div>
           </div>
+          {selectedCar && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
         
         <div className="rentalInfo item5">
