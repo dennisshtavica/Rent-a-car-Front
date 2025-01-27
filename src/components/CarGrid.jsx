@@ -30,7 +30,6 @@ const CarGrid = ({ filters }) => {
     });
   };
 
-  console.log('bookings:', bookings);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -69,7 +68,6 @@ const CarGrid = ({ filters }) => {
       });
 
         if (response.data && Array.isArray(response.data)) {
-          console.log("First car object:", response.data[0]);
           setCars(response.data);
         } else {
           setError("Invalid data format received from server");

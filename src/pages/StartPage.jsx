@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/sections/_startPage.scss";
 import "../scss/layout/_layouts.scss";
@@ -6,10 +6,30 @@ import ReusableButton from "../components/ReusableButton";
 import CarImageStart from "../assets/images/CarImageStartP.svg";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import axios from 'axios';
 
 export default function StartPage() {
   const navigate = useNavigate();
-  
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get('http://localhost:3011/reviews');
+      const reviewsArray = response.data.reviews || [];
+      setReviews(reviewsArray);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to load reviews');
+      setLoading(false);
+    }
+  };
+
   const handleTransition = (e, path) => {
     e.preventDefault();
     
@@ -80,6 +100,39 @@ export default function StartPage() {
                 Indulge in unmatched luxury and performance with our premium high-end vehicle selection.
             </div>
           </div>
+        </div>
+
+        <div className="reviews-section">
+          <h2>What Our Customers Say</h2>
+          {loading ? (
+            <p className="loading">Loading reviews...</p>
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : reviews && reviews.length > 0 ? (
+            <div className="reviews-grid">
+              {reviews.map((review) => (
+                <div key={review._id} className="review-card">
+                  <div className="review-header">
+                    <h3>{review.username}</h3>
+                    <div className="rating">
+                      {[...Array(parseInt(review.rating))].map((_, index) => (
+                        <span key={index} className="star">★</span>
+                      ))}
+                      {[...Array(5 - parseInt(review.rating))].map((_, index) => (
+                        <span key={index + parseInt(review.rating)} className="star-empty">☆</span>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="review-comment">{review.comment}</p>
+                  <p className="review-date">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No reviews available.</p>
+          )}
         </div>
       </section>
     </div>
