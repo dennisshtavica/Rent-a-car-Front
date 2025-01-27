@@ -8,7 +8,7 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
     email: '',
     password: '',
     phone_number: '',
-    role_id: '3'
+    role_id: ''
   });
 
   const handleChange = (e) => {
@@ -33,7 +33,7 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
         email: '',
         password: '',
         phone_number: '',
-        role_id: '3'
+        role_id: ''
       });
       onSuccess();
       onClose();
