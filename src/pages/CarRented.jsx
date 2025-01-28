@@ -31,6 +31,8 @@ function CarRented() {
                 }
             );
             
+            
+            
             if (Array.isArray(response.data)) {
                 setBookedCars(response.data);
             } else {
@@ -62,12 +64,10 @@ function CarRented() {
                 throw new Error('Authentication token missing');
             }
 
-            // Show confirmation dialog
             if (!window.confirm('Are you sure you want to cancel this booking?')) {
                 return;
             }
 
-            // Updated URL to match your backend endpoint
             const response = await axios.delete(
                 `http://localhost:3011/cancelBooking/${user.id}/${bookingId}`,
                 {
@@ -77,12 +77,9 @@ function CarRented() {
                 }
             );
 
-          
-
-            // Refresh the bookings list
+        
             await fetchBookedCars();
 
-            // Show success message
             alert('Booking cancelled successfully');
 
         } catch (error) {
@@ -127,6 +124,10 @@ function CarRented() {
                                     <img 
                                         src={`http://localhost:3011/${booking.car.image}`} 
                                         alt={`${booking.car.brand} ${booking.car.model}`} 
+                                        onError={(e) => {
+                                            e.target.src = 'path/to/fallback/image.jpg'; // Add a fallback image
+                                            console.log('Image failed to load:', booking.car.image);
+                                        }}
                                     />
                                 </div>
                                 <div className="car-details">
