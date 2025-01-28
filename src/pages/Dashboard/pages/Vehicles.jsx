@@ -154,7 +154,7 @@ const Vehicles = () => {
                 alt={`${car.brand} ${car.model}`}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'placeholder-image-url'; // Add a placeholder image URL
+                  e.target.src = 'placeholder-image-url'; 
                 }}
               />
             </div>

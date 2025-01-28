@@ -9,7 +9,7 @@ import {
   FaCarCrash,
   FaChartBar,
   FaUserTie,
-  FaCog,
+  FaStar,
   FaSignOutAlt 
 } from 'react-icons/fa';
 import "../scss/_mainDashboard.scss";
@@ -74,8 +74,8 @@ const DashboardLayout = () => {
             </li>
             <li>
               <NavLink to="/dashboard/settings">
-                <FaCog />
-                <span>Settings</span>
+                <FaStar />
+                <span>Reviews</span>
               </NavLink>
             </li>
             <li className="logout">

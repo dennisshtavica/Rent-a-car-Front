@@ -2056,4 +2056,63 @@ button {
   }
 }
 
+.reviews-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.review-info {
+  h3 {
+    margin: 0;
+    color: #333;
+  }
+}
+
+.review-rating {
+  color: #ffd700;
+  margin: 5px 0;
+  
+  .star-icon {
+    margin-right: 2px;
+  }
+}
+
+.review-date {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.review-comment {
+  color: #444;
+  line-height: 1.5;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 5px;
+  
+  &:hover {
+    color: #c82333;
+  }
+}
+
 
