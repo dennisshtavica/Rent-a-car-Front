@@ -19,13 +19,16 @@ export default function SignIn() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors(""); 
 
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
     axios
       .post(
         "http://localhost:3011/login",
         {
-          email: email,
-          password: password,
+          email: trimmedEmail,
+          password: trimmedPassword,
         },
         {
           headers: { 
@@ -34,7 +37,10 @@ export default function SignIn() {
         }
       )
       .then((res) => {
-        console.log('Login response:', res.data);
+        
+        if (!res.data.token) {
+          throw new Error('No token received from server');
+        }
 
         localStorage.setItem(
           "user",
@@ -77,10 +83,29 @@ export default function SignIn() {
         }, 2500);
       })
       .catch((err) => {
-        console.log("Login error", err);
-        setErrors(err.response.data.message);
+        
+        let errorMessage;
+        if (err.response?.status === 401) {
+          errorMessage = "Invalid email or password. Please check your credentials and try again.";
+        } else {
+          errorMessage = err.response?.data?.message || 
+                        err.response?.data?.error || 
+                        "Unable to login. Please try again.";
+        }
+        
+        setErrors(errorMessage);
         setLoading(false);
       });
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setErrors(""); 
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setErrors(""); 
   };
 
   return (
@@ -100,6 +125,18 @@ export default function SignIn() {
 
         <div className="signUpWrapper">
           <div className="signUpTop">
+            {errors && (
+              <div className="error-message" style={{
+                color: 'red',
+                marginBottom: '1rem',
+                textAlign: 'center',
+                padding: '10px',
+                backgroundColor: '#fff3f3',
+                borderRadius: '4px'
+              }}>
+                {errors}
+              </div>
+            )}
             <form className="signUpForm" onSubmit={handleSubmit}>
               <div className="inputGroup">
                 <input
@@ -109,7 +146,7 @@ export default function SignIn() {
                   required
                   placeholder="Enter your email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
                 />
               </div>
               <div className="inputGroup">
@@ -120,7 +157,8 @@ export default function SignIn() {
                   required
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
+                  minLength="6"
                 />
               </div>
               <div className="linkWrapper">

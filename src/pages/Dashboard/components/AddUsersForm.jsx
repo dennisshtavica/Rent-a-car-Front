@@ -3,6 +3,7 @@ import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 
 const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -12,22 +13,32 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
   });
 
   const handleChange = (e) => {
+    const value = e.target.name === 'role_id' ? 
+      parseInt(e.target.value, 10) :
+      e.target.value;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      await axios.post("http://localhost:3011/users/create", formData, {
+      console.log('Sending data:', formData);
+      
+      const response = await axios.post("http://localhost:3011/users/create", formData, {
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'Content-Type': 'application/json'
         }
       });
+      
+      console.log('Response:', response.data);
+      
       setFormData({
         username: '',
         email: '',
@@ -39,6 +50,7 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
       onClose();
     } catch (error) {
       console.error('Error creating user:', error);
+      setError(error.response?.data?.message || 'An error occurred while creating the user');
     }
   };
 
@@ -55,6 +67,8 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
+          {error && <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
@@ -112,6 +126,7 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
               onChange={handleChange}
               required
             >
+              <option value="">Select a role</option>
               <option value="1">Admin</option>
               <option value="2">User</option>
             </select>
