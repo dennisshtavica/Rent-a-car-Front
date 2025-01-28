@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
-
+import '../scss/_userForm.scss'
 const EditUsersForm = ({ isOpen, onClose, user, onSuccess }) => {
   const [formData, setFormData] = useState({
     username: '',

@@ -79,17 +79,17 @@ const Customers = () => {
     if (!showDeleteConfirm) return null;
     
     return (
-      <div className="modal-overlay">
-        <div className="modal-content delete-confirm">
+      <div className="modal-overlay-delete">
+        <div className="modal-content-delete">
           <h2>Confirm Delete</h2>
           <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-          <div className="form-actions">
+          <div className="delete-form-actions">
             <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary">
               Cancel
             </button>
             <button 
               onClick={() => handleDelete(selectedUser.id)} 
-              className="btn-primary delete"
+              className="btn-delete"
             >
               Delete
             </button>

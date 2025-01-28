@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
-
+import '../scss/_userForm.scss'
 const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -66,81 +66,80 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          {error && <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="phone_number">Phone Number</label>
-            <input
-              type="tel"
-              id="phone_number"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="role_id">Role</label>
-            <select
-              id="role_id"
-              name="role_id"
-              value={formData.role_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select a role</option>
-              <option value="1">Admin</option>
-              <option value="2">User</option>
-            </select>
-          </div>
-
-          <div className="form-actions">
-            <button type="button" onClick={onClose} className="btn-secondary">
-              Cancel
-            </button>
-            <button type="submit" className="btn-primary">
-              Add User
-            </button>
-          </div>
-        </form>
+        <form onSubmit={handleSubmit} className="animated-form">
+         {error && <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+          <div className="form-group slide-in">
+           <label htmlFor="username">Username</label>
+           <input
+             type="text"
+             id="username"
+             name="username"
+             value={formData.username}
+             onChange={handleChange}
+             required
+             className="form-input"
+           />
+         </div>
+          <div className="form-group slide-in">
+           <label htmlFor="email">Email</label>
+           <input
+             type="email"
+             id="email"
+             name="email"
+             value={formData.email}
+             onChange={handleChange}
+             required
+             className="form-input"
+           />
+         </div>
+          <div className="form-group slide-in">
+           <label htmlFor="password">Password</label>
+           <input
+             type="password"
+             id="password"
+             name="password"
+             value={formData.password}
+             onChange={handleChange}
+             required
+             className="form-input"
+           />
+         </div>
+          <div className="form-group slide-in">
+           <label htmlFor="phone_number">Phone Number</label>
+           <input
+             type="tel"
+             id="phone_number"
+             name="phone_number"
+             value={formData.phone_number}
+             onChange={handleChange}
+             required
+             className="form-input"
+           />
+         </div>
+          <div className="form-group slide-in">
+           <label htmlFor="role_id">Role</label>
+           <select
+             id="role_id"
+             name="role_id"
+             value={formData.role_id}
+             onChange={handleChange}
+             required
+             className="form-select"
+           >
+             <option value="">Select a role</option>
+             <option value="1">Admin</option>
+             <option value="2">User</option>
+           </select>
+         </div>
+          <div className="form-actions fade-in">
+           <button type="button" onClick={onClose} className="btn-secondary">
+             Cancel
+           </button>
+           <button type="submit" className="btn-primary">
+             Add User
+           </button>
+         </div>
+       </form>
       </div>
     </div>
   );

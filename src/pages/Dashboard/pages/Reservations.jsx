@@ -19,10 +19,8 @@ const Reservations = () => {
           }
         });
 
-        // Get current date
         const currentDate = new Date();
         
-        // Filter bookings within next 3 days
         const upcomingReservations = response.data.filter(booking => {
           const pickupDate = new Date(booking.rentalDate.from);
           const timeDiff = pickupDate.getTime() - currentDate.getTime();
@@ -112,40 +110,39 @@ const Reservations = () => {
         <div className="reservations-grid">
           {filteredReservations.map((reservation) => (
             <div key={reservation._id} className="reservation-card">
-              <div className="car-info">
-                <img 
-                  src={`http://localhost:3011/${reservation.car.image}`}
-                  alt={`${reservation.car.brand} ${reservation.car.model}`}
-                  className="car-image"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'placeholder-car-image.jpg';
-                  }}
-                />
-                <div className="car-details">
-                  <h3>{reservation.car.brand} {reservation.car.model}</h3>
-                  <p className="customer-name">{reservation.user?.username}</p>
-                </div>
-                <span className={`status-badge ${getStatusColor(reservation.booking_status)}`}>
-                  {reservation.booking_status}
-                </span>
+              <img 
+                src={`http://localhost:3011/${reservation.car.image}`}
+                alt={`${reservation.car.brand} ${reservation.car.model}`}
+                className="car-image"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'placeholder-car-image.jpg';
+                }}
+              />
+              
+              <div className="car-details">
+                <h3>{reservation.car.brand} {reservation.car.model}</h3>
+                <p className="customer-name">{reservation.user?.username}</p>
               </div>
 
-              <div className="reservation-details">
-                <div className="date-range">
-                  <div className="date">
-                    <label>Pickup Date</label>
-                    <p>{formatDate(reservation.rentalDate.from)}</p>
-                  </div>
-                  <div className="date">
-                    <label>Return Date</label>
-                    <p>{formatDate(reservation.rentalDate.to)}</p>
-                  </div>
+              <span className={`status-badge status-${reservation.booking_status.toLowerCase()}`}>
+                {reservation.booking_status}
+              </span>
+
+              <div className="date-section">
+                <div className="pickup">
+                  <div className="label">Pickup Date</div>
+                  <div className="value">{formatDate(reservation.rentalDate.from)}</div>
                 </div>
-                <div className="price">
-                  <label>Total Price</label>
-                  <p>€{reservation.car.price}</p>
+                <div className="return">
+                  <div className="label">Return Date</div>
+                  <div className="value">{formatDate(reservation.rentalDate.to)}</div>
                 </div>
+              </div>
+
+              <div className="total-price">
+                <div className="label">Total Price</div>
+                <div className="value">€{reservation.car.price}</div>
               </div>
             </div>
           ))}

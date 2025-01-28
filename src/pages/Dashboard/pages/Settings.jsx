@@ -3,6 +3,31 @@ import { FaStar, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import "../scss/_pages.scss";
 
+// Move DeleteConfirmation outside of Reviews component
+const DeleteConfirmation = ({ showDeleteConfirm, setShowDeleteConfirm, selectedReview, onDelete }) => {
+  if (!showDeleteConfirm) return null;
+  
+  return (
+    <div className="modal-overlay-delete">
+      <div className="modal-content-delete">
+        <h2>Confirm Delete</h2>
+        <p>Are you sure you want to delete this review? This action cannot be undone.</p>
+        <div className="delete-form-actions">
+          <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary">
+            Cancel
+          </button>
+          <button 
+            onClick={() => onDelete(selectedReview._id)} 
+            className="btn-delete"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -21,6 +46,18 @@ const Reviews = () => {
 
     fetchReviews();
   }, []);
+
+  const handleDeleteClick = (review) => {
+    // Reset states before setting new ones
+    setShowDeleteConfirm(false);
+    setSelectedReview(null);
+    
+    // Use setTimeout to ensure state is reset before setting new values
+    setTimeout(() => {
+      setSelectedReview(review);
+      setShowDeleteConfirm(true);
+    }, 0);
+  };
 
   const handleDeleteReview = async (reviewId) => {
     try {
@@ -47,37 +84,18 @@ const Reviews = () => {
     }
   };
 
-  const DeleteConfirmation = () => {
-    if (!showDeleteConfirm) return null;
-    
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content delete-confirm">
-          <h2>Confirm Delete</h2>
-          <p>Are you sure you want to delete this review? This action cannot be undone.</p>
-          <div className="form-actions">
-            <button onClick={() => setShowDeleteConfirm(false)} className="btn-secondary">
-              Cancel
-            </button>
-            <button 
-              onClick={() => handleDeleteReview(selectedReview._id)} 
-              className="btn-primary delete"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="page-container">
       <div className="page-header">
         <h1><FaStar className="page-icon" /> Customer Reviews</h1>
       </div>
 
-      <DeleteConfirmation />
+      <DeleteConfirmation 
+        showDeleteConfirm={showDeleteConfirm}
+        setShowDeleteConfirm={setShowDeleteConfirm}
+        selectedReview={selectedReview}
+        onDelete={handleDeleteReview}
+      />
 
       <div className="reviews-container">
         {Array.isArray(reviews) && reviews.length > 0 ? (
@@ -94,10 +112,11 @@ const Reviews = () => {
                   <span className="review-date">{review.createdAt}</span>
                 </div>
                 <button 
+                  type="button"
                   className="delete-button"
-                  onClick={() => {
-                    setSelectedReview(review);
-                    setShowDeleteConfirm(true);
+                  onClick={(e) => {
+                    e.stopPropagation();  // Prevent event bubbling
+                    handleDeleteClick(review);
                   }}
                 >
                   <FaTrash />

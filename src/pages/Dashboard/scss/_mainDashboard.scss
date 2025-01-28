@@ -11,6 +11,7 @@
   height: 100vh;
   left: 0;
   top: 0;
+  transition: width 0.3s ease;
 
   .sidebar-header {
     padding-bottom: 1.5rem;
@@ -22,6 +23,11 @@
       font-size: 1.75rem;
       font-weight: 600;
       margin: 0;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
     }
   }
 
@@ -42,16 +48,32 @@
           border-radius: 0.5rem;
           color: #8b92a5;
           text-decoration: none;
-          transition: all 0.2s;
+          transition: all 0.2s ease-in-out;
           width: 100%;
           border: none;
           background: none;
           font-size: 1rem;
           cursor: pointer;
           gap: 0.75rem;
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transition: width 0.2s ease-in-out;
+            z-index: 0;
+          }
 
           svg {
             font-size: 1.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
             
             // Specific colors for each icon
             &[class*="FaTachometerAlt"] { color: #9333ea; }  // Purple
@@ -68,13 +90,29 @@
           span {
             font-size: 1rem;
             color: #8b92a5;
+            position: relative;
+            z-index: 1;
           }
 
           &:hover, &.active {
-            background: rgba(255, 255, 255, 0.05);
+            padding-left: 25px;
+            background: rgba(255, 255, 255, 0.1);
             
-            span {
-              color: #2563eb;  // Blue text on hover/active
+            &::before {
+              width: 100%;
+            }
+            
+            svg {
+              transform: scale(1.2);
+              color: #fff;
+            }
+          }
+
+          &.active {
+            background: rgba(255, 255, 255, 0.15);
+            
+            svg {
+              transform: scale(1.1);
             }
           }
         }
@@ -90,15 +128,25 @@
             font-weight: 500;
             justify-content: center;
             padding: 0.75rem;
+            transition: all 0.3s ease;
             
             &:hover {
-              background: #cbd5e1;
+              background: rgba(255, 0, 0, 0.1);
+              svg {
+                color: #ff6b6b;
+              }
             }
 
             svg {
               color: #1a1f2b;
             }
           }
+        }
+
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateX(5px);
         }
       }
     }
@@ -120,6 +168,11 @@
     color: #1e293b;
     margin-bottom: 2rem;
     font-size: 2rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateX(10px);
+    }
   }
 
   h2 {
@@ -127,100 +180,162 @@
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
   }
-}
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 
-.stat-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  display: flex;
-  align-items: center;
-  transition: transform 0.2s;
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  .stat-icon {
-    background: #2563eb;
-    color: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    margin-right: 1rem;
-  }
-
-  .stat-info {
-    h3 {
-      color: #64748b;
-      font-size: 0.875rem;
-      margin-bottom: 0.25rem;
-    }
-
-    p {
-      color: #1e293b;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-  }
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1.5rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.chart-container {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-}
-
-.recent-activities {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-
-  .activity-list {
-    .activity-item {
-      padding: 1rem 0;
-      border-bottom: 1px solid #e2e8f0;
-
-      &:last-child {
-        border-bottom: none;
+    .stat-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        animation: shine 3s infinite linear;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        
+        &::before {
+          opacity: 1;
+        }
+        
+        .stat-icon {
+          transform: rotate(360deg);
+          color: #2563eb;
+        }
       }
 
-      .activity-time {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin-bottom: 0.25rem;
-        display: block;
+      .stat-icon {
+        background: #2563eb;
+        color: white;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        transition: all 0.5s ease;
       }
 
-      p {
-        color: #334155;
-        font-size: 0.9375rem;
+      .stat-info {
+        h3 {
+          color: #64748b;
+          font-size: 0.875rem;
+          margin-bottom: 0.25rem;
+        }
+
+        p {
+          color: #1e293b;
+          font-size: 1.5rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          &:hover {
+            color: #2563eb;
+          }
+        }
+      }
+    }
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .recent-activities {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+      .activity-list {
+        .activity-item {
+          padding: 1rem 0;
+          border-bottom: 1px solid #e2e8f0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .activity-time {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+            display: block;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: #2563eb;
+            }
+          }
+
+          p {
+            color: #334155;
+            font-size: 0.9375rem;
+          }
+
+          transition: all 0.3s ease;
+          transform-origin: left;
+          
+          &:hover {
+            transform: scale(1.02);
+            background: rgba(37, 99, 235, 0.05);
+            padding-left: 1.5rem;
+          }
+
+          .status-badge {
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: scale(1.1);
+              filter: brightness(1.1);
+            }
+          }
+        }
       }
     }
   }
@@ -240,5 +355,50 @@
 
   .dashboard-content {
     margin-left: 0;
+  }
+}
+
+// Add loading animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+// Add pulse animation for loading state
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.loading {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
   }
 }

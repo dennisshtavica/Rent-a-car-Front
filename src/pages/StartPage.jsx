@@ -102,7 +102,7 @@ export default function StartPage() {
           </div>
         </div>
 
-        <div className="reviews-section">
+        <div className="reviews-section animate-fade-in">
           <h2>What Our Customers Say</h2>
           {loading ? (
             <p className="loading">Loading reviews...</p>
@@ -110,8 +110,12 @@ export default function StartPage() {
             <p className="error-message">{error}</p>
           ) : reviews && reviews.length > 0 ? (
             <div className="reviews-grid">
-              {reviews.map((review) => (
-                <div key={review._id} className="review-card">
+              {reviews.map((review, index) => (
+                <div 
+                  key={review._id} 
+                  className="review-card animate-slide-up"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
                   <div className="review-header">
                     <h3>{review.username}</h3>
                     <div className="rating">
