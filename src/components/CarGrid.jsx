@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CarCard from "./CarCard";
 import "../scss/components/_carGrid.scss";
 import axios from "axios";
-
 const CarGrid = ({ filters }) => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,6 +10,9 @@ const CarGrid = ({ filters }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [bookings, setBookings] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Default');
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -21,6 +23,17 @@ const CarGrid = ({ filters }) => {
       clearTimeout(handler);
     };
   }, [searchTerm]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-GB', {
@@ -152,26 +165,86 @@ const CarGrid = ({ filters }) => {
   return (
     <div className="gridContainer">
       <div className="gridHeader">
-        <div className="leftSection">
-          <h2>Choose your vehicle</h2>
-          <div className="searchSection">
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={handleSearchChange}
+        <h2 className="title">Choose your vehicle</h2>
+        <div className="searchBar">
+          <svg 
+            className="searchIcon" 
+            width="16" 
+            height="16" 
+            viewBox="0 0 16 16" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" 
+              stroke="#666666" 
+              strokeWidth="1.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
             />
-            <span className="availableCars">{sortedAndFilteredCars.length} AVAILABLE</span>
-          </div>
+            <path 
+              d="M14 14L11.1 11.1" 
+              stroke="#666666" 
+              strokeWidth="1.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
         </div>
+        <span className="availableCars">{sortedAndFilteredCars.length} AVAILABLE</span>
         <div className="sortSection">
-          <label>SORT BY</label>
-          <select defaultValue="Default" onChange={handleSort}>
-            <option value="Default">Default</option>
-            <option value="MOST POPULAR FIRST">MOST POPULAR FIRST</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-          </select>
+          <span className="sortLabel">SORT BY</span>
+          <div className="customSelect" ref={dropdownRef}>
+            <div 
+              className="selectedOption" 
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {selectedOption}
+              <svg 
+                className={`arrow ${isOpen ? 'open' : ''}`}
+                width="10" 
+                height="6" 
+                viewBox="0 0 10 6" 
+                fill="none"
+              >
+                <path d="M1 1L5 5L9 1" stroke="#007bff" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            {isOpen && (
+              <div className="optionsList">
+                <div 
+                  className="option" 
+                  onClick={() => { setSelectedOption('Default'); setIsOpen(false); handleSort({ target: { value: 'Default' } }); }}
+                >
+                  Default
+                </div>
+                <div 
+                  className="option" 
+                  onClick={() => { setSelectedOption('MOST POPULAR FIRST'); setIsOpen(false); handleSort({ target: { value: 'MOST POPULAR FIRST' } }); }}
+                >
+                  MOST POPULAR FIRST
+                </div>
+                <div 
+                  className="option" 
+                  onClick={() => { setSelectedOption('Price: Low to High'); setIsOpen(false); handleSort({ target: { value: 'price-low' } }); }}
+                >
+                  Price: Low to High
+                </div>
+                <div 
+                  className="option" 
+                  onClick={() => { setSelectedOption('Price: High to Low'); setIsOpen(false); handleSort({ target: { value: 'price-high' } }); }}
+                >
+                  Price: High to Low
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="carGrid">

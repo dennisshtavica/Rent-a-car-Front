@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { 
   FaTachometerAlt, 
   FaKey, 
@@ -15,6 +15,13 @@ import {
 import "../scss/_mainDashboard.scss";
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <div className="dashboard-layout">
       <aside className="sidebar">
@@ -79,7 +86,7 @@ const DashboardLayout = () => {
               </NavLink>
             </li>
             <li className="logout">
-              <button onClick={() => console.log('Logout clicked')}>
+              <button onClick={handleLogout}>
                 <FaSignOutAlt />
                 <span>Logout</span>
               </button>

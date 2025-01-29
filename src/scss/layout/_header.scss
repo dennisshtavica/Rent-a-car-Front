@@ -1,20 +1,25 @@
 header {
+  $header-timing: 0.3s;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
+  animation: fadeInDown 0.6s ease-out;
 
   .logo {
     width: auto;
+    animation: slideInLeft 0.8s ease-out;
 
     .logoLink {
       display: flex;
+      
       span {
         font-weight: bold;
         font-size: 18px;
         background-color: black;
         padding: 3px 4px;
         border-radius: 10px;
+        animation: fadeIn 1s ease-out;
 
         .drive {
           color: white;
@@ -28,6 +33,24 @@ header {
         }
       }
     }
+
+    img {
+      transition: transform $header-timing ease;
+      
+      &:hover {
+        transform: rotate(5deg) scale(1.1);
+      }
+    }
+    
+    .drive, .hub {
+      display: inline-block;
+      transition: all $header-timing ease;
+    }
+    
+    &:hover {
+      .drive { transform: translateY(-2px); }
+      .hub { transform: translateY(2px); }
+    }
   }
 
   .burgerBar {
@@ -36,11 +59,14 @@ header {
     cursor: pointer;
 
     .bar {
-      width: 26px;
-      height: 4px;
+      $bar-width: 26px;
+      $bar-height: 4px;
+      
+      width: $bar-width;
+      height: $bar-height;
       background-color: #000000;
       margin: 2px 0;
-      transition: 0.4s;
+      transition: $header-timing;
 
       &:first-child {
         transform-origin: left;
@@ -81,6 +107,7 @@ header {
       height: auto;
       opacity: 1;
       visibility: visible;
+      animation: slideInRight 0.8s ease-out;
 
       .menu-content {
         padding: 0;
@@ -101,10 +128,21 @@ header {
           align-items: center;
 
           li {
-            margin-right: 20px;
+            $menu-item-spacing: 20px;
+            
+            margin-right: $menu-item-spacing;
             font-size: 16px;
             color: black;
             cursor: pointer;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+            position: relative;
+
+            @for $i from 1 through 4 {
+              &:nth-child(#{$i}) {
+                animation-delay: 0.2s * $i;
+              }
+            }
 
             &:last-child {
               margin-right: 0;
@@ -117,9 +155,30 @@ header {
               font-weight: 600;
               font-size: 13px;
               gap: 4px;
+              padding: 2px 0;
+              position: relative;
 
-              &:hover {
-                text-decoration: underline;
+              &:not(.profile)::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: #8080FD;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.3s ease;
+              }
+
+              &:not(.profile):hover {
+                text-decoration: none;
+                color: #8080FD;
+                
+                &::after {
+                  transform: scaleX(1);
+                  transform-origin: left;
+                }
               }
             }
 
@@ -127,25 +186,31 @@ header {
               border-radius: 10px;
               border: 2px solid #5a5a5a;
               padding: 8px 21px;
+              transition: all 0.3s ease;
+
+              &:hover {
+                color: #8080FD;
+                border-color: #8080FD;
+              }
             }
           }
         }
       }
     }
-
   }
 }
 
-
-
-@media only screen and (max-width: 1024px){
+// Mobile Menu Styles
+@media only screen and (max-width: 1024px) {
   .menu {
+    $mobile-menu-bg: #000000;
+    
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000000;
+    background-color: $mobile-menu-bg;
     display: flex;
     justify-content: left;
     align-items: flex-start;
@@ -158,7 +223,6 @@ header {
       visibility: visible;
     }
   
-    
     .menu-content {
       padding: 18px 30px;
       width: 100%;
@@ -177,6 +241,7 @@ header {
       ul {
         list-style: none;
         padding: 0;
+        
         li {
           margin-bottom: 10px;
           font-size: 24px;
@@ -191,9 +256,11 @@ header {
           &:hover {
             text-decoration: underline;
           }
+          
           a {
             color: #ffffff;
           }
+          
           .profile {
             border-radius: 10px;
             border: 2px solid #5a5a5a;
@@ -203,5 +270,64 @@ header {
       }
     }
   }
-  
+}
+
+// Animations
+@mixin keyframe-animation($name) {
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@include keyframe-animation(fadeInDown) {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@include keyframe-animation(slideInLeft) {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@include keyframe-animation(slideInRight) {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@include keyframe-animation(fadeIn) {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@include keyframe-animation(fadeInUp) {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

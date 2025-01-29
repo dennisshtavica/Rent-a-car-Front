@@ -15,36 +15,8 @@ export default function ProfilePage() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const usernameStyle = {
-    padding: "10px",
-    border: "2px solid #8C8BBF",
-    borderRadius: "13px",
-    width: "30%",
-  };
-
-  const logoutStyle = {
-    padding: "10px",
-    borderRadius: "13px",
-    width: "10%",
-    backgroundColor: "red",
-    color: "white",
-    textAlign: "center",
-    cursor: "pointer"
-  };
-
-  const updateProfileStyle = {
-    padding: "10px",
-    borderRadius: "13px",
-    width: "10%",
-    border: "1px solid #171717",
-    color: "white",
-    textAlign: "center",
-    cursor: "pointer",
-    color: "black",
-  }
-  
   const logout = () => {
     if(user) {
       window.localStorage.removeItem("user")
@@ -72,28 +44,30 @@ export default function ProfilePage() {
 
 
   return (
-    <div className="container">
-      <Header isOpen={isOpen} toggleMenu={toggleMenu} closeMenu={closeMenu}/>
-      <div>
-        <h1 style={{ marginBottom: "15px" }}>Profile</h1>
-        <div style={{ marginBottom: "15px" }} className="profileInputs">
-          <h3 style={{ marginBottom: "5px" }}>Username</h3>
-          <p style={usernameStyle}>{user.username}</p>
+    <>
+      <div className="mainPage container">
+                <Header isOpen={isOpen} toggleMenu={() => setIsOpen(!isOpen)} closeMenu={() => setIsOpen(false)} />
+      </div>
+      <div className="profile-container">
+        <h1>Profile</h1>
+        <div className="profile-field-group">
+          <h3>Username</h3>
+          <p>{user.username}</p>
         </div>
-        <div style={{ marginBottom: "25px" }} className="profileInputs">
-          <h3 style={{ marginBottom: "5px" }}>Email</h3>
-          <p style={usernameStyle}>{user.email}</p>
+        <div className="profile-field-group">
+          <h3>Email</h3>
+          <p>{user.email}</p>
         </div>
-        <div style={{display: 'flex', gap: '10px'}}>
-          <div style={updateProfileStyle} onClick={() => toggleEditProfile()} className="updateProfile">
+        <div className="profile-buttons-container">
+          <div className="profile-update-btn" onClick={toggleEditProfile}>
             <p>Update profile</p>
           </div>
-          <div style={logoutStyle} onClick={logout} className="logoutBtn">
-              <p>Logout</p>
+          <div className="profile-logout-btn" onClick={logout}>
+            <p>Logout</p>
           </div>
         </div>
         {isUpdateProfileV && <UpdateProfileModal onConfirm={toggleEditProfile} />}
       </div>
-    </div>
+    </>
   );
 }

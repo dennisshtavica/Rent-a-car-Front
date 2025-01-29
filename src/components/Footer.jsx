@@ -20,7 +20,7 @@ export default function Footer() {
         }
 
         const user = JSON.parse(userStr);
-        console.log('User data:', user); // Verify user data
+        console.log('User data:', user);
         
         const formattedReview = {
             userId: user.id.toString(),
@@ -28,7 +28,7 @@ export default function Footer() {
             rating: parseInt(reviewData.rating), 
             comment: reviewData.comment.trim()
         };
-        console.log('Sending review data:', formattedReview); // Verify review data
+        console.log('Sending review data:', formattedReview);
 
         const response = await axios.post('http://localhost:3011/reviews/add', formattedReview, {
             headers: {
@@ -36,14 +36,14 @@ export default function Footer() {
                 'Content-Type': 'application/json'
             }
         });
-        console.log('Response:', response); // Log the response
+        console.log('Response:', response);
 
         if (response.status === 201) {
             alert('Review submitted successfully!');
             setReviewData({ rating: 5, comment: '' });
         }
     } catch (error) {
-        console.error('Error details:', error.response?.data || error); // Log detailed error
+        console.error('Error details:', error.response?.data || error);
         alert('Failed to submit review. Please try again.');
     }
 };

@@ -1,126 +1,188 @@
-.filter-container {
-  width: 300px;
-  background-color: #f6feff !important;
-  box-shadow: none !important;
-  border-right: 2px solid rgba(0, 0, 0, 0.11);
-  border-radius: 0px !important;
-}
-
-.filter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.11);
-
-  .filter-title {
-    display: flex;
-    gap: 5px;
-  }
-
-
-  h2 {
-    font-size: 18px;
-    margin: 0;
-  }
-
-  .clear-filters {
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 12px;
-    cursor: pointer;
-    font-weight: 600;
-
-    &:hover {
-      color: #333;
+.filter {
+  &-container {
+    width: 300px;
+    background-color: #f6feff !important;
+    box-shadow: none !important;
+    border: {
+      right: 2px solid rgba(0, 0, 0, 0.11);
+      radius: 0px !important;
     }
   }
-}
 
-.filter-section {
-  .filter-group {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
     border-bottom: 2px solid rgba(0, 0, 0, 0.11);
 
     .filter-title {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      cursor: pointer;
+      gap: 5px;
 
-      h3 {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 600;
-      }
-
-      .chevron {
-        font-size: 12px;
-        color: #666;
-        transition: transform 0.5s ease;
-
-        &.open {
-          transform: rotate(180deg);
+      img {
+        transition: all 0.3s ease;
+        
+        &:hover {
+          opacity: 0.7;
+          transform: translateX(5px);
         }
       }
     }
 
-    .filter-options {
-      padding: 0 20px;
-      max-height: 0;
-      overflow: hidden;
-      transition: all 0.5s ease-in-out;
-      opacity: 0;
+    h2 {
+      font-size: 18px;
+      margin: 0;
+    }
 
-      &:not(:empty) {
-        padding: 10px 20px;
-        max-height: 300px;
-        opacity: 1;
+    .clear-filters {
+      background: none;
+      border: none;
+      color: #666;
+      font: {
+        size: 12px;
+        weight: 600;
       }
+      cursor: pointer;
+      transition: all 0.3s ease;
 
-      .checkbox-container {
+      &:hover {
+        color: #ff4444;
+        text-decoration: underline;
+        transform: translateX(5px);
+      }
+    }
+  }
+
+  &-section {
+    .filter-group {
+      border-bottom: 2px solid rgba(0, 0, 0, 0.11);
+
+      .filter-title {
         display: flex;
+        justify-content: space-between;
         align-items: center;
+        padding: 15px 20px;
         cursor: pointer;
-        transform: translateY(-10px);
-        transition: transform 0.5s ease;
+        transition: all 0.3s ease;
 
-        &:not(:last-child) {
-          margin-bottom: 10px;
+        &:hover {
+          transform: translateX(10px);
         }
 
-        input[type="checkbox"] {
-          margin-right: 10px;
-          width: 16px;
-          height: 16px;
-          appearance: none;
-          border: 3px solid #8080fd;
-          border-radius: 3px;
-          position: relative;
-          cursor: pointer;
-          background: #fff;
-
-          &:checked {
-            background-color: #8080fd;
-            &:after {
-              content: "✓";
-              position: absolute;
-              color: #fff;
-              font-size: 12px;
-              left: 50%;
-              top: 50%;
-              transform: translate(-50%, -50%);
-            }
+        h3 {
+          margin: 0;
+          font: {
+            size: 14px;
+            weight: 600;
           }
         }
 
-        .checkbox-label {
-          font-size: 14px;
-          font-weight: 600;
-          color: #333;
+        .chevron {
+          font-size: 12px;
+          color: #666;
+          transition: transform 0.5s ease;
+
+          img {
+            transition: all 0.3s ease;
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+
+          &.open {
+            transform: rotate(180deg);
+            
+            img {
+              transform: rotate(90deg);
+            }
+          }
+        }
+      }
+
+      .filter-options {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+        opacity: 0;
+        animation: slideDown 0.3s ease-out;
+
+        &:not(:empty) {
+          padding: 10px 20px;
+          max-height: 300px;
+          opacity: 1;
+        }
+
+        .checkbox-container {
+          $checkbox-color: #8080fd;
+          
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            transform: translateX(5px);
+          }
+
+          input[type="checkbox"] {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            appearance: none;
+            border: 3px solid $checkbox-color;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+            background: #fff;
+
+            &:checked {
+              background-color: $checkbox-color;
+              
+              &:after {
+                content: "✓";
+                position: absolute;
+                color: #fff;
+                font-size: 12px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+              }
+
+              & + .checkbox-label {
+                color: #666;
+                font-weight: 500;
+              }
+            }
+          }
+
+          .checkbox-label {
+            font: {
+              size: 14px;
+              weight: 600;
+            }
+            color: #333;
+            transition: color 0.2s ease;
+          }
         }
       }
     }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
