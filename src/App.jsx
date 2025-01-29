@@ -25,7 +25,7 @@ import Reservations from './pages/Dashboard/pages/Reservations';
 import Cancel from './pages/Cancel';
 import Success from './pages/Success';
 import ProtectedPaymentRoute from './components/ProtectedPaymentRoute';
-
+import ResetPasswordModal from './components/Modal/ResetPasswordModal';
 
 function App() {  
   return (
@@ -42,7 +42,7 @@ function App() {
         <Route path="/success" element={<Success/>}/> */}
         <Route path='/cancel' element={<ProtectedPaymentRoute><Cancel/></ProtectedPaymentRoute>}/>
         <Route path='/success' element={<ProtectedPaymentRoute><Success/></ProtectedPaymentRoute>}/>
-
+        <Route path='/reset-password/:resetToken' element={<ResetPasswordModal/>}/>
 
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<MainDashboard />} />

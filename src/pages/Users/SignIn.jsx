@@ -6,6 +6,7 @@ import SignInHeaderTitle from "../../assets/images/SignInTGS.svg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { PulseLoader } from "react-spinners";
+import PasswordResetLinkModal from "../../components/Modal/PasswordResetLinkModal";
 
 export default function SignIn() {
   const [userId, setUserId] = useState("");
@@ -13,6 +14,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
+  const [isForgetPasswordClicked, setIsForgetPasswordClicked] = useState(false);
 
   const navigate = useNavigate();
 
@@ -108,9 +110,17 @@ export default function SignIn() {
     setErrors(""); 
   };
 
+  const handleForgetPasswordClick = (value) => {
+    setIsForgetPasswordClicked(value);
+  };
+
   return (
     <div className="signUp container">
-      <header>
+      {isForgetPasswordClicked ? (
+        <PasswordResetLinkModal isForgetPasswordClicked={handleForgetPasswordClick} />
+      ) : (
+        <div>
+        <header>
         <Link to="/">
           <div className="logo">
             <img src={RentAcLogo} alt="" />
@@ -169,12 +179,18 @@ export default function SignIn() {
                     "Sign In"
                   )}
                 </button>
-                <Link to="/signup">Dont have an account?</Link>
+                <div className="loginFooter">
+                  <p onClick={() => setIsForgetPasswordClicked(true)}>Forgot password?</p>
+                  <Link to="/signup">Dont have an account?</Link>
+                </div>
               </div>
             </form>
           </div>
         </div>
       </div>
+      </div>
+      )}
+      
     </div>
   );
 }

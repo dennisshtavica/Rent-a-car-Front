@@ -17,18 +17,18 @@
             height: 2px;
             background: linear-gradient(90deg, #7878fd, #bdbafd);
             animation: 
-                expandWidth 0.8s ease-out forwards 2s,
-                fadeOut 1.2s ease-out forwards 2.8s;
+                expandWidth 0.8s ease-out forwards 0.8s,
+                fadeOut 0.8s ease-out forwards 0.8s;
         }
         
         .logo {
             width: auto;
             position: relative;
-            animation: logoEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s backwards;
+            animation: logoEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
             
             img {
                 width: 60px;
-                transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
                 transform-origin: center;
                 
                 &:hover {
@@ -58,7 +58,7 @@
 
     .signUpHeader {
         img {
-            animation: fadeSlideDown 0.8s ease-out 1.8s backwards;
+            animation: fadeSlideDown 0.4s ease-out 0.4s backwards;
         }
     }
 
@@ -67,12 +67,8 @@
             .signUpForm {
                 .inputGroup {
                     animation: fadeSlideIn 0.5s ease-out backwards;
+                    animation-delay: 0.5s;
 
-                    @for $i from 1 through 4 {
-                        &:nth-child(#{$i}) {
-                            animation-delay: #{2 + ($i * 0.15)}s;
-                        }
-                    }
 
                     .signinInput {
                         width: 100%;
@@ -107,11 +103,17 @@
                 }
 
                 .linkWrapper {
-                    animation: fadeIn 0.5s ease-out 2.8s backwards;
+                    animation: fadeIn 0.4s ease-out 0.4s backwards;
                     display: flex;
                     flex-direction: column;
                     gap: 15px;
                     align-items: center;
+
+                    .loginFooter {
+                        display: flex;
+                        justify-content: space-between;
+                        width: 100%;
+                    }
 
                     .signup-button {
                         width: 100%;
@@ -133,7 +135,7 @@
                             background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
                             top: 0;
                             left: -100%;
-                            transition: 0.5s;
+                            transition: 0.4s;
                         }
 
                         &:hover {
@@ -153,7 +155,7 @@
                         }
                     }
 
-                    a {
+                    a, p {
                         color: #818181;
                         font-family: Poppins;
                         font-size: 12px;
@@ -185,7 +187,7 @@
         }
 
         .signUpBot {
-            animation: fadeSlideUp 0.5s ease-out 3s backwards;
+            animation: fadeSlideUp 0.5s ease-out 0.4s backwards;
 
             p {
                 color: #000;
