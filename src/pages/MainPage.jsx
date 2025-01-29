@@ -136,7 +136,7 @@ export default function MainPage() {
       </div>
 
       <div className="bookingSteps">
-        <div className="rentalInfo item1">
+        <div className="rentalInfo item1 animate-step">
           <div className="stepNum">
             <h1>1</h1>
           </div>
@@ -156,7 +156,7 @@ export default function MainPage() {
           {rentalDate.from && rentalDate.to && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
-        <div className="rentalInfo item2">
+        <div className="rentalInfo item2 animate-step">
           <div className="stepNum">
             <h1>2</h1>
           </div>
@@ -176,7 +176,7 @@ export default function MainPage() {
           {pickupLocation && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
-        <div className="rentalInfo item3">
+        <div className="rentalInfo item3 animate-step">
           <div className="stepNum">
             <h1>3</h1>
           </div>
@@ -196,7 +196,7 @@ export default function MainPage() {
           {returnLocation && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
 
-        <div className="rentalInfo item4">
+        <div className="rentalInfo item4 animate-step">
           <div className="stepNum">
             <h1>4</h1>
           </div>
@@ -211,7 +211,7 @@ export default function MainPage() {
           {selectedCar && <img src={checkstepLogo} alt="" className="checkstep"/>}
         </div>
         
-        <div className="rentalInfo item5">
+        <div className="rentalInfo item5 animate-step">
           <div className="stepNum">
             <h1>5</h1>
           </div>
@@ -267,9 +267,6 @@ export default function MainPage() {
         <CarGrid filters={filters} />
       </div>
       <Footer />
-
-
-      {/* <Footer /> */}
     </div>
   );
 }
