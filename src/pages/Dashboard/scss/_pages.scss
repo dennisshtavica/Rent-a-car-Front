@@ -1437,172 +1437,235 @@ button {
 }
 
 .maintenance-container {
-  padding: 1.5rem;
-
+  padding: 20px;
+  
   .maintenance-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 1.5rem;
+    gap: 24px;
+    padding: 20px 0;
   }
 
   .maintenance-card {
     background: white;
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #e5e7eb;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .card-header {
-      padding: 1.25rem;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 24px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to right, #f8fafc, #f1f5f9);
+      gap: 16px;
 
       .vehicle-info {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 16px;
+        flex: 1;
 
         .vehicle-image {
-          width: 100px;
-          height: 70px;
-          object-fit: contain;
+          width: 80px;
+          height: 60px;
+          object-fit: cover;
           border-radius: 8px;
-          background: white;
-          padding: 0.5rem;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-          transition: transform 0.3s ease;
+        }
 
-          &:hover {
-            transform: scale(1.05);
+        div {
+          flex: 1;
+          min-width: 0; // For text truncation
+
+          h3 {
+            margin: 0 0 4px 0;
+            color: #2d3748;
+            font-size: 1.25rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
-        }
 
-        h3 {
-          margin: 0 0 0.25rem 0;
-          font-size: 1.1rem;
-          color: #1e293b;
-        }
-
-        .plate-number {
-          margin: 0;
-          font-size: 0.9rem;
-          color: #64748b;
-          font-weight: 500;
+          .plate-number {
+            margin: 0;
+            color: #718096;
+            font-size: 0.875rem;
+          }
         }
       }
 
       .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
+        gap: 8px;
         font-size: 0.875rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        white-space: nowrap;
 
         svg {
-          animation: pulse 2s infinite;
+          font-size: 1rem;
         }
 
         &.up-to-date {
-          background: #dcfce7;
-          color: #166534;
-          border: 1px solid #86efac;
-        }
-
-        &.service-due-soon {
-          background: #fef3c7;
-          color: #92400e;
-          border: 1px solid #fcd34d;
+          background: #C6F6D5;
+          color: #2F855A;
         }
 
         &.maintenance-required {
-          background: #fee2e2;
-          color: #991b1b;
-          border: 1px solid #fca5a5;
+          background: #FED7D7;
+          color: #C53030;
+        }
+
+        &.service-due-soon {
+          background: #FEEBC8;
+          color: #C05621;
         }
       }
     }
 
     .card-body {
-      padding: 1.25rem;
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
 
       .info-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 24px;
+        margin-bottom: 32px;
 
         .info-item {
           label {
             display: block;
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            color: #718096;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
           }
 
           p {
             margin: 0;
-            font-size: 0.95rem;
-            color: #1e293b;
+            color: #2D3748;
             font-weight: 500;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
 
             svg {
-              color: #64748b;
+              color: #4A5568;
             }
           }
         }
       }
 
-      .maintenance-tasks {
-        margin-bottom: 1.5rem;
+      .service-details {
+        flex: 1;
 
-        label {
-          display: block;
-          font-size: 0.75rem;
-          color: #64748b;
-          margin-bottom: 0.75rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+        h4 {
+          color: #2D3748;
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0 0 16px 0;
         }
 
-        ul {
+        .service-info-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+          margin-bottom: 32px;
+
+          .service-info-item {
+            label {
+              color: #718096;
+              font-size: 0.875rem;
+              display: block;
+              margin-bottom: 4px;
+            }
+
+            p {
+              margin: 0;
+              color: #2D3748;
+              font-weight: 500;
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+
+      .issues-section {
+        margin: 32px 0;
+
+        h4 {
+          color: #2D3748;
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0 0 16px 0;
+        }
+
+        .issues-list, .no-issues {
+          background: #F7FAFC;
+          border-radius: 8px;
+          padding: 12px 16px;
+          color: #4A5568;
+          font-size: 0.875rem;
           margin: 0;
-          padding: 0;
+        }
+
+        .issues-list {
           list-style: none;
 
           li {
-            padding: 0.5rem 0;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            
-            &:before {
-              content: "•";
-              color: #3b82f6;
-              font-weight: bold;
-              margin-right: 0.5rem;
+            padding: 8px 0;
+            border-bottom: 1px solid #E2E8F0;
+
+            &:last-child {
+              border-bottom: none;
+              padding-bottom: 0;
             }
 
-            &:hover {
-              color: #3b82f6;
-              transform: translateX(5px);
-              transition: all 0.2s ease;
+            &:first-child {
+              padding-top: 0;
+            }
+          }
+        }
+
+        .no-issues {
+          font-style: italic;
+          color: #718096;
+        }
+      }
+
+      .service-history {
+        margin-bottom: 32px;
+
+        h4 {
+          color: #2D3748;
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0 0 16px 0;
+        }
+
+        .history-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            padding: 12px 0;
+            border-bottom: 1px solid #E2E8F0;
+            color: #4A5568;
+            font-size: 0.875rem;
+
+            &:last-child {
+              border-bottom: none;
             }
           }
         }
@@ -1610,34 +1673,35 @@ button {
 
       .card-actions {
         display: flex;
-        gap: 1rem;
+        gap: 16px;
+        margin-top: auto;
+        padding-top: 24px;
 
         button {
           flex: 1;
-          padding: 0.75rem;
+          padding: 12px 24px;
           border-radius: 8px;
-          font-weight: 600;
-          transition: all 0.2s ease;
-          
+          border: none;
+          font-weight: 500;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s;
+
           &.btn-primary {
-            background: #3b82f6;
+            background: #3182CE;
             color: white;
-            border: none;
 
             &:hover {
-              background: #2563eb;
-              transform: translateY(-2px);
+              background: #2B6CB0;
             }
           }
 
           &.btn-secondary {
-            background: white;
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
+            background: #EDF2F7;
+            color: #2D3748;
 
             &:hover {
-              background: #eff6ff;
-              transform: translateY(-2px);
+              background: #E2E8F0;
             }
           }
         }
@@ -1646,15 +1710,36 @@ button {
   }
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 0.6;
+.maintenance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .maintenance-card {
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .status-badge {
+        align-self: flex-start;
+      }
+    }
+
+    .card-body {
+      .info-grid,
+      .service-info-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
   }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
+
+  .maintenance-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
   }
 }
 
@@ -3126,6 +3211,195 @@ button {
           background-color: #c82333;
         }
       }
+    }
+  }
+}
+
+// Maintenance Modal specific styles
+.maintenance-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.maintenance-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  .maintenance-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    .maintenance-close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      padding: 4px;
+      
+      &:hover {
+        color: #2c3e50;
+      }
+    }
+  }
+
+  .maintenance-form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #3182ce;
+      }
+    }
+
+    .maintenance-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .maintenance-issue-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    input {
+      flex: 1;
+    }
+
+    .maintenance-remove-issue {
+      background: #fee2e2;
+      border: none;
+      border-radius: 4px;
+      padding: 8px;
+      cursor: pointer;
+      color: #dc2626;
+
+      &:hover {
+        background: #fecaca;
+      }
+    }
+  }
+
+  .maintenance-add-issue {
+    background: none;
+    border: 1px dashed #3182ce;
+    color: #3182ce;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+
+    &:hover {
+      background: #ebf8ff;
+    }
+  }
+
+  .maintenance-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+
+      &.maintenance-btn-primary {
+        background: #3182ce;
+        color: white;
+
+        &:hover {
+          background: #2c5282;
+        }
+      }
+
+      &.maintenance-btn-secondary {
+        background: #e2e8f0;
+        color: #2d3748;
+
+        &:hover {
+          background: #cbd5e0;
+        }
+      }
+    }
+  }
+}
+
+.maintenance-form-group {
+  // ... existing styles ...
+
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #2d3748;
+    background-color: white;
+    appearance: none; // Removes default browser styling
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234A5568' d='M3.293 4.293a1 1 0 0 1 1.414 0L6 5.586l1.293-1.293a1 1 0 1 1 1.414 1.414l-2 2a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 0-1.414z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    }
+
+    &:hover {
+      border-color: #cbd5e0;
     }
   }
 }
