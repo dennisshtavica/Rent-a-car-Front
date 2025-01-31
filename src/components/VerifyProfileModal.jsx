@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PulseLoader } from 'react-spinners';
 import '../scss/components/_verifyProfileModal.scss';
-
 const VerifyProfileModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
     license_number: '',
@@ -12,7 +11,7 @@ const VerifyProfileModal = ({ onClose }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [verificationStatus, setVerificationStatus] = useState(null);
-
+  const [validationErrors, setValidationErrors] = useState({});
   const getStoredUser = () => {
     try {
       const userStr = localStorage.getItem('user');
@@ -23,20 +22,16 @@ const VerifyProfileModal = ({ onClose }) => {
       return null;
     }
   };
-
   useEffect(() => {
     checkVerificationStatus();
   }, []);
-
   const checkVerificationStatus = async () => {
     try {
       const user = getStoredUser();
       const token = user?.token;
-
       if (!user || !token) {
         throw new Error('Authentication data missing');
       }
-
       const response = await axios.get(
         'http://localhost:3011/driver-verification/status',
         {
@@ -45,7 +40,6 @@ const VerifyProfileModal = ({ onClose }) => {
           }
         }
       );
-
       if (response.data.verification) {
         setVerificationStatus(response.data.verification);
       }
@@ -58,20 +52,32 @@ const VerifyProfileModal = ({ onClose }) => {
       setLoading(false);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
+    setValidationErrors({});
+
+    const errors = {};
+    if (!formData.license_number.trim()) {
+      errors.license_number = 'License number is required';
+    }
+    if (!formData.expiration_date) {
+      errors.expiration_date = 'Expiration date is required';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const user = getStoredUser();
       const token = user?.token;
-
       if (!user || !token) {
         throw new Error('Authentication data missing');
       }
-
       const response = await axios.post(
         'http://localhost:3011/driver-verification/submit',
         formData,
@@ -82,11 +88,8 @@ const VerifyProfileModal = ({ onClose }) => {
           }
         }
       );
-
-      // Update user in localStorage with verification status
       const updatedUser = { ...user, is_verified: true };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-
       setSuccess('Verification submitted successfully!');
       await checkVerificationStatus();
       setTimeout(() => {
@@ -99,14 +102,12 @@ const VerifyProfileModal = ({ onClose }) => {
       setLoading(false);
     }
   };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
-
   if (loading) {
     return (
       <div className="verify-modal-overlay">
@@ -118,7 +119,6 @@ const VerifyProfileModal = ({ onClose }) => {
       </div>
     );
   }
-
   if (verificationStatus) {
     return (
       <div className="verify-modal-overlay">
@@ -138,7 +138,6 @@ const VerifyProfileModal = ({ onClose }) => {
       </div>
     );
   }
-
   return (
     <div className="verify-modal-overlay">
       <div className="verify-modal">
@@ -153,9 +152,12 @@ const VerifyProfileModal = ({ onClose }) => {
               onChange={handleChange}
               required
             />
+            {validationErrors.license_number && (
+              <div className="error-message">{validationErrors.license_number}</div>
+            )}
           </div>
           <div className="form-group">
-            <label>Expiration Date</label>
+            <label>Expiration Date (MM/DD/YYYY)</label>
             <input
               type="date"
               name="expiration_date"
@@ -163,6 +165,9 @@ const VerifyProfileModal = ({ onClose }) => {
               onChange={handleChange}
               required
             />
+            {validationErrors.expiration_date && (
+              <div className="error-message">{validationErrors.expiration_date}</div>
+            )}
           </div>
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
@@ -179,5 +184,4 @@ const VerifyProfileModal = ({ onClose }) => {
     </div>
   );
 };
-
 export default VerifyProfileModal;
