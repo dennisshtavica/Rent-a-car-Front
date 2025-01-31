@@ -8,10 +8,13 @@ import axios from "axios";
 import UpdateProfileModal from "../components/UpdateProfileModal";
 import "../scss/sections/_profilePage.scss";
 import SignIn from "./Users/SignIn";
+import VerifyProfileModal from "../components/VerifyProfileModal";
+import { FaCheckCircle } from 'react-icons/fa';
 
 export default function ProfilePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdateProfileV, setIsUpdateProfileV] = useState(false);
+  const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -46,10 +49,18 @@ export default function ProfilePage() {
   return (
     <>
       <div className="mainPage container">
-                <Header isOpen={isOpen} toggleMenu={() => setIsOpen(!isOpen)} closeMenu={() => setIsOpen(false)} />
+        <Header isOpen={isOpen} toggleMenu={() => setIsOpen(!isOpen)} closeMenu={() => setIsOpen(false)} />
       </div>
       <div className="profile-container">
-        <h1>Profile</h1>
+        <div className="profile-header">
+          <h1>Profile</h1>
+          {user.is_verified && (
+            <div className="verification-badge">
+              <FaCheckCircle className="verified-icon" />
+              <span>Verified Driver</span>
+            </div>
+          )}
+        </div>
         <div className="profile-field-group">
           <h3>Username</h3>
           <p>{user.username}</p>
@@ -59,6 +70,11 @@ export default function ProfilePage() {
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
+          {!user.is_verified && (
+            <div className="profile-verify-btn" onClick={() => setIsVerifyModalOpen(true)}>
+              <p>Verify Profile</p>
+            </div>
+          )}
           <div className="profile-update-btn" onClick={toggleEditProfile}>
             <p>Update profile</p>
           </div>
@@ -67,6 +83,7 @@ export default function ProfilePage() {
           </div>
         </div>
         {isUpdateProfileV && <UpdateProfileModal onConfirm={toggleEditProfile} />}
+        {isVerifyModalOpen && <VerifyProfileModal onClose={() => setIsVerifyModalOpen(false)} />}
       </div>
     </>
   );

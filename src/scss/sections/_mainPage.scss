@@ -29,6 +29,37 @@
       &:hover {
         transform: scale(1.05);
       }
+
+      &.not-verified {
+        cursor: not-allowed;
+        position: relative;
+
+        &:hover::after {
+          content: "Please verify your profile before booking";
+          position: absolute;
+          top: 50%;
+          right: calc(100% + 10px);
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 4px;
+          font-size: 14px;
+          white-space: nowrap;
+          z-index: 1000;
+        }
+
+        &:hover::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          right: calc(100% + 2px);
+          transform: translateY(-50%);
+          border: 8px solid transparent;
+          border-right-color: transparent;
+          border-left-color: rgba(0, 0, 0, 0.8);
+        }
+      }
     }
 
     &:last-child {

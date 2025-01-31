@@ -60,6 +60,35 @@ export default function MainPage() {
     vehicleCategory: []
   });
 
+  const [isVerified, setIsVerified] = useState(false);
+
+  useEffect(() => {
+    const checkVerificationStatus = async () => {
+      if (!user) return;
+      
+      try {
+        const response = await axios.get(
+          'http://localhost:3011/driver-verification/status',
+          {
+            headers: {
+              'Authorization': `Bearer ${user.token}`
+            }
+          }
+        );
+        
+        if (response.data.verification && response.data.verification.is_verified) {
+          setIsVerified(true);
+        }
+      } catch (error) {
+        if (error.response?.status !== 404) {
+          console.error('Error checking verification:', error);
+        }
+      }
+    };
+
+    checkVerificationStatus();
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -224,9 +253,10 @@ export default function MainPage() {
             </div>
           </div>
           <button 
-            className="bookBtn" 
+            className={`bookBtn ${!isVerified ? 'not-verified' : ''}`}
             onClick={handleToggleBookingModal}
-            disabled={!selectedCar || !rentalDate.from || !rentalDate.to}
+            disabled={!selectedCar || !rentalDate.from || !rentalDate.to || !isVerified}
+            title={!isVerified ? "Please verify your profile before booking" : ""}
           >
             Book
           </button>

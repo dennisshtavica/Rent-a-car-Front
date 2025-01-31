@@ -1,13 +1,44 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import RentAcLogo from "../assets/images/Logo.svg";
 import "../scss/layout/_header.scss";
 import {Link} from "react-router-dom";
 import manageBCar from "../assets/images/managebookingscar.svg"
 import closeIcon from "../assets/images/close.png";
 import userLogout from "../assets/images/userlogout.svg";
+import { FaCheckCircle } from 'react-icons/fa';
+import axios from 'axios';
 
 export default function Header({isOpen, toggleMenu, closeMenu}) {
     const user = JSON.parse(localStorage.getItem("user"));
+    const [isVerified, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        const checkVerificationStatus = async () => {
+            if (!user) return;
+            
+            try {
+                const response = await axios.get(
+                    'http://localhost:3011/driver-verification/status',
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`
+                        }
+                    }
+                );
+                
+                if (response.data.verification && response.data.verification.is_verified) {
+                    setIsVerified(true);
+                }
+            } catch (error) {
+                // Don't show error for 404 (no verification found)
+                if (error.response?.status !== 404) {
+                    console.error('Error checking verification:', error);
+                }
+            }
+        };
+
+        checkVerificationStatus();
+    }, [user]);
 
     return (
         <>
@@ -45,7 +76,12 @@ export default function Header({isOpen, toggleMenu, closeMenu}) {
                         </li>
                         <li>
                             {user ? 
-                                <Link className='profile' to="/profile">{user.username}</Link>
+                                <Link className='profile' to="/profile">
+                                    {user.username}
+                                    {isVerified && (
+                                        <FaCheckCircle className="header-verified-badge" />
+                                    )}
+                                </Link>
                                 : (
                                     <div className='loginLink'>
                                         <img src={userLogout} alt="" />
