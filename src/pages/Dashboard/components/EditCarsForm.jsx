@@ -4,7 +4,6 @@ import { FaTimes } from 'react-icons/fa';
 import "../scss/_pages.scss";
 
 const EditCarsForm = ({ car, onClose, onSuccess }) => {
-  console.log('Initial car data:', car); // Debug log
   
   const [formData, setFormData] = useState({
     brand: car?.brand || '',
@@ -19,7 +18,6 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
     car_category: car?.car_category?._id || ''
   });
 
-  console.log('Initial formData:', formData); // Debug log
 
   const [features, setFeatures] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -62,12 +60,10 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
   }, []);
 
   const handleFeatureToggle = (featureId) => {
-    console.log('Toggling feature:', featureId);
     setFormData(prev => {
       const newFeatures = prev.car_features.includes(featureId)
         ? prev.car_features.filter(f => f !== featureId)
         : [...prev.car_features, featureId];
-      console.log('New features array:', newFeatures);
       return {
         ...prev,
         car_features: newFeatures
@@ -104,7 +100,6 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
         data.append('image', formData.image);
       }
 
-      console.log('Sending update data:', updateData);
 
       const response = await axios.put(`http://localhost:3011/updateCar/${car._id}`, data, {
         headers: {
@@ -113,7 +108,6 @@ const EditCarsForm = ({ car, onClose, onSuccess }) => {
         }
       });
 
-      console.log('Success response:', response.data);
       
       if (response.data.car) {
         setFormData(prev => ({

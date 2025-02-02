@@ -21,13 +21,11 @@ const rentalDateModalSlice = createSlice({
             state.isReturnLocationModalV = !state.isReturnLocationModalV;
           },
           toggleBookingModal: (state, action) => {
-            console.log('Reducer: toggling modal with payload:', action.payload);
             if (action.payload !== undefined) {
                 state.isBookingModalV = action.payload;
             } else {
                 state.isBookingModalV = !state.isBookingModalV;
             }
-            console.log('Reducer: new state:', state.isBookingModalV);
           },
     },
 })

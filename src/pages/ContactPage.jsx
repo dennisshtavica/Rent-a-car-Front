@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import '../scss/sections/_contactPage.scss';
 import Footer from '../components/Footer';
+import SignIn from './Users/SignIn';
 
 export default function ContactPage() {
     const [isOpen, setIsOpen] = useState(false);

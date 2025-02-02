@@ -83,11 +83,7 @@ const Reports = () => {
           customers: calculateExactPercentageChange(currentCustomers, oldStats.totalCustomers)
         };
 
-        console.log('Stats Change Analysis:');
-        console.log(`Customers: ${oldStats.totalCustomers} → ${currentCustomers} (${changes.customers.toFixed(1)}%)`);
-        console.log(`Vehicles: ${oldStats.activeVehicles} → ${currentVehicles} (${changes.vehicles.toFixed(1)}%)`);
-        console.log(`Bookings: ${oldStats.totalBookings} → ${currentBookings} (${changes.bookings.toFixed(1)}%)`);
-        console.log(`Revenue: ${oldStats.totalRevenue} → ${currentRevenue} (${changes.revenue.toFixed(1)}%)`);
+
 
         const carBookingCounts = bookingsResponse.data.reduce((acc, booking) => {
           const carId = booking.car._id;

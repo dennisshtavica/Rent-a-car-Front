@@ -30,7 +30,6 @@ const ModalOverlay = (props) => {
         email: email,
       })
       .then((res) => {
-        console.log(res.data);
         setLinkSent(true);
         setSuccessMessage(res.data.message);
       })

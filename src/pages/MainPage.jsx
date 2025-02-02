@@ -24,6 +24,7 @@ import FilterCars from "../components/FilterCars";
 import CarGrid from "../components/CarGrid";
 import { se } from "react-day-picker/locale";
 import checkstepLogo from "../assets/images/checkstep.svg";
+import { jwtDecode } from "jwt-decode";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -149,14 +150,26 @@ export default function MainPage() {
     return null;
   };
 
-  // const isDateFilled = bookingDetails.rentalDate.from && bookingDetails.rentalDate.to;
-  // const isPickupFilled = bookingDetails.pickupLocation;
-  // const isReturnFilled = bookingDetails.returnLocation;
-  // const isVehicleSelected = bookingDetails.selectedCar;
+  useEffect(() => {
+    if (!user || !user.token) {
+      navigate("/signin");
+      return;
+    }
 
-  if (!user) {
-    return <SignIn />;
-  }
+    try {
+      const decoded = jwtDecode(user.token);
+      const currentTime = Math.floor(Date.now() / 1000); 
+      if (decoded.exp < currentTime) {
+        localStorage.removeItem("user"); 
+        navigate("/signin"); 
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      localStorage.removeItem("user");
+      navigate("/signin");
+    }
+  }, []);
+
 
   return (
     <div>

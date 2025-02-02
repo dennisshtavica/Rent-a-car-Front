@@ -22,7 +22,6 @@ export default function DetyraLab() {
     setIsOpen(!isOpen);
   };
 
-  console.log('magazines', magazines);
 
   const handleSubmit = (e) => {
     e.preventDefault();

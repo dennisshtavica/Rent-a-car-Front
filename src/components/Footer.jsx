@@ -20,7 +20,6 @@ export default function Footer() {
         }
 
         const user = JSON.parse(userStr);
-        console.log('User data:', user);
         
         const formattedReview = {
             userId: user.id.toString(),
@@ -28,7 +27,6 @@ export default function Footer() {
             rating: parseInt(reviewData.rating), 
             comment: reviewData.comment.trim()
         };
-        console.log('Sending review data:', formattedReview);
 
         const response = await axios.post('http://localhost:3011/reviews/add', formattedReview, {
             headers: {
@@ -36,7 +34,6 @@ export default function Footer() {
                 'Content-Type': 'application/json'
             }
         });
-        console.log('Response:', response);
 
         if (response.status === 201) {
             alert('Review submitted successfully!');

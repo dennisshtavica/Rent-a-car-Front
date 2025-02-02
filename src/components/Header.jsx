@@ -60,7 +60,7 @@ export default function Header({isOpen, toggleMenu, closeMenu}) {
                     </div>
                     <ul>
                         <li>
-                            {user.role_id === 1 && (
+                            {user?.role_id === 1 && (
                                 <Link to="/dashboard" className='manageBCar'>
                                     <img src={manageBCar} alt="" />
                                     <p>Manage bookings</p>

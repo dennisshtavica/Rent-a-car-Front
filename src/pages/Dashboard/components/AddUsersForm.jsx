@@ -28,7 +28,6 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
     setError('');
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      console.log('Sending data:', formData);
       
       const response = await axios.post("http://localhost:3011/users/create", formData, {
         headers: {
@@ -37,7 +36,6 @@ const AddUsersForm = ({ isOpen, onClose, onSuccess }) => {
         }
       });
       
-      console.log('Response:', response.data);
       
       setFormData({
         username: '',

@@ -61,20 +61,14 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         };
         
         // Log the API URLs being called
-        console.log('Fetching from:', {
-          features: 'http://localhost:3011/features',
-          categories: 'http://localhost:3011/categories'
-        });
+
 
         const [featuresRes, categoriesRes] = await Promise.all([
           axios.get('http://localhost:3011/features', config),
           axios.get('http://localhost:3011/categories', config)
         ]);
 
-        console.log('API responses:', {
-          features: featuresRes.data,
-          categories: categoriesRes.data
-        });
+
 
         setFeatures(featuresRes.data);
         setCategories(categoriesRes.data);
@@ -96,12 +90,10 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         ? prev.car_features.filter(f => f !== featureId)
         : [...prev.car_features, featureId]
     }));
-    console.log('Updated features:', formData.car_features);
   };
 
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
-    console.log('Selected category:', categoryId);
     setFormData(prev => ({
       ...prev,
       car_category: categoryId
@@ -115,7 +107,6 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
       const data = new FormData();
       
       // Log the form data before submission
-      console.log('Form data before submission:', formData);
 
       // Validate required fields
       if (!formData.brand || !formData.model || !formData.image || 
@@ -147,7 +138,6 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
       });
 
       // Log what's being sent
-      console.log('FormData entries being sent:');
       for (let pair of data.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
@@ -159,7 +149,6 @@ const AddCarsForm = ({ onClose, onSuccess }) => {
         }
       });
 
-      console.log('Success response:', response.data);
       
       // Call onSuccess only after successful submission
       if (onSuccess && typeof onSuccess === 'function') {
