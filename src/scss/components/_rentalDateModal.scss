@@ -13,6 +13,21 @@
   background-color: white;
   padding: 20px;
   border-radius: 16px;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: modalFadeIn 0.3s ease forwards;
+
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
 
   .saveBtn {
     width: 71px;
@@ -82,6 +97,20 @@
 
 .returnLocationModal {
   margin-left: 660px;
+}
+
+.backdrop {
+  opacity: 0;
+  animation: backdropFadeIn 0.3s ease forwards;
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @media screen and (max-width: 768px) {

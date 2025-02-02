@@ -6,7 +6,6 @@ import StartPage from "./pages/StartPage"
 import SignUp from "./pages/Users/SignUp"
 import SignIn from "./pages/Users/SignIn";
 import MainPage from "./pages/MainPage";
-import BookingPage from "./pages/BookingPage";
 import ContactPage from "./pages/ContactPage";
 import SearchResults from "./pages/SearchResults";
 import CarRented from "./pages/CarRented";
@@ -35,11 +34,8 @@ function App() {
         <Route path="/signup" element={<SignUp/>}/>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="/mainPage" element={<MainPage/>}/>
-        <Route path="/bookingPage/:id" element={<BookingPage/>}/>
         <Route path="/contactPage" element={<ContactPage/>}/>
         <Route path="/detyralab2" element={<DetyraLab/>}/>
-        {/* <Route path="/cancel" element={<Cancel/>}/>
-        <Route path="/success" element={<Success/>}/> */}
         <Route path='/cancel' element={<ProtectedPaymentRoute><Cancel/></ProtectedPaymentRoute>}/>
         <Route path='/success' element={<ProtectedPaymentRoute><Success/></ProtectedPaymentRoute>}/>
         <Route path='/reset-password/:resetToken' element={<ResetPasswordModal/>}/>
